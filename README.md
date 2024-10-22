@@ -1,1 +1,1 @@
-## Sollu CMS
+## Sollu Dashboard Template
