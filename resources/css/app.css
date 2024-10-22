@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: "Dosis Bold";
+        src: url("font/dosis-semibold.ttf") format("trueType");
+    }
+    @font-face {
+        font-family: "Dosis";
+        src: url("font/dosis-light.ttf") format("trueType");
+    }
+
+    /* Floating scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
+    .floating-scrollbar::-webkit-scrollbar {
+        width: 8px; /* Minimal width for a clean look */
+    }
+
+    .floating-scrollbar::-webkit-scrollbar-track {
+        background: transparent; /* Makes the track invisible */
+    }
+
+    .floating-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #71809680; /* Thumb color */
+        border-radius: 4px;
+        border: 2px solid rgba(0, 0, 0, 0); /* Invisible border to create the floating effect */
+        background-clip: padding-box; /* Keeps the thumb from filling the entire track */
+    }
+
+    .floating-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #a0aec0; /* Lighter color when hovering */
+    }
+
+    /* Floating scrollbar styles for Firefox */
+    .floating-scrollbar {
+        scrollbar-width: thin; /* Thin scrollbar */
+        scrollbar-color: #71809680 transparent; /* Thumb color and transparent track */
+    }
+}
+
+@layer components {
+    /* Sidebar Style */
+    .sidebar-item {
+        @apply flex flex-row gap-2 items-center py-2 px-3 hover:bg-main hover:text-light dark:hover:bg-main-light;
+    }
+    .sidebar-item.active {
+        @apply bg-main text-light dark:bg-main-light;
+    }
+    .sidebar-item-expand {
+        @apply hover:bg-main hover:text-light dark:hover:bg-main-light;
+    }
+    .sidebar-item-expand.active {
+        @apply bg-main text-light dark:bg-main-light;
+    }
+    .sidebar-item-expand button {
+        @apply flex flex-row gap-2 items-center py-2 px-3 w-full;
+    }
+    .sidebar-item-expand .sidebar-item {
+        @apply hover:bg-main-dark dark:hover:bg-main-lighter;
+    }
+    .sidebar-item-expand .sidebar-item.active {
+        @apply hover:bg-main-dark dark:hover:bg-main-lighter;
+    }
+
+    /* Widget Style */
+    .widget {
+        @apply flex flex-row text-light p-4 gap-2 rounded-lg shadow-md justify-between overflow-hidden;
+    }
+
+    /* Custom Inmput Style */
+    .input-search {
+        @apply block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:leading-6;
+    }
+
+    .input {
+        @apply rounded-md border
+        focus:ring-0
+        bg-light dark:bg-dark
+        border-gray-300 dark:border-gray-600
+        focus-within:border-main dark:focus-within:border-main-light
+        py-1.5;
+    }
+
+    /* Buttons Style */
+    button {
+        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5;
+    }
+    .btn {
+        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5;
+    }
+    .btn-outline {
+        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5 bg-transparent border-1;
+    }
+
+    .btn-primary {
+        @apply bg-main hover:bg-main-dark text-white dark:bg-main-light hover:dark:bg-main disabled:bg-main/70 dark:disabled:bg-main-light/70;
+    }
+    .btn-info {
+        @apply bg-info hover:bg-info-dark text-white dark:bg-info-light hover:dark:bg-info disabled:bg-info/70 dark:disabled:bg-info-light/70;
+    }
+    .btn-warning {
+        @apply bg-warning hover:bg-warning-dark text-white dark:bg-warning-light hover:dark:bg-warning;
+    }
+    .btn-danger {
+        @apply bg-danger hover:bg-danger-dark text-white dark:bg-danger-light hover:dark:bg-danger;
+    }
+    .btn-neutral-main {
+        @apply bg-transparent border-1 border-neutral-400 text-neutral-400
+        hover:bg-main hover:border-main hover:text-light
+        dark:border-neutral-600 dark:text-neutral-600 text-sm
+        dark:hover:bg-main-light dark:hover:border-main-light dark:hover:text-light;
+    }
+
+    .btn-neutral-main.active {
+        @apply !bg-main !border-main !text-light
+        dark:!bg-main-light dark:!border-main-light dark:!text-light;
+    }
+
+    .btn-primary.btn-outline {
+        @apply !bg-transparent border-main border-1 hover:!bg-main !text-main hover:!text-white
+        dark:!text-main-light dark:!border-main-light dark:hover:!bg-main-light
+        disabled:border-main/70 disabled:dark:border-main-light/70;
+    }
+    .btn-info.btn-outline {
+        @apply !bg-transparent border-info border-1 hover:!bg-info !text-info hover:!text-white
+        dark:!text-info-light dark:!border-info-light dark:hover:!bg-info-light
+        disabled:border-info/70 disabled:dark:border-info-light/70;
+    }
+    .btn-warning.btn-outline {
+        @apply !bg-transparent border-warning border-1 hover:!bg-warning !text-warning hover:!text-white
+        dark:!text-warning-light dark:!border-warning-light dark:hover:!bg-warning-light
+        disabled:border-warning/70 disabled:dark:border-warning-light/70;
+    }
+    .btn-danger.btn-outline {
+        @apply !bg-transparent border-danger border-1 hover:!bg-danger !text-danger hover:!text-white
+        dark:!text-danger-light dark:!border-danger-light dark:hover:!bg-danger-light
+        disabled:border-danger/70 disabled:dark:border-danger-light/70;
+    }
+
+    /* LABEL */
+    .label {
+        @apply px-2 py-1 rounded-full text-center text-sm;
+    }
+    .doted-label {
+        @apply flex flex-row items-center gap-1;
+    }
+
+    /* SWUTCH BUTTON */
+    .switch-button {
+        @apply flex flex-row;
+    }
+    .switch-button .left {
+        @apply bg-transparent border-1 border-neutral-400 text-neutral-400 dark:border-neutral-600 dark:text-neutral-600 rounded-none rounded-l-md w-10 place-content-center py-1.5;
+    }
+    .switch-button .right {
+        @apply bg-transparent border-1 border-l-0 border-neutral-400 text-neutral-400 dark:border-neutral-600 dark:text-neutral-600 rounded-none rounded-r-md w-10 place-content-center py-1.5;
+    }
+    .switch-button .active {
+        @apply !bg-main !border-main !text-light
+        dark:!bg-main-light dark:!border-main-light dark:!text-light;
+    }
+}
