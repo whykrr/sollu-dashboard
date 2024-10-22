@@ -18,24 +18,65 @@
                         name="Dashboard"
                         :is-active="true"
                     />
-                    <div class="p-0 font-bold text-md">Main</div>
-                    <SidebarItem to="#" icon="fa-users" name="Users" />
+                    <div class="p-0 font-bold text-md">Theme</div>
+                    <SidebarItem to="#" icon="fa-droplet" name="Colors" />
+                    <SidebarItem to="#" icon="fa-font" name="Typography" />
+                    <div class="p-0 font-bold text-md">Components</div>
+                    <SidebarItemExpand to="#" icon="fa-icons" name="Base">
+                        <SidebarItem to="#" name="Cards" />
+                        <SidebarItem to="#" name="Navigation & Tabs" />
+                        <SidebarItem to="#" name="Placeholders" />
+                        <SidebarItem to="#" name="Spinners" />
+                        <SidebarItem to="#" name="Tables" />
+                    </SidebarItemExpand>
+                    <SidebarItemExpand
+                        to="#"
+                        icon="fa-arrow-pointer"
+                        name="Buttons"
+                    >
+                        <SidebarItem to="#" name="Buttons" />
+                        <SidebarItem to="#" name="Button Group" />
+                    </SidebarItemExpand>
+                    <SidebarItem to="#" icon="fa-chart-line" name="Charts" />
+                    <SidebarItemExpand to="#" icon="fa-align-left" name="Forms">
+                        <SidebarItem to="#" name="Form Control" />
+                        <SidebarItem to="#" name="Select" />
+                        <SidebarItem to="#" name="Radio" />
+                        <SidebarItem to="#" name="Check" />
+                        <SidebarItem to="#" name="Input Group" />
+                        <SidebarItem to="#" name="Floating Label" />
+                        <SidebarItem to="#" name="Layout" />
+                        <SidebarItem to="#" name="Validation" />
+                    </SidebarItemExpand>
+                    <SidebarItemExpand
+                        to="#"
+                        icon="fa-bell"
+                        name="Notification"
+                    >
+                        <SidebarItem to="#" name="Alert" />
+                        <SidebarItem to="#" name="Modal" />
+                        <SidebarItem to="#" name="Badge" />
+                        <SidebarItem to="#" name="Toast" />
+                    </SidebarItemExpand>
+
                     <SidebarItem
                         to="#"
-                        icon="fa-border-all"
-                        name="Category"
-                        :is-active="true"
+                        icon="fa-tachograph-digital"
+                        name="Widgets"
                     />
-                    <SidebarItem to="#" icon="fa-envelope" name="Contact Us" />
-                    <SidebarItem to="#" icon="fa-cogs" name="Setting" />
-                    <div class="p-0 font-bold text-md">Section</div>
-                    <SidebarItem to="#" icon="fa-icons" name="Hero" />
-                    <SidebarItemExpand to="#" icon="fa-icons" name="Gallery" />
-                    <SidebarItem to="#" icon="fa-icons" name="About Us" />
-                    <SidebarItem to="#" icon="fa-icons" name="Products" />
-                    <SidebarItem to="#" icon="fa-icons" name="Portfolio" />
-                    <SidebarItem to="#" icon="fa-icons" name="Blog" />
-                    <SidebarItem to="#" icon="fa-icons" name="Testimonials" />
+                    <div class="p-0 font-bold text-md">Extras</div>
+                    <SidebarItemExpand to="#" icon="fa-file" name="Pages">
+                        <SidebarItem to="#" name="Login" />
+                        <SidebarItem to="#" name="Register" />
+                    </SidebarItemExpand>
+                    <SidebarItemExpand
+                        to="#"
+                        icon="fa-file-circle-exclamation"
+                        name="Error"
+                    >
+                        <SidebarItem to="#" name="Error 404" />
+                        <SidebarItem to="#" name="Error 500" />
+                    </SidebarItemExpand>
                 </nav>
             </div>
             <div>

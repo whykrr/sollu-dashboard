@@ -17,18 +17,7 @@
         <!-- Animated Submenu -->
         <transition name="submenu">
             <div v-if="isSubMenuOpen" class="gap-2">
-                <a href="#" class="sidebar-item">
-                    <div class="w-[20px]"></div>
-                    Test
-                </a>
-                <a href="#" class="sidebar-item">
-                    <div class="w-[20px]"></div>
-                    Security</a
-                >
-                <a href="#" class="sidebar-item">
-                    <div class="w-[20px]"></div>
-                    Notifications</a
-                >
+                <slot></slot>
             </div>
         </transition>
     </a>
