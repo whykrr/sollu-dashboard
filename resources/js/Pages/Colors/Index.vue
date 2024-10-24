@@ -127,37 +127,5 @@
 </template>
 
 <script setup>
-import Search from "@/Components/Form/Search.vue";
 import Container from "@/Components/UI/Container.vue";
-import Pagination from "@/Components/UI/Pagination.vue";
-import { ref } from "vue";
-
-const listView = ref(true);
-
-const updateView = (value) => {
-    listView.value = value;
-};
-
-const pagination = [
-    {
-        url: "http://learning-vilt.test/realtor/listing?deleted=0&page=1",
-        label: "&laquo; Previous",
-        active: false,
-    },
-    {
-        url: "http://sollu-cms.test",
-        label: "1",
-        active: true,
-    },
-    {
-        url: "http://learning-vilt.test/realtor/listing?deleted=0&page=2",
-        label: "2",
-        active: false,
-    },
-    {
-        url: "http://learning-vilt.test/realtor/listing?deleted=0&page=2",
-        label: "Next &raquo;",
-        active: false,
-    },
-];
 </script>

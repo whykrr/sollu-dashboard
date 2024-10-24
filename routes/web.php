@@ -11,7 +11,7 @@ Route::get('/colors', function () {
     return inertia('Colors/Index');
 })->name('colors');
 Route::get('/typography', function () {
-    return inertia('Colors/Index');
+    return inertia('Typography/Index');
 })->name('typography');
 
 // Base
