@@ -99,6 +99,57 @@
         @apply flex flex-col md:flex-row justify-between gap-2 mb-2 p-4 pb-0;
     }
 
+    .navigation {
+        @apply flex flex-col gap-2;
+    }
+    .navigation ul {
+        @apply flex flex-row items-center border-b-1;
+    }
+    .navigation ul li {
+        @apply items-center hover:border-b-2 hover:border-b-main hover:text-main font-medium;
+    }
+    .navigation ul li.active {
+        @apply items-center border-b-2 border-b-main text-main;
+    }
+
+    .tab {
+        @apply flex flex-col gap-2;
+    }
+    .tab ul {
+        @apply flex flex-row items-center border-b-1;
+    }
+    .tab ul li {
+        @apply items-center hover:border-b-2 hover:border-b-main hover:text-main font-medium;
+    }
+    .tab ul li.active {
+        @apply items-center border-b-2 border-b-main text-main;
+    }
+    .tab .tab-content .tab-pane {
+        @apply hidden;
+    }
+    .tab .tab-content .tab-pane.active {
+        @apply block animate-fadeIn;
+    }
+
+    .tab-vertical {
+        @apply flex flex-row gap-2;
+    }
+    .tab-vertical ul {
+        @apply grid grid-flow-row items-start min-w-[150px] border-r-1;
+    }
+    .tab-vertical ul li {
+        @apply items-center hover:border-r-2 hover:border-r-main hover:text-main font-medium;
+    }
+    .tab-vertical ul li.active {
+        @apply items-center border-r-2 border-r-main text-main;
+    }
+    .tab-vertical .tab-content .tab-pane {
+        @apply hidden;
+    }
+    .tab-vertical .tab-content .tab-pane.active {
+        @apply block animate-fadeIn;
+    }
+
     /* Widget Style */
     .widget {
         @apply flex flex-row text-light p-4 gap-2 rounded-lg shadow-md justify-between overflow-hidden;

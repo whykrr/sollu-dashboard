@@ -22,16 +22,16 @@ Route::prefix('base')
             return inertia('Base/Cards');
         })->name('cards');
         Route::get('/navigation', function () {
-            return inertia('Colors/Index');
+            return inertia('Base/Navigation');
         })->name('navigation');
         Route::get('/placeholders', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('placeholders');
         Route::get('/spinners', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('spinners');
         Route::get('/tables', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('tables');
     });
 
@@ -40,15 +40,15 @@ Route::prefix('buttons')
     ->name('buttons.')
     ->group(function () {
         Route::get('/buttons', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('buttons');
         Route::get('/button-group', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('button-group');
     });
 
 Route::get('/charts', function () {
-    return inertia('Colors/Index');
+    return inertia('ComingSoon');
 })->name('charts');
 
 // Forms
@@ -56,28 +56,28 @@ Route::prefix('forms')
     ->name('forms.')
     ->group(function () {
         Route::get('/form-control', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('form-control');
         Route::get('/select', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('select');
         Route::get('/radio', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('radio');
         Route::get('/check', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('check');
         Route::get('/input-group', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('input-group');
         Route::get('/floating-label', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('floating-label');
         Route::get('/layout', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('layout');
         Route::get('/validation', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('validation');
     });
 
@@ -86,21 +86,21 @@ Route::prefix('notification')
     ->name('notification.')
     ->group(function () {
         Route::get('/alert', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('alert');
         Route::get('/modal', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('modal');
         Route::get('/badge', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('badge');
         Route::get('/toast', function () {
-            return inertia('Colors/Index');
+            return inertia('ComingSoon');
         })->name('toast');
     });
 
 Route::get('/widgets', function () {
-    return inertia('Colors/Index');
+    return inertia('ComingSoon');
 })->name('widgets');
 
 // Pages
