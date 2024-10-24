@@ -89,6 +89,16 @@
         @apply bg-main-dark hover:bg-main-lighter;
     }
 
+    .card {
+        @apply bg-neutral-lighter dark:bg-neutral-darker rounded-lg overflow-hidden;
+    }
+    .card.card-outline {
+        @apply bg-transparent border border-neutral-400 dark:border-neutral-600;
+    }
+    .card .card-header {
+        @apply flex flex-col md:flex-row justify-between gap-2 mb-2 p-4 pb-0;
+    }
+
     /* Widget Style */
     .widget {
         @apply flex flex-row text-light p-4 gap-2 rounded-lg shadow-md justify-between overflow-hidden;
