@@ -19,7 +19,7 @@ Route::prefix('base')
     ->name('base.')
     ->group(function () {
         Route::get('/cards', function () {
-            return inertia('Colors/Index');
+            return inertia('Base/Cards');
         })->name('cards');
         Route::get('/navigation', function () {
             return inertia('Colors/Index');

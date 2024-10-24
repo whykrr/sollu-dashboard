@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-4">
-        <Container title="Font Size">
+        <Card title="Font Size">
             <div class="grid grid-cols-10 gap-4 border-b-2 border-indigo-600">
                 <div class="col-span-2">Size</div>
                 <div class="col-span-8">Example</div>
@@ -81,8 +81,8 @@
                 <div class="col-span-2">9xl</div>
                 <div class="col-span-8">9x Extra Large</div>
             </div>
-        </Container>
-        <Container title="Font Weight">
+        </Card>
+        <Card title="Font Weight">
             <div class="grid grid-cols-10 gap-4 border-b-2 border-indigo-600">
                 <div class="col-span-2">Class</div>
                 <div class="col-span-8">Example</div>
@@ -117,10 +117,10 @@
                 <div class="col-span-2">.font-bold</div>
                 <div class="col-span-8">Lorem ipsum dolor sit amet</div>
             </div>
-        </Container>
+        </Card>
     </div>
 </template>
 
 <script setup>
-import Container from "@/Components/UI/Container.vue";
+import Card from "@/Components/UI/Card.vue";
 </script>

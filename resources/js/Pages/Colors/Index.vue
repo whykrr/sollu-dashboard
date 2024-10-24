@@ -1,5 +1,5 @@
 <template>
-    <Container title="Theme Color">
+    <Card title="Theme Color">
         <div>Every color has a light and darker shade</div>
         <div class="grid grid-cols-5 gap-4">
             <div class="col-span-1">
@@ -123,9 +123,9 @@
                 </div>
             </div>
         </div>
-    </Container>
+    </Card>
 </template>
 
 <script setup>
-import Container from "@/Components/UI/Container.vue";
+import Card from "@/Components/UI/Card.vue";
 </script>

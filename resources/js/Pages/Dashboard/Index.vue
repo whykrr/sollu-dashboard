@@ -35,24 +35,24 @@
 
     <div class="grid grid-flow-row lg:grid-cols-4 gap-4 mb-4">
         <div class="col-span-4 lg:col-span-2">
-            <Container title="Charts">
+            <Card title="Charts">
                 <template #buttons> </template>
-            </Container>
+            </Card>
         </div>
         <div class="col-span-2 lg:col-span-1">
-            <Container title="Pie">
+            <Card title="Pie">
                 <template #buttons> </template>
-            </Container>
+            </Card>
         </div>
         <div class="col-span-2 lg:col-span-1">
-            <Container title="Bar">
+            <Card title="Bar">
                 <template #buttons> </template>
-            </Container>
+            </Card>
         </div>
     </div>
 
     <div class="flex flex-col">
-        <Container title="Data List">
+        <Card title="Data List">
             <template #buttons>
                 <button class="btn-primary text-sm">
                     <fa icon="fa-plus" />
@@ -118,13 +118,13 @@
             <ListView v-if="listView" />
             <GridView v-else />
             <Pagination :links="pagination" :from="11" :to="20" :total="200" />
-        </Container>
+        </Card>
     </div>
 </template>
 
 <script setup>
 import Search from "@/Components/Form/Search.vue";
-import Container from "@/Components/UI/Container.vue";
+import Card from "@/Components/UI/Card.vue";
 import Pagination from "@/Components/UI/Pagination.vue";
 import ListView from "@/Pages/Dashboard/Components/ListView.vue";
 import Widget from "@/Components/UI/Widget.vue";

@@ -1,5 +1,5 @@
 <template>
-    <Container title="Data List">
+    <Card title="Data List">
         <template #buttons>
             <button class="btn-primary text-sm">
                 <fa icon="fa-plus" />
@@ -60,12 +60,12 @@
             </div>
         </div>
         <Pagination :links="pagination" :from="11" :to="20" :total="200" />
-    </Container>
+    </Card>
 </template>
 
 <script setup>
 import Search from "@/Components/Form/Search.vue";
-import Container from "@/Components/UI/Container.vue";
+import Card from "@/Components/UI/Card.vue";
 import Pagination from "@/Components/UI/Pagination.vue";
 import { ref } from "vue";
 
