@@ -150,6 +150,16 @@
         @apply block animate-fadeIn;
     }
 
+    .placeholder {
+        @apply inline-block min-h-[20px] cursor-wait opacity-50 bg-neutral-400 dark:bg-neutral-600 mb-2;
+    }
+    .placeholder::before {
+        box-sizing: border-box;
+    }
+    .placeholder::after {
+        box-sizing: border-box;
+    }
+
     /* Widget Style */
     .widget {
         @apply flex flex-row text-light p-4 gap-2 rounded-lg shadow-md justify-between overflow-hidden;

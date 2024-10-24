@@ -25,7 +25,7 @@ Route::prefix('base')
             return inertia('Base/Navigation');
         })->name('navigation');
         Route::get('/placeholders', function () {
-            return inertia('ComingSoon');
+            return inertia('Base/Placeholders');
         })->name('placeholders');
         Route::get('/spinners', function () {
             return inertia('ComingSoon');
