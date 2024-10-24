@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom transition classes for submenu */
+.submenu-enter-active,
+.submenu-leave-active {
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+.submenu-enter-from,
+.submenu-leave-to {
+    max-height: 0;
+    opacity: 0;
+}
+.submenu-enter-to,
+.submenu-leave-from {
+    max-height: 500px; /* or max-h-screen, depends on expected size */
+    opacity: 1;
+}
+
 @layer base {
     @font-face {
         font-family: "Dosis Bold";
@@ -40,6 +56,16 @@
 }
 
 @layer components {
+    .nav-icon {
+        @apply flex justify-center items-center rounded-full relative w-[30px] h-[30px] bg-main/10 dark:bg-light/10;
+    }
+    .nav-icon span {
+        @apply rounded-md text-xs p-1 bg-danger text-white absolute top-0 right-0;
+    }
+    .nav-account {
+        @apply flex flex-row items-center gap-2.5 p-[5px] px-3 bg-main/10 dark:bg-light/10 rounded-lg;
+    }
+
     /* Sidebar Style */
     .sidebar-item {
         @apply flex flex-row gap-2 items-center py-2 px-3 hover:bg-main hover:text-light dark:hover:bg-main-light;
@@ -60,7 +86,7 @@
         @apply hover:bg-main-dark dark:hover:bg-main-lighter;
     }
     .sidebar-item-expand .sidebar-item.active {
-        @apply hover:bg-main-dark dark:hover:bg-main-lighter;
+        @apply bg-main-dark hover:bg-main-lighter;
     }
 
     /* Widget Style */

@@ -1,6 +1,5 @@
 <template>
-    <a
-        :href="to"
+    <div
         class="sidebar-item-expand overflow-hidden rounded-lg w-full"
         :class="{ active: isActive || isSubMenuOpen }"
     >
@@ -20,11 +19,11 @@
                 <slot></slot>
             </div>
         </transition>
-    </a>
+    </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, toRef, watch } from "vue";
 
 const props = defineProps({
     to: String,
@@ -33,28 +32,16 @@ const props = defineProps({
     isActive: Boolean,
 });
 
-const isSubMenuOpen = ref(false);
+const isSubMenuOpen = toRef(props.isActive);
+
+watch(
+    () => props.isActive,
+    (newValue) => {
+        isSubMenuOpen.value = newValue;
+    }
+);
 
 const toggleSubMenu = () => {
     isSubMenuOpen.value = !isSubMenuOpen.value;
-    console.log(isSubMenuOpen.value);
 };
 </script>
-
-<style scoped>
-/* Custom transition classes for submenu */
-.submenu-enter-active,
-.submenu-leave-active {
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-}
-.submenu-enter-from,
-.submenu-leave-to {
-    max-height: 0;
-    opacity: 0;
-}
-.submenu-enter-to,
-.submenu-leave-from {
-    max-height: 500px; /* or max-h-screen, depends on expected size */
-    opacity: 1;
-}
-</style>

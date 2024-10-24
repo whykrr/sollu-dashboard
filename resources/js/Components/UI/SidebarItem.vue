@@ -1,5 +1,5 @@
 <template>
-    <a
+    <Link
         :href="to"
         class="sidebar-item"
         :class="{ active: isActive, 'rounded-lg': icon }"
@@ -9,10 +9,12 @@
         <div>
             {{ name }}
         </div>
-    </a>
+    </Link>
 </template>
 
 <script setup>
+import { Link } from "@inertiajs/vue3";
+
 defineProps({
     to: String,
     icon: String,

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Http\Request;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -38,6 +38,8 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             // Synchronously...
             'appName' => config('app.name'),
+            'breadcrumbs' => generateBreadcrumbs($request->route()->getName()),
+            'menuActive' => $request->route()->getName(),
 
             // Lazily...
             'user' => fn() => $request->user()?->only('id', 'name', 'email'),

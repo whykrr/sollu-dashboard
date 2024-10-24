@@ -17,7 +17,7 @@
             <tr class="h-2"></tr>
             <TableRowLink
                 v-for="i in data"
-                :to="route('blank')"
+                to="#"
                 class="text-nowrap"
                 :key="i.id"
             >
@@ -64,6 +64,106 @@ import TableRowHead from "@/Components/Table/TableRowHead.vue";
 import TableRowLink from "@/Components/Table/TableRowLink.vue";
 
 const data = [
+    {
+        id: 1,
+        name: "Morris Johnson",
+        class: "Class 9",
+        subject: "English",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 2,
+        name: "Morris Johnson",
+        class: "Class 2",
+        subject: "Korea",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 3,
+        name: "Morris Johnson",
+        class: "Class 5",
+        subject: "Thailand",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 4,
+        name: "Morris Johnson",
+        class: "Class 7",
+        subject: "Japan",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 5,
+        name: "Morris Johnson",
+        class: "Class 10",
+        subject: "Zimbabwe",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: false,
+    },
+    {
+        id: 1,
+        name: "Morris Johnson",
+        class: "Class 9",
+        subject: "English",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 2,
+        name: "Morris Johnson",
+        class: "Class 2",
+        subject: "Korea",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 3,
+        name: "Morris Johnson",
+        class: "Class 5",
+        subject: "Thailand",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 4,
+        name: "Morris Johnson",
+        class: "Class 7",
+        subject: "Japan",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: true,
+    },
+    {
+        id: 5,
+        name: "Morris Johnson",
+        class: "Class 10",
+        subject: "Zimbabwe",
+        email: "example@site.com",
+        address: "Samantha Street 27, District John",
+        gender: "Male",
+        isActive: false,
+    },
     {
         id: 1,
         name: "Morris Johnson",

@@ -7,75 +7,210 @@
                 <img
                     src="storage/img/logo-fit-color.png"
                     class="w-28"
-                    alt="Sollu CMS"
+                    alt="Sollu"
                 />
             </div>
             <div class="flex-1 overflow-y-auto floating-scrollbar">
-                <nav class="flex flex-col gap-2 p-4 pt-0">
+                <nav class="flex flex-col gap-1 p-4 pt-0">
                     <SidebarItem
-                        to="#"
+                        :to="route('dashboard')"
                         icon="fa-home"
                         name="Dashboard"
-                        :is-active="true"
+                        :is-active="menuActive === 'dashboard'"
                     />
+
                     <div class="p-0 font-bold text-md">Theme</div>
-                    <SidebarItem to="#" icon="fa-droplet" name="Colors" />
-                    <SidebarItem to="#" icon="fa-font" name="Typography" />
+                    <SidebarItem
+                        :to="route('colors')"
+                        icon="fa-droplet"
+                        name="Colors"
+                        :is-active="menuActive === 'colors'"
+                    />
+
+                    <SidebarItem
+                        :to="route('typography')"
+                        icon="fa-font"
+                        name="Typography"
+                        :is-active="menuActive === 'typography'"
+                    />
+
                     <div class="p-0 font-bold text-md">Components</div>
-                    <SidebarItemExpand to="#" icon="fa-icons" name="Base">
-                        <SidebarItem to="#" name="Cards" />
-                        <SidebarItem to="#" name="Navigation & Tabs" />
-                        <SidebarItem to="#" name="Placeholders" />
-                        <SidebarItem to="#" name="Spinners" />
-                        <SidebarItem to="#" name="Tables" />
+                    <SidebarItemExpand
+                        icon="fa-icons"
+                        name="Base"
+                        :is-active="menuActive.includes('base.')"
+                    >
+                        <SidebarItem
+                            :to="route('base.cards')"
+                            name="Cards"
+                            :is-active="menuActive === 'base.cards'"
+                        />
+
+                        <SidebarItem
+                            :to="route('base.navigation')"
+                            name="Navigation & Tabs"
+                            :is-active="menuActive === 'base.navigation'"
+                        />
+
+                        <SidebarItem
+                            :to="route('base.placeholders')"
+                            name="Placeholders"
+                            :is-active="menuActive === 'base.placeholders'"
+                        />
+
+                        <SidebarItem
+                            :to="route('base.spinners')"
+                            name="Spinners"
+                            :is-active="menuActive === 'base.spinners'"
+                        />
+                        <SidebarItem
+                            :to="route('base.tables')"
+                            name="Tables"
+                            :is-active="menuActive === 'base.tables'"
+                        />
                     </SidebarItemExpand>
+
                     <SidebarItemExpand
                         to="#"
                         icon="fa-arrow-pointer"
                         name="Buttons"
+                        :is-active="menuActive.includes('buttons.')"
                     >
-                        <SidebarItem to="#" name="Buttons" />
-                        <SidebarItem to="#" name="Button Group" />
+                        <SidebarItem
+                            :to="route('buttons.buttons')"
+                            name="Buttons"
+                            :is-active="menuActive === 'buttons.buttons'"
+                        />
+                        <SidebarItem
+                            :to="route('buttons.button-group')"
+                            name="Button Group"
+                            :is-active="menuActive === 'buttons.button-group'"
+                        />
                     </SidebarItemExpand>
-                    <SidebarItem to="#" icon="fa-chart-line" name="Charts" />
-                    <SidebarItemExpand to="#" icon="fa-align-left" name="Forms">
-                        <SidebarItem to="#" name="Form Control" />
-                        <SidebarItem to="#" name="Select" />
-                        <SidebarItem to="#" name="Radio" />
-                        <SidebarItem to="#" name="Check" />
-                        <SidebarItem to="#" name="Input Group" />
-                        <SidebarItem to="#" name="Floating Label" />
-                        <SidebarItem to="#" name="Layout" />
-                        <SidebarItem to="#" name="Validation" />
+
+                    <SidebarItem
+                        :to="route('charts')"
+                        icon="fa-chart-line"
+                        name="Charts"
+                        :is-active="menuActive === 'charts'"
+                    />
+
+                    <SidebarItemExpand
+                        icon="fa-align-left"
+                        name="Forms"
+                        :is-active="menuActive.includes('forms.')"
+                    >
+                        <SidebarItem
+                            :to="route('forms.form-control')"
+                            name="Form Control"
+                            :is-active="menuActive === 'forms.form-control'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.select')"
+                            name="Select"
+                            :is-active="menuActive === 'forms.select'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.radio')"
+                            name="Radio"
+                            :is-active="menuActive === 'forms.radio'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.check')"
+                            name="Check"
+                            :is-active="menuActive === 'forms.check'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.input-group')"
+                            name="Input Group"
+                            :is-active="menuActive === 'forms.input-group'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.floating-label')"
+                            name="Floating Label"
+                            :is-active="menuActive === 'forms.floating-label'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.layout')"
+                            name="Layout"
+                            :is-active="menuActive === 'forms.layout'"
+                        />
+
+                        <SidebarItem
+                            :to="route('forms.validation')"
+                            name="Validation"
+                            :is-active="menuActive === 'forms.validation'"
+                        />
                     </SidebarItemExpand>
+
                     <SidebarItemExpand
                         to="#"
                         icon="fa-bell"
                         name="Notification"
+                        :is-active="menuActive.includes('notification.')"
                     >
-                        <SidebarItem to="#" name="Alert" />
-                        <SidebarItem to="#" name="Modal" />
-                        <SidebarItem to="#" name="Badge" />
-                        <SidebarItem to="#" name="Toast" />
+                        <SidebarItem
+                            :to="route('notification.alert')"
+                            name="Alert"
+                            :is-active="menuActive === 'notification.alert'"
+                        />
+
+                        <SidebarItem
+                            :to="route('notification.modal')"
+                            name="Modal"
+                            :is-active="menuActive === 'notification.modal'"
+                        />
+
+                        <SidebarItem
+                            :to="route('notification.badge')"
+                            name="Badge"
+                            :is-active="menuActive === 'notification.badge'"
+                        />
+
+                        <SidebarItem
+                            :to="route('notification.toast')"
+                            name="Toast"
+                            :is-active="menuActive === 'notification.toast'"
+                        />
                     </SidebarItemExpand>
 
                     <SidebarItem
-                        to="#"
+                        :to="route('widgets')"
                         icon="fa-tachograph-digital"
                         name="Widgets"
+                        :is-active="menuActive === 'widgets'"
                     />
+
                     <div class="p-0 font-bold text-md">Extras</div>
-                    <SidebarItemExpand to="#" icon="fa-file" name="Pages">
-                        <SidebarItem to="#" name="Login" />
-                        <SidebarItem to="#" name="Register" />
+                    <SidebarItemExpand icon="fa-file" name="Pages">
+                        <SidebarItem :to="route('pages.login')" name="Login" />
+
+                        <SidebarItem
+                            :to="route('pages.register')"
+                            name="Register"
+                        />
                     </SidebarItemExpand>
+
                     <SidebarItemExpand
                         to="#"
                         icon="fa-file-circle-exclamation"
                         name="Error"
                     >
-                        <SidebarItem to="#" name="Error 404" />
-                        <SidebarItem to="#" name="Error 500" />
+                        <SidebarItem
+                            :to="route('error-pages.error-404')"
+                            name="Error 404"
+                        />
+
+                        <SidebarItem
+                            :to="route('error-pages.error-500')"
+                            name="Error 500"
+                        />
                     </SidebarItemExpand>
                 </nav>
             </div>
@@ -92,4 +227,9 @@
 <script setup>
 import SidebarItem from "@/Components/UI/SidebarItem.vue";
 import SidebarItemExpand from "@/Components/UI/SidebarItemExpand.vue";
+import { usePage } from "@inertiajs/vue3";
+import { computed, ref, watch } from "vue";
+
+const page = usePage();
+const menuActive = computed(() => page.props.menuActive);
 </script>
