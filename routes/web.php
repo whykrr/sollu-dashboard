@@ -31,7 +31,7 @@ Route::prefix('base')
             return inertia('ComingSoon');
         })->name('spinners');
         Route::get('/tables', function () {
-            return inertia('ComingSoon');
+            return inertia('Base/Tables');
         })->name('tables');
     });
 
