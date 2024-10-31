@@ -15,16 +15,14 @@
 
         <Card title="Button Outline">
             <div class="flex flex-row gap-1">
-                <button class="btn-outline btn-main">Button Outline</button>
-                <button class="btn-outline btn-secondary">
+                <button class="btn btn-outline-main">Button Outline</button>
+                <button class="btn btn-outline-secondary">
                     Button Outline
                 </button>
-                <button class="btn-outline btn-success">Button Outline</button>
-                <button class="btn-outline btn-info">Button Outline</button>
-                <button class="btn-outline btn-warning">Button Outline</button>
-                <button class="btn-outline btn-danger">Button Outline</button>
-                <a href="#" class="btn-outline link">Button Outline</a>
-                <button class="btn-outline" disabled>Button Outline</button>
+                <button class="btn btn-outline-success">Button Outline</button>
+                <button class="btn btn-outline-info">Button Outline</button>
+                <button class="btn btn-outline-warning">Button Outline</button>
+                <button class="btn btn-outline-danger">Button Outline</button>
             </div>
         </Card>
 
@@ -65,35 +63,27 @@
             </div>
 
             <div class="flex flex-row gap-1">
-                <button class="btn-outline btn-main">
+                <button class="btn btn-outline-main">
                     <fa icon="fa-plus" />
                     Btn Icon
                 </button>
-                <button class="btn-outline btn-secondary">
+                <button class="btn btn-outline-secondary">
                     <fa icon="fa-plus" />
                     Btn Icon
                 </button>
-                <button class="btn-outline btn-success">
+                <button class="btn btn-outline-success">
                     <fa icon="fa-plus" />
                     Btn Icon
                 </button>
-                <button class="btn-outline btn-info">
+                <button class="btn btn-outline-info">
                     <fa icon="fa-plus" />
                     Btn Icon
                 </button>
-                <button class="btn-outline btn-warning">
+                <button class="btn btn-outline-warning">
                     <fa icon="fa-plus" />
                     Btn Icon
                 </button>
-                <button class="btn-outline btn-danger">
-                    <fa icon="fa-plus" />
-                    Btn Icon
-                </button>
-                <a href="#" class="btn-outline link">
-                    <fa icon="fa-plus" />
-                    Btn Icon
-                </a>
-                <button class="btn-outline" disabled>
+                <button class="btn btn-outline-danger">
                     <fa icon="fa-plus" />
                     Btn Icon
                 </button>
@@ -103,8 +93,8 @@
         <Card title="Button Block">
             <div class="flex flex-col gap-2">
                 <button class="btn btn-main block">Button</button>
-                <button class="btn-outline btn-main block">Button</button>
-                <button class="btn-outline btn-main block">
+                <button class="btn btn-outline-main block">Button</button>
+                <button class="btn btn-outline-main block">
                     <fa icon="fa-plus" />
                     Button
                 </button>

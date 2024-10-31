@@ -140,8 +140,8 @@ export default {
                 if (typeof shades === 'object') {
                     for (const [shade, colorValue] of Object.entries(shades)) {
                         // BUTTON COLORS
-                        let classBtn = `.btn.btn-${colorName}`;
-                        let classBtnOutline = `.btn-outline.btn-${colorName}`;
+                        let classBtn = `.btn-${colorName}`;
+                        let classBtnOutline = `.btn-outline-${colorName}`;
                         if (shade !== 'DEFAULT') {
                             classBtn += `-${shade}`;
                             classBtnOutline += `-${shade}`;
@@ -151,6 +151,7 @@ export default {
                             'color': '#ffffff',
                         };
                         colorClasses[classBtnOutline] = {
+                            'border-width': '1px',
                             'border-color': colorValue,
                             'color': colorValue,
                         };

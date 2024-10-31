@@ -9,22 +9,22 @@
         </Card>
 
         <Card title="Button Group Outline">
-            <div class="btn-group">
-                <button class="btn-outline btn-main">Button</button>
-                <button class="btn-outline btn-main">Button</button>
-                <button class="btn-outline btn-main">Button</button>
+            <div class="btn-group bordered">
+                <button class="btn btn-outline-main">Button</button>
+                <button class="btn btn-outline-main">Button</button>
+                <button class="btn btn-outline-main">Button</button>
             </div>
         </Card>
 
         <Card title="Button Checkbox">
-            <div class="btn-group">
+            <div class="btn-group bordered">
                 <input
                     type="checkbox"
                     class="btn-check peer"
                     name="button"
                     id="button1"
                 />
-                <label class="btn-outline btn-main" for="button1"
+                <label class="btn btn-outline-main" for="button1"
                     >Checkbox</label
                 >
 
@@ -34,7 +34,7 @@
                     name="button"
                     id="button2"
                 />
-                <label class="btn-outline btn-main" for="button2"
+                <label class="btn btn-outline-main" for="button2"
                     >Checkbox</label
                 >
 
@@ -44,20 +44,20 @@
                     name="button"
                     id="button3"
                 />
-                <label class="btn-outline btn-main" for="button3"
+                <label class="btn btn-outline-main" for="button3"
                     >Checkbox</label
                 >
             </div>
         </Card>
         <Card title="Button Radio">
-            <div class="btn-group">
+            <div class="btn-group bordered">
                 <input
                     type="radio"
                     class="btn-check peer"
                     name="radio-btn"
                     id="radio1"
                 />
-                <label class="btn-outline btn-main" for="radio1">Radio</label>
+                <label class="btn btn-outline-main" for="radio1">Radio</label>
 
                 <input
                     type="radio"
@@ -65,7 +65,7 @@
                     name="radio-btn"
                     id="radio2"
                 />
-                <label class="btn-outline btn-main" for="radio2">Radio</label>
+                <label class="btn btn-outline-main" for="radio2">Radio</label>
 
                 <input
                     type="radio"
@@ -73,19 +73,19 @@
                     name="radio-btn"
                     id="radio3"
                 />
-                <label class="btn-outline btn-main" for="radio3">Radio</label>
+                <label class="btn btn-outline-main" for="radio3">Radio</label>
             </div>
         </Card>
 
         <Card title="Button Vertical">
-            <div class="btn-group-vertical">
+            <div class="btn-group-vertical bordered">
                 <input
                     type="radio"
                     class="btn-check peer"
                     name="radio-btn-v"
                     id="vertical1"
                 />
-                <label class="btn-outline btn-main" for="vertical1"
+                <label class="btn btn-outline-main" for="vertical1"
                     >Radio</label
                 >
 
@@ -95,7 +95,7 @@
                     name="radio-btn-v"
                     id="vertical2"
                 />
-                <label class="btn-outline btn-main" for="vertical2"
+                <label class="btn btn-outline-main" for="vertical2"
                     >Radio</label
                 >
 
@@ -105,7 +105,7 @@
                     name="radio-btn-v"
                     id="vertical3"
                 />
-                <label class="btn-outline btn-main" for="vertical3"
+                <label class="btn btn-outline-main" for="vertical3"
                     >Radio</label
                 >
             </div>

@@ -186,31 +186,24 @@
     .btn.link {
         @apply underline;
     }
-    .btn-outline {
-        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5 bg-transparent border disabled:cursor-not-allowed disabled:text-gray-400 disabled:border-gray-400 dark:disabled:text-gray-600 dark:disabled:border-gray-600;
-    }
-    .btn-outline.link {
-        @apply underline;
-    }
+
     .btn-group {
         @apply inline-flex;
     }
-    .btn-group .btn,
-    .btn-group .btn-outline {
+    .btn-group .btn {
         @apply rounded-none first-of-type:rounded-l last-of-type:rounded-r;
     }
-    .btn-group .btn-outline {
+    .btn-group.bordered .btn {
         @apply border-x-[0.5px] first-of-type:border-l last-of-type:border-r;
     }
 
     .btn-group-vertical {
         @apply relative inline-flex flex-col;
     }
-    .btn-group-vertical .btn,
-    .btn-group-vertical .btn-outline {
+    .btn-group-vertical .btn {
         @apply rounded-none first-of-type:rounded-t last-of-type:rounded-b;
     }
-    .btn-group-vertical .btn-outline {
+    .btn-group-vertical.bordered .btn {
         @apply border-y-[0.5px] first-of-type:rounded-t first-of-type:border-t last-of-type:rounded-b last-of-type:border-b;
     }
 
