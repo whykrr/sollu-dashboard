@@ -140,6 +140,25 @@ export default {
                 if (typeof shades === 'object') {
                     for (const [shade, colorValue] of Object.entries(shades)) {
                         // BUTTON COLORS
+                        let classBtn = `.btn.btn-${colorName}`;
+                        let classBtnOutline = `.btn-outline.btn-${colorName}`;
+                        if (shade !== 'DEFAULT') {
+                            classBtn += `-${shade}`;
+                            classBtnOutline += `-${shade}`;
+                        }
+                        colorClasses[classBtn] = {
+                            'background-color': colorValue,
+                            'color': '#ffffff',
+                        };
+                        colorClasses[classBtnOutline] = {
+                            'border-color': colorValue,
+                            'color': colorValue,
+                        };
+                        colorClasses[classBtnOutline + ':hover'] = {
+                            'background-color': colorValue,
+                            'color': '#ffffff',
+                        };
+
 
                         // LABELS COLORS
                         let classLabel = `.label-${colorName}`;

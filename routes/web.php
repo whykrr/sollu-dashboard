@@ -40,7 +40,7 @@ Route::prefix('buttons')
     ->name('buttons.')
     ->group(function () {
         Route::get('/buttons', function () {
-            return inertia('ComingSoon');
+            return inertia('Buttons/Buttons');
         })->name('buttons');
         Route::get('/button-group', function () {
             return inertia('ComingSoon');

@@ -180,59 +180,17 @@
     }
 
     /* Buttons Style */
-    button {
-        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5;
-    }
     .btn {
-        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5;
+        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
+    }
+    .btn.link {
+        @apply underline;
     }
     .btn-outline {
-        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5 bg-transparent border-1;
+        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5 bg-transparent border-1 disabled:cursor-not-allowed disabled:text-gray-400 disabled:border-gray-400 dark:disabled:text-gray-600 dark:disabled:border-gray-600;
     }
-
-    .btn-primary {
-        @apply bg-main hover:bg-main-dark text-white dark:bg-main-light hover:dark:bg-main disabled:bg-main/70 dark:disabled:bg-main-light/70;
-    }
-    .btn-info {
-        @apply bg-info hover:bg-info-dark text-white dark:bg-info-light hover:dark:bg-info disabled:bg-info/70 dark:disabled:bg-info-light/70;
-    }
-    .btn-warning {
-        @apply bg-warning hover:bg-warning-dark text-white dark:bg-warning-light hover:dark:bg-warning;
-    }
-    .btn-danger {
-        @apply bg-danger hover:bg-danger-dark text-white dark:bg-danger-light hover:dark:bg-danger;
-    }
-    .btn-neutral-main {
-        @apply bg-transparent border-1 border-neutral-400 text-neutral-400
-        hover:bg-main hover:border-main hover:text-light
-        dark:border-neutral-600 dark:text-neutral-600 text-sm
-        dark:hover:bg-main-light dark:hover:border-main-light dark:hover:text-light;
-    }
-
-    .btn-neutral-main.active {
-        @apply !bg-main !border-main !text-light
-        dark:!bg-main-light dark:!border-main-light dark:!text-light;
-    }
-
-    .btn-primary.btn-outline {
-        @apply !bg-transparent border-main border-1 hover:!bg-main !text-main hover:!text-white
-        dark:!text-main-light dark:!border-main-light dark:hover:!bg-main-light
-        disabled:border-main/70 disabled:dark:border-main-light/70;
-    }
-    .btn-info.btn-outline {
-        @apply !bg-transparent border-info border-1 hover:!bg-info !text-info hover:!text-white
-        dark:!text-info-light dark:!border-info-light dark:hover:!bg-info-light
-        disabled:border-info/70 disabled:dark:border-info-light/70;
-    }
-    .btn-warning.btn-outline {
-        @apply !bg-transparent border-warning border-1 hover:!bg-warning !text-warning hover:!text-white
-        dark:!text-warning-light dark:!border-warning-light dark:hover:!bg-warning-light
-        disabled:border-warning/70 disabled:dark:border-warning-light/70;
-    }
-    .btn-danger.btn-outline {
-        @apply !bg-transparent border-danger border-1 hover:!bg-danger !text-danger hover:!text-white
-        dark:!text-danger-light dark:!border-danger-light dark:hover:!bg-danger-light
-        disabled:border-danger/70 disabled:dark:border-danger-light/70;
+    .btn-outline.link {
+        @apply underline;
     }
 
     /* LABEL */
