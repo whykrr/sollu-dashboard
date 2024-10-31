@@ -154,7 +154,11 @@ export default {
                             'border-color': colorValue,
                             'color': colorValue,
                         };
-                        colorClasses[classBtnOutline + ':hover'] = {
+                        colorClasses['button' + classBtnOutline + ':hover'] = {
+                            'background-color': colorValue,
+                            'color': '#ffffff',
+                        };
+                        colorClasses['.btn-check:checked + ' + classBtnOutline] = {
                             'background-color': colorValue,
                             'color': '#ffffff',
                         };

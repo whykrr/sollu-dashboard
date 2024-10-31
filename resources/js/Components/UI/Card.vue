@@ -14,7 +14,7 @@
                 <slot name="buttons" />
             </div>
         </div>
-        <div class="flex flex-col px-4 pb-4">
+        <div class="px-4 pb-4">
             <slot />
         </div>
     </div>

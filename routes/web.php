@@ -43,7 +43,7 @@ Route::prefix('buttons')
             return inertia('Buttons/Buttons');
         })->name('buttons');
         Route::get('/button-group', function () {
-            return inertia('ComingSoon');
+            return inertia('Buttons/ButtonGroup');
         })->name('button-group');
     });
 

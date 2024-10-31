@@ -1,6 +1,6 @@
 <template>
     <li role="presentation">
-        <button class="flex flex-row gap-1.5" type="button" role="tab">
+        <button class="btn" type="button" role="tab">
             <fa v-if="icon" :icon />
             {{ label }}
         </button>
