@@ -13,6 +13,13 @@
             </div>
         </Card>
 
+        <Card title="Button Size">
+            <button class="btn btn-xs btn-main mb-1">Extra Small</button>
+            <button class="btn btn-sm btn-main mb-1">Small</button>
+            <button class="btn btn-main mb-1">Regular</button>
+            <button class="btn btn-lg btn-main">Large</button>
+        </Card>
+
         <Card title="Button Outline">
             <div class="flex flex-row gap-1">
                 <button class="btn btn-outline-main">Button Outline</button>
@@ -23,6 +30,17 @@
                 <button class="btn btn-outline-info">Button Outline</button>
                 <button class="btn btn-outline-warning">Button Outline</button>
                 <button class="btn btn-outline-danger">Button Outline</button>
+            </div>
+        </Card>
+
+        <Card title="Button Highlight">
+            <div class="flex flex-row gap-1">
+                <button class="btn btn-highlight-main">Button</button>
+                <button class="btn btn-highlight-secondary">Button</button>
+                <button class="btn btn-highlight-success">Button</button>
+                <button class="btn btn-highlight-info">Button</button>
+                <button class="btn btn-highlight-warning">Button</button>
+                <button class="btn btn-highlight-danger">Button</button>
             </div>
         </Card>
 

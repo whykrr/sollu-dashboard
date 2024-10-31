@@ -93,7 +93,7 @@
         @apply bg-neutral-lighter dark:bg-neutral-darker rounded-lg overflow-hidden;
     }
     .card.card-outline {
-        @apply bg-transparent border border-neutral-400 dark:border-neutral-600;
+        @apply bg-transparent border border-neutral-300 dark:border-neutral-700;
     }
     .card .card-header {
         @apply flex flex-col md:flex-row justify-between gap-2 mb-2 p-4 pb-0;
@@ -103,26 +103,30 @@
         @apply flex flex-col gap-2;
     }
     .navigation ul {
-        @apply flex flex-row items-center border-b-1;
+        @apply flex flex-row items-center border-b-1 dark:border-neutral-700;
     }
     .navigation ul li {
-        @apply items-center hover:border-b-2 hover:border-b-main hover:text-main font-medium;
+        @apply items-center hover:border-b-2 hover:border-b-main hover:text-main
+        dark:hover:border-b-main-light dark:hover:text-main-light font-medium;
     }
     .navigation ul li.active {
-        @apply items-center border-b-2 border-b-main text-main;
+        @apply items-center border-b-2 border-b-main text-main
+        dark:border-b-main-light dark:text-main-light;
     }
 
     .tab {
         @apply flex flex-col gap-2;
     }
     .tab ul {
-        @apply flex flex-row items-center border-b-1;
+        @apply flex flex-row items-center border-b-1 dark:border-neutral-700;
     }
     .tab ul li {
-        @apply items-center hover:border-b-2 hover:border-b-main hover:text-main font-medium;
+        @apply items-center hover:border-b-2 font-medium hover:border-b-main hover:text-main
+        dark:hover:border-b-main-light dark:hover:text-main-light;
     }
     .tab ul li.active {
-        @apply items-center border-b-2 border-b-main text-main;
+        @apply items-center border-b-2 border-b-main text-main
+        dark:border-b-main-light dark:text-main-light;
     }
     .tab .tab-content .tab-pane {
         @apply hidden;
@@ -135,13 +139,15 @@
         @apply flex flex-row gap-2;
     }
     .tab-vertical ul {
-        @apply grid grid-flow-row items-start min-w-[150px] border-r-1;
+        @apply grid grid-flow-row items-start min-w-[150px] border-r-1 dark:border-neutral-700;
     }
     .tab-vertical ul li {
-        @apply items-center hover:border-r-2 hover:border-r-main hover:text-main font-medium;
+        @apply items-center hover:border-r-2 font-medium hover:border-r-main hover:text-main
+        dark:hover:border-r-main-light dark:hover:text-main-light;
     }
     .tab-vertical ul li.active {
-        @apply items-center border-r-2 border-r-main text-main;
+        @apply items-center border-r-2 border-r-main text-main
+        dark:border-r-main-light dark:text-main-light;
     }
     .tab-vertical .tab-content .tab-pane {
         @apply hidden;
@@ -181,7 +187,16 @@
 
     /* Buttons Style */
     .btn {
-        @apply flex flex-row gap-1.5 items-center border border-transparent rounded px-2 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
+        @apply flex flex-row gap-1.5 items-center border border-transparent rounded px-4 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
+    }
+    .btn-xs {
+        @apply text-xs px-1 py-0.5;
+    }
+    .btn-sm {
+        @apply text-sm px-2.5 py-1;
+    }
+    .btn-lg {
+        @apply text-lg px-6 py-3;
     }
     .btn.link {
         @apply underline;

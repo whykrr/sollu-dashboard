@@ -28,6 +28,7 @@ if (!function_exists('generateBreadcrumbs')) {
                     'placeholders' => ['label' => 'Placeholders', 'url' => route($routeName)],
                     'spinners' => ['label' => 'Spinners', 'url' => route($routeName)],
                     'tables' => ['label' => 'Tables', 'url' => route($routeName)],
+                    'pagination' => ['label' => 'Pagination', 'url' => route($routeName)],
                 };
                 break;
 

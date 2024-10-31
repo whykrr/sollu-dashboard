@@ -8,15 +8,15 @@
         </Card>
         <Card title="Card with Buttons">
             <template #buttons>
-                <button class="btn-primary text-sm">
+                <button class="btn btn-main btn-sm">
                     <fa icon="fa-plus" />
                     Create
                 </button>
-                <button class="btn-warning text-sm">
+                <button class="btn btn-warning btn-sm">
                     <fa icon="fa-file" />
                     Draft
                 </button>
-                <button class="btn-danger text-sm">
+                <button class="btn btn-danger btn-sm">
                     <fa icon="fa-trash" />
                     Trash
                 </button>

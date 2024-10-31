@@ -133,70 +133,16 @@ export default {
         require('@tailwindcss/forms'),
         plugin(function ({ addComponents, theme }) {
             const colors = theme('colors');
-            const colorClasses = {};
-
             for (const [colorName, shades] of Object.entries(colors)) {
                 // Only create classes for colors that have shades (not 'inherit', 'current', etc.)
                 if (typeof shades === 'object') {
                     for (const [shade, colorValue] of Object.entries(shades)) {
-                        // BUTTON COLORS
-                        let classBtn = `.btn-${colorName}`;
-                        let classBtnOutline = `.btn-outline-${colorName}`;
-                        if (shade !== 'DEFAULT') {
-                            classBtn += `-${shade}`;
-                            classBtnOutline += `-${shade}`;
-                        }
-                        colorClasses[classBtn] = {
-                            'background-color': colorValue,
-                            'color': '#ffffff',
-                        };
-                        colorClasses[classBtnOutline] = {
-                            'border-width': '1px',
-                            'border-color': colorValue + ' !important',
-                            'color': colorValue,
-                        };
-                        colorClasses['button' + classBtnOutline + ':hover'] = {
-                            'background-color': colorValue,
-                            'color': '#ffffff',
-                        };
-                        colorClasses['.btn-check:checked + ' + classBtnOutline] = {
-                            'background-color': colorValue,
-                            'color': '#ffffff',
-                        };
-
-
-                        // LABELS COLORS
-                        let classLabel = `.label-${colorName}`;
-                        let classDotedLabel = `.doted-label-${colorName}`;
-                        if (shade !== 'DEFAULT') {
-                            classLabel += `-${shade}`;
-                            classDotedLabel += `-${shade}`;
-                        }
-
-                        colorClasses[classLabel] = {
-                            'color': colorValue,
-                            'background-color': hexToRgba(colorValue, 0.1),
-                        };
-                        colorClasses[classDotedLabel] = {
-                            'color': colorValue,
-                        };
-                        colorClasses[classDotedLabel + ' span'] = {
-                            'background-color': colorValue,
-                        };
+                        addComponents(addColorClasses(colorName, shade, colorValue));
                     }
                 } else {
-
-                    // LABELS COLORS
-                    const classLabel = `.doted-label-${colorName}`;
-                    colorClasses[classLabel] = {
-                        'color': shades,
-                    };
-                    colorClasses[classLabel + ' span'] = {
-                        'background-color': shades,
-                    };
+                    addComponents(addColorClasses(colorName, null, shades));
                 }
             }
-            addComponents(colorClasses);
         }),
     ],
 }
@@ -207,4 +153,75 @@ function hexToRgba(hex, alpha) {
     let g = parseInt(hex.slice(3, 5), 16);
     let b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function addColorClasses(colorName, shade, colorValue) {
+    const colorClasses = {}
+    // BUTTON COLORS
+    let classBtn = `.btn-${colorName}`;
+    let classBtnOutline = `.btn-outline-${colorName}`;
+    let classBtnHighlight = `.btn-highlight-${colorName}`;
+    if (shade !== 'DEFAULT' && shade !== null) {
+        classBtn += `-${shade}`;
+        classBtnOutline += `-${shade}`;
+        classBtnHighlight += `-${shade}`;
+    }
+    colorClasses[classBtn] = {
+        'background-color': colorValue,
+        'color': '#ffffff',
+    };
+    colorClasses[classBtnOutline] = {
+        'border-width': '1px',
+        'border-color': colorValue + ' !important',
+        'color': colorValue,
+    };
+
+    colorClasses[classBtnHighlight] = {
+        'background-color': hexToRgba(colorValue, 0.075),
+        'color': colorValue,
+    };
+
+    colorClasses['button' + classBtnHighlight + ':hover, ' +
+        'a' + classBtnHighlight + ':hover, ' +
+        'button' + classBtnHighlight + '.active, ' +
+        'a' + classBtnHighlight + '.active'
+    ] = {
+        'background-color': colorValue,
+        'color': '#ffffff',
+    };
+
+    colorClasses['button' + classBtnOutline + ':hover, ' +
+        'a' + classBtnOutline + ':hover, ' +
+        'button' + classBtnOutline + '.active, ' +
+        'a' + classBtnOutline + '.active'] = {
+        'background-color': colorValue,
+        'color': '#ffffff',
+    };
+
+    colorClasses['.btn-check:checked + ' + classBtnOutline] = {
+        'background-color': colorValue,
+        'color': '#ffffff',
+    };
+
+
+    // LABELS COLORS
+    let classLabel = `.label-${colorName}`;
+    let classDotedLabel = `.doted-label-${colorName}`;
+    if (shade !== 'DEFAULT' && shade !== null) {
+        classLabel += `-${shade}`;
+        classDotedLabel += `-${shade}`;
+    }
+
+    colorClasses[classLabel] = {
+        'color': colorValue,
+        'background-color': hexToRgba(colorValue, 0.1),
+    };
+    colorClasses[classDotedLabel] = {
+        'color': colorValue,
+    };
+    colorClasses[classDotedLabel + ' span'] = {
+        'background-color': colorValue,
+    };
+
+    return colorClasses
 }

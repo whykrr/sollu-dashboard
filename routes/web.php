@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,9 @@ Route::prefix('base')
         Route::get('/tables', function () {
             return inertia('Base/Tables');
         })->name('tables');
+        Route::get('/pagination', function () {
+            return inertia('Base/Pagination', ['users' => User::paginate(10)]);
+        })->name('pagination');
     });
 
 // Buttons

@@ -1,4 +1,4 @@
-<html>
+<html class="dark">
 
 <head>
     <base href="{{ url('') }}">

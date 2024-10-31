@@ -68,6 +68,11 @@
                             name="Tables"
                             :is-active="menuActive === 'base.tables'"
                         />
+                        <SidebarItem
+                            :to="route('base.pagination')"
+                            name="Pagination"
+                            :is-active="menuActive === 'base.pagination'"
+                        />
                     </SidebarItemExpand>
 
                     <SidebarItemExpand

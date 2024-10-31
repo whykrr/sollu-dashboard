@@ -24,6 +24,14 @@
                 <fa icon="fa-bell"></fa>
                 <span></span>
             </div>
+            <!-- <button
+                type="button"
+                @click="toggleDarkMode"
+                class="nav-icon bg-dark text-light dark:bg-light dark:text-dark"
+                title="Theme Toggle"
+            >
+                <fa icon="fa-circle-half-stroke"></fa>
+            </button> -->
             <div class="nav-account">
                 <img
                     src="https://via.placeholder.com/30"
@@ -44,4 +52,24 @@
 <script setup>
 import Search from "@/Components/Form/Search.vue";
 import Breadcrumbs from "./UI/Breadcrumbs.vue";
+import { ref } from "vue";
+
+const isDarkMode = ref(true);
+
+// Check if the dark mode is already in localStorage or Session
+if (sessionStorage.getItem("dark_mode") === "true") {
+    isDarkMode.value = true;
+    document.documentElement.classList.add("dark");
+}
+
+function toggleDarkMode() {
+    isDarkMode.value = !isDarkMode.value;
+    if (isDarkMode.value) {
+        document.documentElement.classList.add("dark");
+        sessionStorage.setItem("dark_mode", "true");
+    } else {
+        document.documentElement.classList.remove("dark");
+        sessionStorage.setItem("dark_mode", "false");
+    }
+}
 </script>
