@@ -9,7 +9,7 @@
         </Card>
 
         <Card title="Button Group Outline">
-            <div class="btn-group bordered">
+            <div class="btn-group">
                 <button class="btn btn-outline-main">Button</button>
                 <button class="btn btn-outline-main">Button</button>
                 <button class="btn btn-outline-main">Button</button>
@@ -17,7 +17,7 @@
         </Card>
 
         <Card title="Button Checkbox">
-            <div class="btn-group bordered">
+            <div class="btn-group">
                 <input
                     type="checkbox"
                     class="btn-check peer"
@@ -50,7 +50,7 @@
             </div>
         </Card>
         <Card title="Button Radio">
-            <div class="btn-group bordered">
+            <div class="btn-group">
                 <input
                     type="radio"
                     class="btn-check peer"
@@ -78,7 +78,7 @@
         </Card>
 
         <Card title="Button Vertical">
-            <div class="btn-group-vertical bordered">
+            <div class="btn-group-vertical">
                 <input
                     type="radio"
                     class="btn-check peer"

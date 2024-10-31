@@ -181,7 +181,7 @@
 
     /* Buttons Style */
     .btn {
-        @apply flex flex-row gap-1.5 items-center rounded px-2 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
+        @apply flex flex-row gap-1.5 items-center border border-transparent rounded px-2 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
     }
     .btn.link {
         @apply underline;
@@ -191,20 +191,14 @@
         @apply inline-flex;
     }
     .btn-group .btn {
-        @apply rounded-none first-of-type:rounded-l last-of-type:rounded-r;
-    }
-    .btn-group.bordered .btn {
-        @apply border-x-[0.5px] first-of-type:border-l last-of-type:border-r;
+        @apply rounded-none ml-[-1px] first-of-type:rounded-l first-of-type:!ml-0 last-of-type:rounded-r;
     }
 
     .btn-group-vertical {
         @apply relative inline-flex flex-col;
     }
     .btn-group-vertical .btn {
-        @apply rounded-none first-of-type:rounded-t last-of-type:rounded-b;
-    }
-    .btn-group-vertical.bordered .btn {
-        @apply border-y-[0.5px] first-of-type:rounded-t first-of-type:border-t last-of-type:rounded-b last-of-type:border-b;
+        @apply rounded-none mt-[-1px] first-of-type:rounded-t first-of-type:!mt-0 last-of-type:rounded-b;
     }
 
     .btn-check {

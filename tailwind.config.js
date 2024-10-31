@@ -152,7 +152,7 @@ export default {
                         };
                         colorClasses[classBtnOutline] = {
                             'border-width': '1px',
-                            'border-color': colorValue,
+                            'border-color': colorValue + ' !important',
                             'color': colorValue,
                         };
                         colorClasses['button' + classBtnOutline + ':hover'] = {
