@@ -14,9 +14,9 @@
         </Card>
 
         <Card title="Button Size">
-            <button class="btn btn-xs btn-main mb-1">Extra Small</button>
-            <button class="btn btn-sm btn-main mb-1">Small</button>
-            <button class="btn btn-main mb-1">Regular</button>
+            <button class="btn btn-xs btn-main mr-2">Extra Small</button>
+            <button class="btn btn-sm btn-main mr-2">Small</button>
+            <button class="btn btn-main mr-2">Regular</button>
             <button class="btn btn-lg btn-main">Large</button>
         </Card>
 

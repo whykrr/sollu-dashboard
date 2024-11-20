@@ -80,10 +80,10 @@
         @apply bg-main text-light dark:bg-main-light;
     }
     .sidebar-item-expand button {
-        @apply flex flex-row gap-2 items-center py-2 px-3 w-full;
+        @apply flex rounded-lg flex-row gap-2 items-center py-2 px-3 w-full;
     }
     .sidebar-item-expand .sidebar-item {
-        @apply hover:bg-main-dark dark:hover:bg-main-lighter;
+        @apply hover:bg-main-dark dark:hover:bg-main-lighter last:rounded-b-lg;
     }
     .sidebar-item-expand .sidebar-item.active {
         @apply bg-main-dark hover:bg-main-lighter;
@@ -172,22 +172,134 @@
     }
 
     /* Custom Inmput Style */
-    .input-search {
-        @apply block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:leading-6;
-    }
-
-    .input {
+    .form {
         @apply rounded-md border
         focus:ring-0
         bg-light dark:bg-dark
         border-gray-300 dark:border-gray-600
         focus-within:border-main dark:focus-within:border-main-light
-        py-1.5;
+        py-1.5 overflow-hidden;
+    }
+    .form[type="file"] {
+        @apply outline-none py-0 focus-visible:ring-0 cursor-pointer file:mr-2 file:py-1.5 file:px-2 file:border-0 file:bg-gray-300 file:dark:bg-gray-600 file:text-dark file:dark:text-light;
+    }
+    label + .form {
+        @apply block w-full;
+    }
+    .label-horizontal {
+        @apply py-1.5;
+    }
+
+    .form-sm {
+        @apply form !py-1 !text-sm;
+    }
+    .form-sm[type="file"] {
+        @apply !py-0 file:!py-1 file:!text-sm;
+    }
+    label + .form-sm {
+        @apply !text-sm;
+    }
+
+    .form-lg {
+        @apply form !py-2.5 !text-lg;
+    }
+    .form-lg[type="file"] {
+        @apply !py-0 file:!py-2.5 file:!text-lg;
+    }
+    label + .form-lg {
+        @apply !text-lg;
+    }
+
+    .form:disabled,
+    .form-sm:disabled,
+    .form-lg:disabled {
+        @apply bg-transparent border-none text-gray-400 dark:text-gray-600;
+    }
+
+    .form-check {
+        @apply block min-h-6;
+    }
+    .form-check-input {
+        @apply form align-top w-4 h-4 mt-1;
+    }
+    .form-check-label {
+        @apply mx-1 select-none;
+    }
+
+    .form-group {
+        @apply flex rounded-lg items-center bg-light border-1 focus-within:border-main py-0 overflow-hidden;
+    }
+
+    .form-group span,
+    .form-group label {
+        @apply text-gray-500 first:!ml-3 last:!mr-3;
+    }
+    .form-group .form,
+    .form-group .form-sm,
+    .form-group .form-lg {
+        @apply w-full !border-0;
+    }
+
+    .form-group-input {
+        @apply flex flex-row;
+    }
+    .form-group-input .form {
+        @apply rounded-none border-x-[0.5px] first:border-l last:border-r first:rounded-l last:rounded-r;
+    }
+
+    .form-group-btn {
+        @apply flex rounded items-center bg-light border-1 focus-within:border-main py-0 overflow-hidden;
+    }
+    .form-group-btn .btn {
+        @apply py-2.5 rounded-none;
+    }
+    .form-group-btn .form {
+        @apply w-full border-0;
+    }
+
+    .form-floating {
+        @apply relative;
+    }
+    .form-floating .form {
+        @apply w-full h-12 pt-5 placeholder-transparent;
+    }
+    .form-floating label {
+        @apply absolute left-2 -translate-y-1/2 text-xs top-3 transform transition-all duration-200 px-1;
+    }
+    .form-floating input:placeholder-shown ~ label {
+        @apply top-1/2 -translate-y-1/2 text-base text-gray-600;
+    }
+    .form-floating .form:focus ~ label {
+        @apply top-3 text-xs;
+    }
+
+    .form + .form-feedback,
+    .form-group + .form-feedback,
+    .form-group-input + .form-feedback,
+    .form-group-button + .form-feedback,
+    .form-floating + .form-feedback {
+        @apply hidden;
+    }
+
+    .is-valid,
+    .form-floating.is-valid .form {
+        @apply border-success focus:!border-success focus-within:!border-success;
+    }
+    .is-valid + .form-feedback {
+        @apply block text-success text-xs;
+    }
+
+    .is-invalid,
+    .form-floating.is-invalid .form {
+        @apply border-danger focus:!border-danger focus-within:!border-danger;
+    }
+    .is-invalid + .form-feedback {
+        @apply block text-danger text-xs;
     }
 
     /* Buttons Style */
     .btn {
-        @apply flex flex-row gap-1.5 items-center border border-transparent rounded px-4 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
+        @apply inline-flex gap-1.5 items-center border border-transparent rounded px-4 py-1.5 hover:brightness-110 disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-600 disabled:hover:brightness-100;
     }
     .btn-xs {
         @apply text-xs px-1 py-0.5;

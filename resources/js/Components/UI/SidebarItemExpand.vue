@@ -1,6 +1,6 @@
 <template>
     <div
-        class="sidebar-item-expand overflow-hidden rounded-lg w-full"
+        class="sidebar-item-expand rounded-lg w-full"
         :class="{ active: isActive || isSubMenuOpen }"
     >
         <button type="button" @click="toggleSubMenu">

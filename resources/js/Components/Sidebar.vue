@@ -106,9 +106,9 @@
                         :is-active="menuActive.includes('forms.')"
                     >
                         <SidebarItem
-                            :to="route('forms.form-control')"
-                            name="Form Control"
-                            :is-active="menuActive === 'forms.form-control'"
+                            :to="route('forms.form')"
+                            name="Form"
+                            :is-active="menuActive === 'forms.form'"
                         />
 
                         <SidebarItem
@@ -125,13 +125,13 @@
 
                         <SidebarItem
                             :to="route('forms.check')"
-                            name="Check"
+                            name="Checkbox"
                             :is-active="menuActive === 'forms.check'"
                         />
 
                         <SidebarItem
                             :to="route('forms.input-group')"
-                            name="Input Group"
+                            name="Form Group"
                             :is-active="menuActive === 'forms.input-group'"
                         />
 

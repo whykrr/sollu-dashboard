@@ -59,29 +59,29 @@ Route::get('/charts', function () {
 Route::prefix('forms')
     ->name('forms.')
     ->group(function () {
-        Route::get('/form-control', function () {
-            return inertia('ComingSoon');
-        })->name('form-control');
+        Route::get('/form', function () {
+            return inertia('Forms/Form');
+        })->name('form');
         Route::get('/select', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/Select');
         })->name('select');
         Route::get('/radio', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/Radio');
         })->name('radio');
         Route::get('/check', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/Checkbox');
         })->name('check');
         Route::get('/input-group', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/InputGroup');
         })->name('input-group');
         Route::get('/floating-label', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/FloatingLabel');
         })->name('floating-label');
         Route::get('/layout', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/Layout');
         })->name('layout');
         Route::get('/validation', function () {
-            return inertia('ComingSoon');
+            return inertia('Forms/Validation');
         })->name('validation');
     });
 

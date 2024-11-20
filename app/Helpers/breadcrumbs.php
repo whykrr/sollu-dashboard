@@ -50,11 +50,11 @@ if (!function_exists('generateBreadcrumbs')) {
                 $breadcrumbs[] = ['label' => 'Forms', 'url' => '#'];
 
                 $breadcrumbs[] = match (str_replace('forms.', '', $routeName)) {
-                    'form-control' => ['label' => 'Form Control', 'url' => route($routeName)],
+                    'form' => ['label' => 'Form', 'url' => route($routeName)],
                     'select' => ['label' => 'Select', 'url' => route($routeName)],
                     'radio' => ['label' => 'Radio', 'url' => route($routeName)],
-                    'check' => ['label' => 'Check', 'url' => route($routeName)],
-                    'input-group' => ['label' => 'Input Group', 'url' => route($routeName)],
+                    'check' => ['label' => 'Checkbox', 'url' => route($routeName)],
+                    'input-group' => ['label' => 'Form Group', 'url' => route($routeName)],
                     'floating-label' => ['label' => 'Floating Label', 'url' => route($routeName)],
                     'layout' => ['label' => 'Layout', 'url' => route($routeName)],
                     'validation' => ['label' => 'Validation', 'url' => route($routeName)],
