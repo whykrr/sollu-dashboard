@@ -1,12 +1,6 @@
 <template>
-    <div v-if="isVisible" class="modal">
-        <div
-            class="modal-container"
-            :class="{
-                'translate-y-0 opacity-100': showModal,
-                '-translate-y-12 opacity-0': !showModal,
-            }"
-        >
+    <div class="modal">
+        <div class="modal-container">
             <!-- Modal Header -->
             <div class="modal-header">
                 <h2 class="text-lg font-bold">{{ title }}</h2>
@@ -36,26 +30,27 @@ defineProps({
     title: String,
 });
 
-const isVisible = ref(false);
-const showModal = ref(false);
+// const showModal = ref(false);
 
-onMounted(() => {
-    isVisible.value = true;
-    setTimeout(() => {
-        showModal.value = true;
-    }, 50);
-});
+// onMounted(() => {
+//     showModal.value = false;
+//     setTimeout(() => {
+//         showModal.value = true;
+//     }, 100);
+// });
 
-onBeforeUnmount(() => {
-    isVisible.value = false;
-});
+// onBeforeUnmount(() => {
+//     setTimeout(() => {
+//         isVisible.value = false;
+//     }, 100);
+// });
 
 const emit = defineEmits(["close"]);
 const closeModal = () => {
-    showModal.value = false;
-    setTimeout(() => {
-        isVisible.value = false;
-        emit("close");
-    }, 100);
+    // showModal.value = false;
+    // setTimeout(() => {
+    // isVisible.value = false;
+    emit("close");
+    // }, 100);
 };
 </script>

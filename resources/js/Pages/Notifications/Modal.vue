@@ -6,7 +6,10 @@
             </button>
 
             <Modal
-                v-if="activeModal == 'basicModal'"
+                :class="{
+                    show: activeModal == 'basicModal',
+                    hide: !activeModal != 'basicModal',
+                }"
                 title="Modal Title"
                 @close="closeModal"
             >
