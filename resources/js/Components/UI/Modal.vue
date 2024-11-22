@@ -30,27 +30,8 @@ defineProps({
     title: String,
 });
 
-// const showModal = ref(false);
-
-// onMounted(() => {
-//     showModal.value = false;
-//     setTimeout(() => {
-//         showModal.value = true;
-//     }, 100);
-// });
-
-// onBeforeUnmount(() => {
-//     setTimeout(() => {
-//         isVisible.value = false;
-//     }, 100);
-// });
-
 const emit = defineEmits(["close"]);
 const closeModal = () => {
-    // showModal.value = false;
-    // setTimeout(() => {
-    // isVisible.value = false;
     emit("close");
-    // }, 100);
 };
 </script>
