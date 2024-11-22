@@ -204,23 +204,27 @@ function addColorClasses(colorName, shade, colorValue) {
     };
 
 
-    // LABELS COLORS
-    let classLabel = `.label-${colorName}`;
-    let classDotedLabel = `.doted-label-${colorName}`;
+    // BADGE COLORS
+    let classBadge = `.badge-${colorName}`;
     if (shade !== 'DEFAULT' && shade !== null) {
-        classLabel += `-${shade}`;
-        classDotedLabel += `-${shade}`;
+        classBadge += `-${shade}`;
     }
 
-    colorClasses[classLabel] = {
+    colorClasses[classBadge] = {
         'color': colorValue,
         'background-color': hexToRgba(colorValue, 0.1),
     };
-    colorClasses[classDotedLabel] = {
+
+    // ALERT COLORS
+    let classAlert = `.alert-${colorName}`;
+    if (shade !== 'DEFAULT' && shade !== null) {
+        classAlert += `-${shade}`;
+    }
+
+    colorClasses[classAlert] = {
         'color': colorValue,
-    };
-    colorClasses[classDotedLabel + ' span'] = {
-        'background-color': colorValue,
+        'border-color': colorValue,
+        'background-color': hexToRgba(colorValue, 0.15),
     };
 
     return colorClasses

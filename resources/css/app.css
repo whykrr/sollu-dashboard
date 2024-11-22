@@ -1,3 +1,5 @@
+@import "@fortawesome/fontawesome-free/css/solid.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -334,11 +336,19 @@
     }
 
     /* LABEL */
-    .label {
-        @apply px-2 py-1 rounded-full text-center text-sm;
+    .badge {
+        @apply px-2 py-1 rounded-lg text-center;
     }
-    .doted-label {
-        @apply flex flex-row items-center gap-1;
+    .badge.pill {
+        @apply !rounded-full;
+    }
+    .badge-doted {
+        @apply flex flex-row items-center gap-1 !bg-transparent;
+    }
+    .badge-doted::before {
+        font-family: "Font Awesome 6 Free";
+        content: "\f111";
+        font-size: 10px;
     }
 
     /* SWUTCH BUTTON */
@@ -354,5 +364,27 @@
     .switch-button .active {
         @apply !bg-main !border-main !text-light
         dark:!bg-main-light dark:!border-main-light dark:!text-light;
+    }
+
+    /* ALERT */
+    .alert {
+        @apply block px-4 py-2 border rounded-lg;
+    }
+
+    /* MODAL */
+    .modal {
+        @apply fixed inset-0 bg-gray-900 bg-opacity-50 flex items-start p-14 justify-center z-50 transition-opacity duration-300 ease-out;
+    }
+    .modal-container {
+        @apply bg-white rounded-lg shadow-lg w-96 transition-all duration-300 ease-out transform;
+    }
+    .modal-header {
+        @apply flex justify-between items-center border-b p-4;
+    }
+    .modal-body {
+        @apply p-4;
+    }
+    .modal-footer {
+        @apply flex justify-end border-t p-4;
     }
 }

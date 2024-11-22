@@ -26,17 +26,17 @@
                 }}</TableCells>
                 <TableCells class="text-gray">{{ i.class }}</TableCells>
                 <TableCells>
-                    <div v-if="i.isActive" class="label label-success">
+                    <span v-if="i.isActive" class="badge pill badge-success">
                         Active
-                    </div>
-                    <div v-else class="label label-danger">Active</div>
+                    </span>
+                    <span v-else class="badge pill badge-danger">Active</span>
                 </TableCells>
                 <TableCells>
-                    <DotedLabel v-if="i.isActive" class="doted-label-success"
-                        >Active</DotedLabel
+                    <span v-if="i.isActive" class="badge-doted badge-success"
+                        >Active</span
                     >
-                    <DotedLabel v-else class="doted-label-danger"
-                        >Not Active</DotedLabel
+                    <span v-else class="badge-doted badge-danger"
+                        >Not Active</span
                     >
                 </TableCells>
                 <TableCells class="text-gray">{{ i.subject }}</TableCells>
@@ -55,7 +55,6 @@
 </template>
 
 <script setup>
-import DotedLabel from "@/Components/Labels/DotedLabel.vue";
 import TableBody from "@/Components/Table/TableBody.vue";
 import TableCells from "@/Components/Table/TableCells.vue";
 import TableHead from "@/Components/Table/TableHead.vue";

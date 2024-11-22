@@ -17,10 +17,13 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.7.1",
         "@fortawesome/fontawesome-svg-core": "^6.6.0",
         "@fortawesome/free-solid-svg-icons": "^6.6.0",
         "@fortawesome/vue-fontawesome": "^3.0.8",
         "@inertiajs/vue3": "^1.2.0",
-        "lodash": "^4.17.21"
+        "install": "^0.13.0",
+        "lodash": "^4.17.21",
+        "npm": "^10.9.1"
     }
 }

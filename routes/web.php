@@ -90,16 +90,16 @@ Route::prefix('notification')
     ->name('notification.')
     ->group(function () {
         Route::get('/alert', function () {
-            return inertia('ComingSoon');
+            return inertia('Notifications/Alert');
         })->name('alert');
         Route::get('/modal', function () {
-            return inertia('ComingSoon');
+            return inertia('Notifications/Modal');
         })->name('modal');
         Route::get('/badge', function () {
-            return inertia('ComingSoon');
+            return inertia('Notifications/Badge');
         })->name('badge');
         Route::get('/toast', function () {
-            return inertia('ComingSoon');
+            return inertia('Notifications/Toast');
         })->name('toast');
     });
 
