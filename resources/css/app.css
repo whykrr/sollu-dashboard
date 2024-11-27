@@ -168,11 +168,6 @@
         box-sizing: border-box;
     }
 
-    /* Widget Style */
-    .widget {
-        @apply flex flex-row text-light p-4 gap-2 rounded-lg shadow-md justify-between overflow-hidden;
-    }
-
     /* Custom Inmput Style */
     .form {
         @apply rounded-md border
@@ -409,5 +404,71 @@
     }
     .toast.show {
         @apply translate-y-0 opacity-100;
+    }
+
+    /* Widget Style */
+    .widget {
+        @apply flex flex-row text-light p-4 gap-2 rounded-lg shadow-md justify-between overflow-hidden;
+    }
+
+    .widget-progress {
+        @apply flex flex-col p-4 rounded-lg text-white shadow-md  gap-1  min-h-40 justify-between;
+    }
+    .widget-progress .widget-header {
+        @apply font-bold text-2xl;
+    }
+    .widget-progress .widget-title {
+        @apply font-medium;
+    }
+    .widget-progress .widget-bar {
+        @apply w-full bg-gray-200/30 rounded-full h-2.5;
+    }
+    .widget-progress .widget-bar .widget-value {
+        @apply bg-white h-2.5 rounded-full;
+    }
+    .widget-progress .widget-helper {
+        @apply text-sm text-white/50;
+    }
+
+    .widget-chart {
+        @apply flex flex-col rounded-lg p-4 pb-0 text-white shadow-md justify-between min-h-44;
+    }
+    .widget-chart .canvas {
+        @apply max-h-20;
+    }
+
+    .widget-card {
+        @apply flex flex-col bg-white rounded-lg pt-4 overflow-hidden min-h-44 justify-between;
+    }
+    .widget-card .widget-icon {
+        @apply ml-auto text-gray-800/50 px-4;
+    }
+    .widget-card .widget-container {
+        @apply px-4;
+    }
+    .widget-card .widget-container .widget-title {
+        @apply text-lg font-bold;
+    }
+    .widget-card .widget-container .widget-subtitle {
+        @apply text-sm mb-2 text-dark/50;
+    }
+    .widget-card .widget-container .widget-description {
+        @apply bg-main py-2 -mx-4 px-4 text-white;
+    }
+
+    .widget-highlight {
+        @apply flex flex-row rounded-lg overflow-hidden min-h-20 bg-white;
+    }
+    .widget-highlight .widget-icon {
+        @apply flex p-4 text-white min-w-20;
+    }
+    .widget-highlight .widget-content {
+        @apply flex flex-col px-4 py-2 w-full justify-center;
+    }
+    .widget-highlight .widget-content .widget-title {
+        @apply font-bold text-lg;
+    }
+    .widget-highlight .widget-content .widget-description {
+        @apply text-sm text-dark/50;
     }
 }

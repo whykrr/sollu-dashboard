@@ -52,7 +52,7 @@ Route::prefix('buttons')
     });
 
 Route::get('/charts', function () {
-    return inertia('ComingSoon');
+    return inertia('Charts/Index');
 })->name('charts');
 
 // Forms
@@ -104,7 +104,7 @@ Route::prefix('notification')
     });
 
 Route::get('/widgets', function () {
-    return inertia('ComingSoon');
+    return inertia('Widgets/Index');
 })->name('widgets');
 
 // Pages

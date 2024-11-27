@@ -32,7 +32,6 @@
     </Card>
 </template>
 <script setup>
-import DotedLabel from "@/Components/Labels/DotedLabel.vue";
 import TableBody from "@/Components/Table/TableBody.vue";
 import TableCells from "@/Components/Table/TableCells.vue";
 import TableHead from "@/Components/Table/TableHead.vue";
