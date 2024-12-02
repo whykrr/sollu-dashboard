@@ -438,7 +438,7 @@
     }
 
     .widget-card {
-        @apply flex flex-col bg-white rounded-lg pt-4 overflow-hidden min-h-44 justify-between;
+        @apply flex flex-col bg-white rounded-lg pt-4 overflow-hidden min-h-44 justify-between shadow-lg;
     }
     .widget-card .widget-icon {
         @apply ml-auto text-gray-800/50 px-4;
@@ -457,7 +457,7 @@
     }
 
     .widget-highlight {
-        @apply flex flex-row rounded-lg overflow-hidden min-h-20 bg-white;
+        @apply flex flex-row rounded-lg overflow-hidden min-h-20 bg-white shadow-lg;
     }
     .widget-highlight .widget-icon {
         @apply flex p-4 text-white min-w-20;

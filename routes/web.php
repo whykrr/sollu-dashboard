@@ -112,10 +112,10 @@ Route::prefix('pages')
     ->name('pages.')
     ->group(function () {
         Route::get('/login', function () {
-            return inertia('Colors/Index');
+            return inertia('Pages/Login');
         })->name('login');
         Route::get('/register', function () {
-            return inertia('Colors/Index');
+            return inertia('Pages/Register');
         })->name('register');
     });
 
@@ -124,9 +124,9 @@ Route::prefix('error-pages')
     ->name('error-pages.')
     ->group(function () {
         Route::get('/error-404', function () {
-            return inertia('Colors/Index');
+            return inertia('Errors/Error404');
         })->name('error-404');
         Route::get('/error-500', function () {
-            return inertia('Colors/Index');
+            return inertia('Errors/Error500');
         })->name('error-500');
     });
