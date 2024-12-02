@@ -1,7 +1,7 @@
 <template>
-    <div class="switch-button">
+    <div class="btn-group">
         <button
-            class="left"
+            class="btn btn-outline-main"
             :class="{
                 active: isViewList,
             }"

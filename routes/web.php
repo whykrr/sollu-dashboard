@@ -29,7 +29,7 @@ Route::prefix('base')
             return inertia('Base/Placeholders');
         })->name('placeholders');
         Route::get('/spinners', function () {
-            return inertia('ComingSoon');
+            return inertia('Base/Spinners');
         })->name('spinners');
         Route::get('/tables', function () {
             return inertia('Base/Tables');

@@ -1,42 +1,59 @@
 <template>
     <Card title="Table">
-        <TableResponsive>
-            <TableHead class="bg-main/10">
-                <TableCells class="rounded-l-md">Name</TableCells>
-                <TableCells>Class</TableCells>
-                <TableCells>Subject</TableCells>
-                <TableCells>Email</TableCells>
-                <TableCells>Address</TableCells>
-                <TableCells>Gender</TableCells>
-            </TableHead>
-            <TableBody>
-                <tr class="h-2"></tr>
-                <TableRowLink
-                    v-for="i in dataTable"
-                    to="#"
-                    class="text-nowrap"
-                    :key="i.id"
-                >
-                    <TableCells class="font-bold rounded-l-md">{{
-                        i.name
-                    }}</TableCells>
-                    <TableCells class="text-gray">{{ i.class }}</TableCells>
-                    <TableCells class="text-gray">{{ i.subject }}</TableCells>
-                    <TableCells class="font-bold">{{ i.email }}</TableCells>
-                    <TableCells class="text-gray">{{ i.address }}</TableCells>
-
-                    <TableCells class="text-gray">{{ i.gender }}</TableCells>
-                </TableRowLink>
-            </TableBody>
-        </TableResponsive>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Class</td>
+                        <td>Subject</td>
+                        <td>Email</td>
+                        <td>Address</td>
+                        <td>Gender</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="i in dataTable" class="text-nowrap" :key="i.id">
+                        <td class="font-bold">{{ i.name }}</td>
+                        <td class="text-gray">{{ i.class }}</td>
+                        <td class="text-gray">{{ i.subject }}</td>
+                        <td class="font-bold">{{ i.email }}</td>
+                        <td class="text-gray">{{ i.address }}</td>
+                        <td class="text-gray">{{ i.gender }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </Card>
+    <Card title="Table Hovered" class="mt-4">
+        <div class="table-responsive">
+            <table class="table table-hovered">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Class</td>
+                        <td>Subject</td>
+                        <td>Email</td>
+                        <td>Address</td>
+                        <td>Gender</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="h-2"></tr>
+                    <tr v-for="i in dataTable" class="text-nowrap" :key="i.id">
+                        <td class="font-bold">{{ i.name }}</td>
+                        <td class="text-gray">{{ i.class }}</td>
+                        <td class="text-gray">{{ i.subject }}</td>
+                        <td class="font-bold">{{ i.email }}</td>
+                        <td class="text-gray">{{ i.address }}</td>
+                        <td class="text-gray">{{ i.gender }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </Card>
 </template>
 <script setup>
-import TableBody from "@/Components/Table/TableBody.vue";
-import TableCells from "@/Components/Table/TableCells.vue";
-import TableHead from "@/Components/Table/TableHead.vue";
-import TableResponsive from "@/Components/Table/TableResponsive.vue";
-import TableRowLink from "@/Components/Table/TableRowLink.vue";
 import Card from "@/Components/UI/Card.vue";
 const dataTable = [
     {

@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-2 gap-4">
         <div
-            class="flex flex-col bg-light/15 rounded-md"
+            class="flex flex-col border-2 border-light rounded-md"
             v-for="i in data"
             :id="i.id"
         >
@@ -15,11 +15,11 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-2">
-                    <button class="btn-info text-sm">
+                    <button class="btn btn-info text-sm">
                         <fa icon="fa-search" />
                         Details
                     </button>
-                    <button class="btn-danger text-sm">
+                    <button class="btn btn-danger text-sm">
                         <fa icon="fa-trash" />
                         Delete
                     </button>
@@ -30,13 +30,6 @@
 </template>
 
 <script setup>
-import TableBody from "@/Components/Table/TableBody.vue";
-import TableCells from "@/Components/Table/TableCells.vue";
-import TableHead from "@/Components/Table/TableHead.vue";
-import TableResponsive from "@/Components/Table/TableResponsive.vue";
-import TableRow from "@/Components/Table/TableRow.vue";
-import TableRowLink from "@/Components/Table/TableRowLink.vue";
-
 const data = [
     {
         id: 1,

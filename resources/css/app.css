@@ -168,6 +168,37 @@
         box-sizing: border-box;
     }
 
+    /* SPINNER */
+    .spinner {
+        @apply w-10 h-10 border-4 border-main border-t-transparent rounded-full animate-spin;
+    }
+
+    /* TABLES */
+    .table-responsive {
+        @apply overflow-x-auto;
+    }
+    .table {
+        @apply min-w-full border-separate border-spacing-x-0;
+    }
+    .table thead {
+        @apply font-bold mb-2;
+    }
+    .table thead tr {
+        @apply bg-main/15;
+    }
+    .table thead tr td {
+        @apply px-2 py-3 first:rounded-l-md last:rounded-r-md;
+    }
+    .table.table-hovered tbody tr {
+        @apply hover:bg-slate-100 dark:hover:bg-slate-100/10 cursor-pointer;
+    }
+    .table tbody tr td {
+        @apply px-1 py-1.5 first:rounded-l-md last:rounded-r-md;
+    }
+    .table.table-hovered tbody tr td {
+        @apply px-2 py-3 first:rounded-l-md last:rounded-r-md;
+    }
+
     /* Custom Inmput Style */
     .form {
         @apply rounded-md border
@@ -224,7 +255,7 @@
     }
 
     .form-group {
-        @apply flex rounded-lg items-center bg-light border-1 focus-within:border-main py-0 overflow-hidden;
+        @apply flex rounded items-center bg-light border-1 focus-within:border-main py-0 overflow-hidden;
     }
 
     .form-group span,
@@ -344,21 +375,6 @@
         font-family: "Font Awesome 6 Free";
         content: "\f111";
         font-size: 10px;
-    }
-
-    /* SWUTCH BUTTON */
-    .switch-button {
-        @apply flex flex-row;
-    }
-    .switch-button .left {
-        @apply bg-transparent border-1 border-neutral-400 text-neutral-400 dark:border-neutral-600 dark:text-neutral-600 rounded-none rounded-l-md w-10 place-content-center py-1.5;
-    }
-    .switch-button .right {
-        @apply bg-transparent border-1 border-l-0 border-neutral-400 text-neutral-400 dark:border-neutral-600 dark:text-neutral-600 rounded-none rounded-r-md w-10 place-content-center py-1.5;
-    }
-    .switch-button .active {
-        @apply !bg-main !border-main !text-light
-        dark:!bg-main-light dark:!border-main-light dark:!text-light;
     }
 
     /* ALERT */

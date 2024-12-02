@@ -203,6 +203,11 @@ function addColorClasses(colorName, shade, colorValue) {
         'color': '#ffffff',
     };
 
+    colorClasses['.btn-check:checked + ' + classBtnHighlight] = {
+        'background-color': colorValue,
+        'color': '#ffffff',
+    };
+
 
     // BADGE COLORS
     let classBadge = `.badge-${colorName}`;

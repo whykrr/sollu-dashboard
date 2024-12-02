@@ -127,10 +127,10 @@
 </template>
 
 <script setup>
-import Tab from "@/Components/Tab/Tab.vue";
-import TabContent from "@/Components/Tab/TabContent.vue";
-import TabNav from "@/Components/Tab/TabNav.vue";
-import TabVertical from "@/Components/Tab/TabVertical.vue";
+import Tab from "@/Components/UI/Tab.vue";
+import TabContent from "@/Components/UI/TabContent.vue";
+import TabNav from "@/Components/UI/TabNav.vue";
+import TabVertical from "@/Components/UI/TabVertical.vue";
 import Card from "@/Components/UI/Card.vue";
 import { Link } from "@inertiajs/vue3";
 import { ref } from "vue";
