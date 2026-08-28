@@ -1,9 +1,16 @@
 ---
 name: sollu-api-documentation
-description: Aturan untuk memperbarui dokumentasi API (Postman / Swagger) setiap kali ada perubahan pada struktur request atau response API di proyek Sollu. Trigger skill ini saat memodifikasi API Endpoint.
+description: >-
+  API Documentation standards (Postman / OpenAPI / Swagger) for Sollu App.
+  MUST trigger whenever creating or modifying API routes (routes/api.php), FormRequests, Controller JSON responses,
+  JsonResource classes, or modifying API data structures.
 ---
 
 # Sollu API Documentation Maintenance
+
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Core rules for controllers, JsonResources, and API endpoints.
+- **`sollu-code-quality`**: Pre-completion linter & verification standards.
 
 ## Tujuan
 Dokumentasi API adalah kontrak antara Backend dan Frontend/Client. Setiap kali terjadi perubahan pada kode yang memengaruhi *request* (parameter, body, header) atau *response* (struktur JSON, tipe data, HTTP status) API, kamu **DIWAJIBKAN** untuk memperbarui dokumentasi API yang relevan agar selalu *up-to-date*.

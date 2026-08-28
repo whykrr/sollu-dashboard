@@ -8,6 +8,10 @@ description: >-
 
 # Aturan Pembuatan PDF di Sollu App
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Controller actions and data preparation for PDF views.
+- **`sollu-code-quality`**: Pint linter (`vendor/bin/pint`) & pre-completion verification.
+
 Setiap kali Anda diminta membuat fitur ekspor dokumen ke format PDF (misal: Laporan, Invoice, PO, dsb), Anda **diwajibkan** untuk menerapkan struktur dan *layout* generik yang telah disepakati.
 
 ## 1. Penggunaan Generic Header Template

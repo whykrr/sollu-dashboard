@@ -8,6 +8,11 @@ description: >-
 
 # Sollu App Service Layer Unit Testing Standards
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Domain service class conventions (Single vs Split services) and database transactions.
+- **`sollu-code-quality`**: Unit testing execution order and DoD checklist (`vendor/bin/phpunit`).
+- **`laravel-expert`**: Mocking best practices and pure unit testing techniques.
+
 ## 1. Wajib Unit Test
 Setiap perubahan, perbaikan bug, penambahan fitur (enhancement), atau pembuatan **Service class** baru, **WAJIB** disertai dengan pembuatan atau pembaruan **Unit Test** yang merepresentasikan logika tersebut.
 

@@ -9,6 +9,11 @@ description: >-
 
 # Sollu Frontend Rules (Vue 3 / Inertia / Tailwind v4)
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-integration-testing`**: MANDATORY visual & functional browser verification with `browsermcp`.
+- **`sollu-roles-permissions`**: Frontend RBAC authorization using `@/Composable/useAuth`.
+- **`sollu-code-quality`**: ESLint formatting (`npm run fix:eslint`) and Vite build verification (`npm run build`).
+
 Standard pengembangan antarmuka (UI) Sollu App berbasis Vue 3 (Composition API `<script setup>`), Inertia.js 1.2, dan Tailwind CSS v4.
 
 ## 1. 🚨 Anti-Hallucination Core Rules

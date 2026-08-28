@@ -8,6 +8,11 @@ description: >-
 
 # Aturan Ekspor & Impor Excel di Sollu App
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Job queueing, controller actions, and database transactions.
+- **`sollu-unit-testing`**: Service/Job unit testing standards.
+- **`sollu-code-quality`**: Pint linter (`vendor/bin/pint`) & pre-completion verification.
+
 Setiap pembuatan fitur **Ekspor Excel** atau **Impor Excel** wajib menggunakan arsitektur *asynchronous (background job)* dan standar format bawaan proyek.
 
 ## 1. Ekspor Excel Async (`AbstractExcelExportJob`)

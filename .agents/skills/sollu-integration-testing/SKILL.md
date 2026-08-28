@@ -9,6 +9,10 @@ description: >-
 
 # Sollu App Web Integration & E2E Testing Standard
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-frontend`**: Component standards for `<MainPage>`, `<PopUpPage>`, and `@/Components/Form/`.
+- **`sollu-code-quality`**: Definition of Done & browser console log inspection rules.
+
 Standard pengujian integrasi antarmuka web (End-to-End / E2E Integration Testing) pada aplikasi **Sollu App** menggunakan MCP Web (`browsermcp`).
 
 ## 1. Prerequisites & Dev Server Verification

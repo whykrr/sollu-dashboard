@@ -8,6 +8,12 @@ description: >-
 
 # Sollu Code Quality & Verification Standards
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Pint formatting (`vendor/bin/pint`), thin controllers, and response constants.
+- **`sollu-frontend`**: ESLint formatting (`npm run fix:eslint`) and Vite build verification (`npm run build`).
+- **`sollu-unit-testing`**: Service unit test coverage and isolation.
+- **`sollu-integration-testing`**: E2E visual & functional browser verification with `browsermcp`.
+
 Standar kualitas kode, pengujian, pembersihan otomatis (*linter*), serta kriteria *Definition of Done* untuk aplikasi Sollu App.
 
 ## 1. Automated Code Formatting & Linting

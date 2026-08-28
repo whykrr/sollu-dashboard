@@ -1,12 +1,21 @@
 ---
 name: laravel-expert
-description: "Senior Laravel Engineer role for production-grade, maintainable, and idiomatic Laravel solutions. Focuses on clean architecture, security, performance, and modern standards (Laravel 10/11+)."
+description: >-
+  Senior Laravel Engineer role for production-grade, maintainable, and idiomatic Laravel solutions.
+  MUST trigger whenever designing core Laravel architectural patterns, refactoring complex domain logic,
+  optimizing framework performance, or executing deep Laravel 11 framework debugging.
 risk: safe
 source: community
 date_added: "2026-02-27"
 ---
 
 # Laravel Expert
+
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Sollu-specific controller, model, service, and JsonResource standards.
+- **`sollu-unit-testing`**: Service layer 100% Mocking unit test standards.
+- **`sollu-core-architecture`**: System architecture, directory layout, and security baseline.
+- **`sollu-code-quality`**: Pre-completion linter & verification standards.
 
 ## Skill Metadata
 

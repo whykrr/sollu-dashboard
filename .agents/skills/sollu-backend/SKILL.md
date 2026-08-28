@@ -10,6 +10,14 @@ description: >-
 
 # Sollu Backend Rules (Laravel 11.9+)
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-unit-testing`**: MANDATORY 100% Mocking Unit Tests whenever creating or modifying Service classes.
+- **`sollu-api-documentation`**: MANDATORY API doc update whenever request/response structures change.
+- **`sollu-roles-permissions`**: MANDATORY RBAC checks via `$this->authorize` and `BaseInertiaFormRequest`.
+- **`sollu-excel`**: Asynchronous Excel export/import background job standards.
+- **`sollu-pdf`**: Generic header Blade PDF generation standards.
+- **`sollu-code-quality`**: Pre-completion Pint linter (`vendor/bin/pint`) & DoD checklist.
+
 ## 0. Mandatory Database Verification (Live Database Condition Check)
 
 - **MANDATORY BEFORE & DURING BACKEND CHANGES:** Setiap kali membuat atau memodifikasi file backend (Model, Controller, Form Request, Service, DB Migration, JsonResource), **WAJIB** melakukan verifikasi kondisi skema database asli terlebih dahulu menggunakan MCP tool `sollu-db` (query SQL `information_schema` atau `pg_attribute`).

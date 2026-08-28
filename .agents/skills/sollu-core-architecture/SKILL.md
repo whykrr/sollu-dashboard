@@ -9,6 +9,12 @@ description: >-
 
 # Sollu Core Architecture & Tech Stack
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Controller, Service, Model, and FormRequest standards.
+- **`sollu-frontend`**: Vue 3, Inertia 1.2, Tailwind CSS v4, and PopUpPage standards.
+- **`sollu-roles-permissions`**: Spatie RBAC, PermissionEnum, and authorization rules.
+- **`laravel-expert`**: Framework architectural patterns and deep Laravel 11 engineering.
+
 Standard arsitektur, teknologi, dan fondasi pengembangan aplikasi **Sollu App**.
 
 ## 1. Official Technology Stack

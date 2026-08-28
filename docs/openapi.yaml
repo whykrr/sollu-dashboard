@@ -4,7 +4,7 @@ info:
     version: 1.0.0
     description: API Spesifikasi untuk Aplikasi POS Client (Flutter) & Pairing Perangkat
 servers:
-    - url: http://dashboard.sollu.test/api/pos
+    - url: http://app.sollu.test/api/pos
       description: Local Server
 components:
     securitySchemes:

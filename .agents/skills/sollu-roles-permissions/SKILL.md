@@ -8,6 +8,11 @@ description: >-
 
 # Sollu Roles & Permissions Standard (RBAC)
 
+## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-backend`**: Authorization in FormRequests (`BaseInertiaFormRequest`) and Controllers (`$this->authorize`).
+- **`sollu-frontend`**: Frontend UI permission checks using `@/Composable/useAuth`.
+- **`sollu-code-quality`**: Strict prohibition against hardcoding roles or string comparisons.
+
 Aturan pengelolaan Hak Akses (Role-Based Access Control / RBAC) menggunakan package `spatie/laravel-permission` pada Sollu App.
 
 ## 1. Permission Registration Workflow

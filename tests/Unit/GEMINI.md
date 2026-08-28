@@ -2,10 +2,11 @@
 trigger: always_on
 ---
 
-# Wajib Perhatikan: Standar Unit Test
+# Wajib Perhatikan: Standar Unit Testing Service Layer
 
-Karena Anda sedang bekerja di direktori `tests/Unit`, Anda **WAJIB** menerapkan standar dari `sollu-unit-testing`.
+Saat bekerja di `tests/Unit`, Anda **WAJIB** menerapkan standar dari skill `sollu-unit-testing`, `sollu-backend`, dan `laravel-expert`:
 
-1. **ISOLASI IN-MEMORY:** Dilarang keras menggunakan database fisik. Wajib menggunakan `RefreshDatabase` dengan `sqlite:memory` agar test cepat dan bersih.
-2. Pastikan file test Service diletakkan pada folder yang mencerminkan namespace asli (misal: `tests/Unit/Services/...`).
-3. Selalu periksa coverage code untuk memastikan 100% logika tercover. Mocks (seperti Mockery) hanya untuk service eksternal/class pendukung.
+1. **Service Layer Testing Only:** Unit testing difokuskan khusus untuk Service Layer (`tests/Unit/Services/...`).
+2. **100% Pure Isolation & In-Memory:** Dilarang keras menyentuh database fisik. Wajib gunakan `RefreshDatabase` dengan `sqlite:memory` dan Mockery untuk dependensi eksternal.
+3. **Struktur & Penamaan:** Lokasi file test WAJIB menduplikasi struktur namespace Service asli (misal: `App\Services\App\Inventory\StockAdjustmentService` -> `tests/Unit/Services/App/Inventory/StockAdjustmentServiceTest.php`).
+4. **100% Code Coverage:** Verifikasi coverage suite unit test dengan `vendor/bin/phpunit`.
