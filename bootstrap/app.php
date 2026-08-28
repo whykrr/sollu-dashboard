@@ -50,6 +50,10 @@ return Application::configure(basePath: dirname(__DIR__))
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
+
         $middleware->redirectGuestsTo(function (Request $request) {
             if (str_starts_with($request->getHost(), 'cockpit.') || $request->getHost() === config('domain.cockpit')) {
                 return route('cockpit.login');
@@ -73,7 +77,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
-            if ($request->is('api/*')) {
+            if ($request->is('api/*') || $request->getHost() === config('domain.api')) {
                 return true;
             }
 

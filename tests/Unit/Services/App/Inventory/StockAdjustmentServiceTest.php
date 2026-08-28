@@ -1,0 +1,198 @@
+<?php
+
+namespace Tests\Unit\Services\App\Inventory;
+
+use App\Enums\AdjustmentReason;
+use App\Enums\AdjustmentStatus;
+use App\Models\Business;
+use App\Models\Inventory\InventoryBalance;
+use App\Models\Inventory\InventoryItem;
+use App\Models\Inventory\StockAdjustment;
+use App\Models\Outlet;
+use App\Models\User;
+use App\Services\App\Inventory\StockAdjustmentService;
+use App\Services\Shared\ActivityLogService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use Tests\TestCase;
+
+class StockAdjustmentServiceTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected ActivityLogService $activityLogServiceMock;
+    protected StockAdjustmentService $service;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
+        $this->activityLogServiceMock->shouldReceive('log')->andReturnNull();
+
+        $this->service = new StockAdjustmentService($this->activityLogServiceMock);
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    private function setupBaseData()
+    {
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $user = User::first();
+        $business = $user->business;
+        $outlet = $business->outlets()->first();
+        
+        $inventoryItem = InventoryItem::firstOrCreate([
+            'business_id' => $business->id,
+        ], [
+            'name' => 'Flour',
+            'sku' => 'FL-001',
+            'item_type' => 'raw_material',
+        ]);
+
+        return [$user, $business, $outlet, $inventoryItem];
+    }
+
+    public function test_it_creates_stock_adjustment()
+    {
+        [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
+
+        $data = [
+            'outlet_id' => $outlet->id,
+            'reason' => AdjustmentReason::Correction->value,
+            'notes' => 'Test notes',
+            'items' => [
+                [
+                    'inventory_item_id' => $inventoryItem->id,
+                    'qty_change' => 10,
+                    'unit_cost' => 1000,
+                    'description' => 'Add 10 items',
+                ]
+            ]
+        ];
+
+        $adj = $this->service->create($data, $user);
+
+        $this->assertInstanceOf(StockAdjustment::class, $adj);
+        $this->assertEquals(AdjustmentStatus::Draft, $adj->status);
+        $this->assertEquals($data['reason'], $adj->reason->value);
+        $this->assertCount(1, $adj->items);
+        $this->assertStringStartsWith('ADJ-', $adj->adjustment_number);
+    }
+
+    public function test_it_approves_stock_adjustment()
+    {
+        [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
+
+        $data = [
+            'outlet_id' => $outlet->id,
+            'reason' => AdjustmentReason::Correction->value,
+            'notes' => 'Test',
+            'items' => [
+                [
+                    'inventory_item_id' => $inventoryItem->id,
+                    'qty_change' => 5,
+                    'unit_cost' => 100,
+                    'description' => 'Add 5',
+                ]
+            ]
+        ];
+        $adj = $this->service->create($data, $user);
+
+        $approvedAdj = $this->service->approve($adj, $user);
+
+        $this->assertEquals(AdjustmentStatus::Approved, $approvedAdj->status);
+
+        $balance = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first();
+        $this->assertEquals(5, $balance->current_stock);
+        
+        $movement = $approvedAdj->inventoryMovements()->first();
+        $this->assertNotNull($movement);
+        $this->assertEquals(5, $movement->qty_change);
+    }
+
+    public function test_it_fails_to_approve_if_stock_becomes_negative()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Stok tidak mencukupi');
+
+        [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
+
+        $data = [
+            'outlet_id' => $outlet->id,
+            'reason' => AdjustmentReason::Waste->value,
+            'notes' => 'Test',
+            'items' => [
+                [
+                    'inventory_item_id' => $inventoryItem->id,
+                    'qty_change' => -5,
+                    'unit_cost' => null,
+                    'description' => 'Remove 5',
+                ]
+            ]
+        ];
+        $adj = $this->service->create($data, $user);
+
+        $this->service->approve($adj, $user);
+    }
+
+    public function test_it_rejects_stock_adjustment()
+    {
+        [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
+
+        $data = [
+            'outlet_id' => $outlet->id,
+            'reason' => AdjustmentReason::Correction->value,
+            'notes' => 'Test',
+            'items' => [
+                [
+                    'inventory_item_id' => $inventoryItem->id,
+                    'qty_change' => 5,
+                    'unit_cost' => 100,
+                    'description' => 'Add 5',
+                ]
+            ]
+        ];
+        $adj = $this->service->create($data, $user);
+
+        $rejectedAdj = $this->service->reject($adj, 'Wrong items', $user);
+
+        $this->assertEquals(AdjustmentStatus::Rejected, $rejectedAdj->status);
+        $this->assertEquals('Wrong items', $rejectedAdj->notes);
+    }
+
+    public function test_it_voids_approved_stock_adjustment()
+    {
+        [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
+
+        $data = [
+            'outlet_id' => $outlet->id,
+            'reason' => AdjustmentReason::Correction->value,
+            'notes' => 'Test',
+            'items' => [
+                [
+                    'inventory_item_id' => $inventoryItem->id,
+                    'qty_change' => 10,
+                    'unit_cost' => 100,
+                    'description' => 'Add 10',
+                ]
+            ]
+        ];
+        $adj = $this->service->create($data, $user);
+        $this->service->approve($adj, $user);
+
+        $balanceBefore = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first()->current_stock;
+        $this->assertEquals(10, $balanceBefore);
+
+        $voidedAdj = $this->service->void($adj, $user);
+
+        $this->assertEquals(AdjustmentStatus::Voided, $voidedAdj->status);
+
+        $balanceAfter = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first()->current_stock;
+        $this->assertEquals(0, $balanceAfter);
+    }
+}

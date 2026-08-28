@@ -101,3 +101,41 @@ if (app()->environment('local', 'development')) {
         return redirect('/');
     })->name('bypass.auth');
 }
+
+/*
+|--------------------------------------------------------------------------
+| Legacy API Route Bridge (Backward Compatibility)
+|--------------------------------------------------------------------------
+|
+| Provides seamless fallback for legacy POS apps and webhooks sending
+| requests to http://app.sollu.test/api/pos/... or http://app.sollu.test/api/midtrans/...
+|
+*/
+Route::prefix('api')->middleware(['api', \App\Http\Middleware\AttachApiDeprecationHeader::class])->group(function () {
+    Route::post('midtrans/notification', \App\Http\Controllers\API\Midtrans\NotificationController::class)
+        ->name('legacy.midtrans.notification');
+
+    Route::prefix('pos')->name('legacy.api.pos.')->group(function () {
+        Route::post('/device/connect', [\App\Http\Controllers\API\POS\DeviceController::class, 'connect'])
+            ->name('legacy.device.connect');
+
+        Route::middleware(['auth:sanctum', 'pos.device'])->group(function () {
+            Route::get('/device/status', [\App\Http\Controllers\API\POS\DeviceController::class, 'checkStatus'])->name('legacy.device.status');
+            Route::get('/sync/master', [\App\Http\Controllers\API\POS\SyncController::class, 'masterData'])->name('legacy.sync.master');
+            Route::get('/employees', [\App\Http\Controllers\API\POS\EmployeeController::class, 'index'])->name('legacy.employees.index');
+            Route::put('/employees/pin', [\App\Http\Controllers\API\POS\EmployeeController::class, 'updatePin'])->name('legacy.employees.pin.update');
+            Route::post('/transactions', [\App\Http\Controllers\API\POS\TransactionController::class, 'store'])->name('legacy.transactions.store');
+
+            Route::prefix('shifts')->name('legacy.shifts.')->group(function () {
+                Route::post('/sync', [\App\Http\Controllers\API\POS\ShiftController::class, 'sync'])->name('legacy.sync');
+                Route::post('/open', [\App\Http\Controllers\API\POS\ShiftController::class, 'open'])->name('legacy.open');
+                Route::post('/close', [\App\Http\Controllers\API\POS\ShiftController::class, 'close'])->name('legacy.close');
+                Route::post('/cash-log', [\App\Http\Controllers\API\POS\ShiftController::class, 'cashLog'])->name('legacy.cash-log');
+            });
+
+            Route::put('/settings/printer', [\App\Http\Controllers\API\POS\SettingController::class, 'updatePrinter'])->name('legacy.settings.printer.update');
+            Route::post('/logs/error', [\App\Http\Controllers\API\POS\LogController::class, 'error'])->name('legacy.logs.error');
+        });
+    });
+});
+
