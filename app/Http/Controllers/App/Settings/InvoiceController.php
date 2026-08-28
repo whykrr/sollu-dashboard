@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\App\Settings;
-use App\Services\App\Outlet\ManageOutletStatusService;
 
 use App\Constants\FlashDataVariable;
 use App\Http\Controllers\Controller;

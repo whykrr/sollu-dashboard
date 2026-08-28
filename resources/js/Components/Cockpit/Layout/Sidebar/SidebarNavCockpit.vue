@@ -1,5 +1,5 @@
 <template>
-    <nav class="sidebar-navigation">
+    <nav class="sidebar-navigation cockpit-navigation">
         <div class="navigation-list">
             <template v-for="(sidebar, index) in sidebars" :key="index">
                 <div
@@ -12,7 +12,7 @@
                             {{ sidebar.label }}
                         </div>
                     </div>
-                    <div v-else class="py-0.5">
+                    <div v-else class="py-0.5 text-xs">
                         {{ sidebar.label }}
                     </div>
                 </div>
@@ -55,15 +55,13 @@
         </div>
     </nav>
 </template>
+
 <script setup>
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import NavigationDropdown from '@/Components/Layout/Sidebar/NavigationDropdown.vue';
 import NavigationItem from '@/Components/Layout/Sidebar/NavigationItem.vue';
 import { cockpitSidebars } from '@/Composable/Sidebar/cockpit';
-import { useAppStore } from '@/store/app';
-
-const appStore = useAppStore();
 
 const activeMenu = computed(() => {
     const _ = usePage().url;
@@ -90,3 +88,18 @@ const sidebars = computed(() => {
     return cockpitSidebars;
 });
 </script>
+
+<style>
+.cockpit-navigation .nav-item {
+    @apply hover:bg-indigo-50/70 hover:text-indigo-600 transition-all duration-150;
+}
+.cockpit-navigation .nav-item.active {
+    @apply !bg-indigo-50 !text-indigo-700 font-bold shadow-2xs;
+}
+.cockpit-navigation .nav-dropdown-item:hover {
+    @apply hover:bg-indigo-50/70 hover:text-indigo-600;
+}
+.cockpit-navigation .nav-dropdown-item.active {
+    @apply !bg-indigo-50 !text-indigo-700 font-bold;
+}
+</style>

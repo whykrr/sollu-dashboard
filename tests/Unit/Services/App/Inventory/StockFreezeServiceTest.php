@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App\Inventory;
 
-use App\Models\Outlet;
 use App\Models\User;
 use App\Services\App\Inventory\StockFreezeService;
 use App\Services\Shared\ActivityLogService;
@@ -15,12 +14,13 @@ class StockFreezeServiceTest extends TestCase
     use RefreshDatabase;
 
     protected ActivityLogService $activityLogServiceMock;
+
     protected StockFreezeService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->activityLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -39,14 +39,14 @@ class StockFreezeServiceTest extends TestCase
         $user = User::first();
         $business = $user->business;
         $outlet = clone $business->outlets()->first(); // clone to avoid cache
-        
+
         return [$user, $business, $outlet];
     }
 
     public function test_it_freezes_stock()
     {
         [$user, $business, $outlet] = $this->setupBaseData();
-        
+
         $outlet->is_stock_frozen = false;
         $outlet->save();
 
@@ -62,7 +62,7 @@ class StockFreezeServiceTest extends TestCase
     public function test_it_unfreezes_stock()
     {
         [$user, $business, $outlet] = $this->setupBaseData();
-        
+
         $outlet->is_stock_frozen = true;
         $outlet->save();
 
@@ -78,12 +78,12 @@ class StockFreezeServiceTest extends TestCase
     public function test_it_asserts_not_frozen_successfully()
     {
         [$user, $business, $outlet] = $this->setupBaseData();
-        
+
         $outlet->is_stock_frozen = false;
         $outlet->save();
 
         $this->expectNotToPerformAssertions();
-        
+
         $this->service->assertNotFrozen($outlet);
     }
 
@@ -93,7 +93,7 @@ class StockFreezeServiceTest extends TestCase
         $this->expectExceptionMessage('sedang dibekukan');
 
         [$user, $business, $outlet] = $this->setupBaseData();
-        
+
         $outlet->is_stock_frozen = true;
         $outlet->save();
 

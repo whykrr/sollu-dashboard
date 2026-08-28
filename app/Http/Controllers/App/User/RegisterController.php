@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\App\User;
-use App\Services\App\Outlet\OutletProvisioningService;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\User\RegisterRequest;

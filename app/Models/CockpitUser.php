@@ -18,4 +18,17 @@ class CockpitUser extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+            'last_login_at' => 'datetime',
+        ];
+    }
 }

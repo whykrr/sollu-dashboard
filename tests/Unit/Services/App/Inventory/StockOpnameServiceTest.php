@@ -18,12 +18,13 @@ class StockOpnameServiceTest extends TestCase
     use RefreshDatabase;
 
     protected ActivityLogService $activityLogServiceMock;
+
     protected StockOpnameService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->activityLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -42,7 +43,7 @@ class StockOpnameServiceTest extends TestCase
         $user = User::first();
         $business = $user->business;
         $outlet = clone $business->outlets()->first();
-        
+
         $inventoryItem = InventoryItem::firstOrCreate([
             'business_id' => $business->id,
         ], [
@@ -66,8 +67,8 @@ class StockOpnameServiceTest extends TestCase
                     'inventory_item_id' => $inventoryItem->id,
                     'system_qty' => 10,
                     'actual_qty' => 8,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $opname = $this->service->createOpname($data, $user);
@@ -86,14 +87,14 @@ class StockOpnameServiceTest extends TestCase
         $opname = $this->service->createOpname([
             'outlet_id' => $outlet->id,
             'opname_date' => now()->format('Y-m-d'),
-            'items' => [['inventory_item_id' => $inventoryItem->id, 'system_qty' => 10, 'actual_qty' => null]]
+            'items' => [['inventory_item_id' => $inventoryItem->id, 'system_qty' => 10, 'actual_qty' => null]],
         ], $user);
 
         $updateData = [
             'notes' => 'Updated notes',
             'items' => [
-                ['inventory_item_id' => $inventoryItem->id, 'system_qty' => 10, 'actual_qty' => 12]
-            ]
+                ['inventory_item_id' => $inventoryItem->id, 'system_qty' => 10, 'actual_qty' => 12],
+            ],
         ];
 
         $updatedOpname = $this->service->updateOpname($opname, $updateData, $user);
@@ -114,7 +115,7 @@ class StockOpnameServiceTest extends TestCase
         $opname = $this->service->createOpname([
             'outlet_id' => $outlet->id,
             'opname_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $user);
 
         $opname->status = StockOpnameStatus::PendingApproval;
@@ -130,9 +131,9 @@ class StockOpnameServiceTest extends TestCase
         $opname = $this->service->createOpname([
             'outlet_id' => $outlet->id,
             'opname_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $user);
-        
+
         $opname->status = StockOpnameStatus::PendingApproval;
         $opname->save();
 
@@ -145,8 +146,8 @@ class StockOpnameServiceTest extends TestCase
 
         $completeData = [
             'items' => [
-                ['inventory_item_id' => $inventoryItem->id, 'system_qty' => 10, 'actual_qty' => 8] // -2 difference
-            ]
+                ['inventory_item_id' => $inventoryItem->id, 'system_qty' => 10, 'actual_qty' => 8], // -2 difference
+            ],
         ];
 
         $completedOpname = $this->service->completeOpname($opname, $completeData, $user);
@@ -164,9 +165,9 @@ class StockOpnameServiceTest extends TestCase
         $opname = $this->service->createOpname([
             'outlet_id' => $outlet->id,
             'opname_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $user);
-        
+
         $opname->status = StockOpnameStatus::PendingApproval;
         $opname->save();
 

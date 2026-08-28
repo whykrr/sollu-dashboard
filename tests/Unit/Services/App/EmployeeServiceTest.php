@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App;
 
-use App\Models\Business;
 use App\Models\Outlet;
 use App\Models\User;
 use App\Notifications\NewEmployee;
@@ -20,7 +19,7 @@ class EmployeeServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new EmployeeService();
+        $this->service = new EmployeeService;
     }
 
     public function test_it_creates_employee()
@@ -51,7 +50,7 @@ class EmployeeServiceTest extends TestCase
         $this->assertEquals('New Employee', $employee->name);
         $this->assertFalse($employee->is_root_user);
         $this->assertTrue($employee->hasRole('cashier'));
-        
+
         $this->assertCount(1, $employee->outlets);
         $this->assertEquals($outlet->id, $employee->outlets->first()->id);
 
@@ -89,11 +88,11 @@ class EmployeeServiceTest extends TestCase
 
         $this->assertEquals('Updated Employee', $updated->name);
         $this->assertTrue(\Illuminate\Support\Facades\Hash::check('9999', $updated->pin));
-        
+
         $updated->refresh();
         $this->assertTrue($updated->hasRole('waiter'));
         $this->assertFalse($updated->hasRole('cashier'));
-        
+
         $this->assertCount(1, $updated->outlets);
         $this->assertEquals($outlet->id, $updated->outlets->first()->id);
     }

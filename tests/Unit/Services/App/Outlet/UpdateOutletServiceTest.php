@@ -17,7 +17,7 @@ class UpdateOutletServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new UpdateOutletService();
+        $this->service = new UpdateOutletService;
     }
 
     public function test_it_updates_outlet()

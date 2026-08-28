@@ -21,8 +21,12 @@ class AuthenticationController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::guard('cockpit')->attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::guard('cockpit')->attempt(array_merge($credentials, ['status' => 'active']), $request->boolean('remember'))) {
             $request->session()->regenerate();
+
+            /** @var \App\Models\CockpitUser $user */
+            $user = Auth::guard('cockpit')->user();
+            $user->update(['last_login_at' => now()]);
 
             return redirect()->route('cockpit.dashboard');
         }

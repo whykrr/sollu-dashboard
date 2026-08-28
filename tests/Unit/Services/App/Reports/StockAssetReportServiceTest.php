@@ -21,7 +21,7 @@ class StockAssetReportServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new StockAssetReportService();
+        $this->service = new StockAssetReportService;
     }
 
     public function test_it_gets_report()

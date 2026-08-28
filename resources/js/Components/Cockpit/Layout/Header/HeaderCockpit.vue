@@ -32,29 +32,34 @@
                 <FontAwesomeIcon :icon="faBars" />
             </div>
         </div>
-        <div class="grow">
-            <!-- Reuse standard Breadcrumbs or define custom if needed -->
+        <div class="grow flex items-center gap-3">
             <Breadcrumbs />
+            <div
+                class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold select-none shadow-xs"
+            >
+                <span
+                    class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"
+                />
+                COCKPIT CONTROL CENTER
+            </div>
         </div>
         <div class="hidden relative sm:flex items-center space-x-2.5">
             <!-- Cockpit specific notifications (placeholder) -->
             <TopBarNotification />
 
-            <div class="w-px h-6 bg-gray-300" />
+            <div class="w-px h-6 bg-gray-200" />
 
             <TopBarAccountCockpit />
         </div>
     </header>
 </template>
+
 <script setup>
 import Breadcrumbs from '@/Components/Layout/Header/Breadcrumbs.vue';
 import TopBarAccountCockpit from './TopBarAccountCockpit.vue';
 import TopBarNotification from '@/Components/Layout/Header/TopBarNotification.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {
-    faBars,
-    faClose,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose } from '@fortawesome/free-solid-svg-icons';
 import { useAppStore } from '@/store/app';
 
 const appStore = useAppStore();

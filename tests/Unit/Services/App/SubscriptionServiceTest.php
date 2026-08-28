@@ -20,7 +20,7 @@ class SubscriptionServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new SubscriptionService();
+        $this->service = new SubscriptionService;
     }
 
     public function test_it_subscribes_business_to_plan()

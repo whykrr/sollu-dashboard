@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\App;
 
-use App\Http\Controllers\Controller;
-
 use App\Constants\FlashDataVariable;
 use App\Constants\ResourceMessage;
 use App\Enums\RoleEnum;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Employee\GetEmployeeRequest;
 use App\Http\Requests\App\User\StoreUserRequest;
 use App\Http\Requests\App\User\UpdateUserRequest;

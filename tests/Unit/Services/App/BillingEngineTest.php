@@ -21,7 +21,7 @@ class BillingEngineTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new BillingEngine();
+        $this->service = new BillingEngine;
     }
 
     public function test_it_calculates_prorated_cost_and_generates_invoice()
@@ -46,7 +46,7 @@ class BillingEngineTest extends TestCase
         // Price = 100,000
         // Remaining days = 20
         // Prorated cost = (20 / 30) * 100,000 = 66666.67
-        
+
         $price = $plan->price_per_outlet;
         $prorated = $this->service->calculateProratedCost($subscription);
         $expected = round((20 / 30) * $price, 2);

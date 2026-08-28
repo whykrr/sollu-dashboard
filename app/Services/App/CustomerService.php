@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Services\App;
-use App\Services\Shared\ActivityLogService;
 
 use App\Models\Master\Customer;
+use App\Services\Shared\ActivityLogService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;

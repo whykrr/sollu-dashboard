@@ -45,14 +45,25 @@ Sebelum menyelesaikan tugas atau mengirimkan perubahan kode:
 3. **NO Soft Delete / Audit Log Removal:** NEVER delete audit log records (`AuditLogService`) or bypass soft-delete traits (`SoftDeletes`).
 4. **NO Raw SQL Injection Risks:** Never bypass Eloquent with raw SQL string concatenation.
 5. **NO Direct Role Hardcoding:** NEVER write `$user->role == 'admin'`. Always use Spatie permission checks (`$user->can('permission.name')`).
-6. **NO Hardcoded Controller Messages:** NEVER write manual hardcoded strings for controller response messages (e.g. `->with('success', 'Data berhasil dibuat')`). ALWAYS use `App\Constants\*` (`ResourceMessage`, `AuthorizationMessage`, `FlashDataVariable`) or Laravel language translation files (`__('messages.key')`).
+7. **NO Deadcode Leftovers (Pembersihan Dead Code Wajib):** DILARANG meninggalkan kode mati (*dead code*) dalam bentuk apa pun (commented-out code, unused imports, orphaned methods/variables, obsolete files/routes). Seluruh kode mati WAJIB DIHAPUS pada sesi perubahan codebase yang sama.
 
-## 4. Definition of Done (DoD) Checklist
+## 4. 🧹 Dead Code Elimination Protocol (Aturan Pembersihan Kode Mati)
+
+Setiap kali membuat atau memodifikasi file di codebase, WAJIB menerapkan protokol pembersihan berikut:
+
+1. **NO Commented-Out Code:** Hapus semua kode lama yang dikomentari (`//`, `/* */`, `<!-- -->`, `{{-- --}}`). Jangan biarkan kode mati tersisa sebagai komentar (riwayat versi sudah aman tercatat di Git).
+2. **Unused Imports & Dependencies:** Hapus semua `use` statement di PHP dan `import` statement di JS/Vue yang tidak lagi dirujuk setelah perubahan.
+3. **Orphaned Methods & Variables:** Hapus helper method private, variabel local/reactive (`ref`, `computed`), konstanta, atau enum case yang tidak lagi memiliki pemanggil (*caller*).
+4. **Orphaned Files & Obsolete Routes:** Jika suatu refactoring menggantikan Controller, Service, Request, Vue Component, atau Blade View lama, pastikan file lama dan pendaftarannya di `routes/web.php` / `routes/api.php` dihapus setelah dipastikan tidak ada dependensi tersisa.
+5. **Redundant Styles:** Hapus `@utility` atau style khusus di `resources/css/app.css` yang sudah tidak dipakai oleh komponen manapun.
+
+## 5. Definition of Done (DoD) Checklist
 
 A feature or bugfix is considered **DONE** only when:
 - [ ] Backend logic & endpoints tested and returning accurate HTTP status codes.
 - [ ] Controller response messages use `App\Constants\*` (`ResourceMessage`, `FlashDataVariable`) or `lang/` translation files without any hardcoded strings.
 - [ ] Frontend UI verified visually and functionally via `browsermcp` (navigasi URL, screenshot, snapshot, console log check), and layout aligns with design standards.
+- [ ] Semua dead code (commented-out code, unused imports, orphaned methods/variables, obsolete files/routes) telah diverifikasi dan dihapus.
 - [ ] Code formatted with `vendor/bin/pint` and `npm run fix:eslint`.
 - [ ] `npm run build` executes cleanly with zero syntax or bundling errors.
 - [ ] All permissions registered in `PermissionEnum.php` & `RolePermissionSeeder.php` (if applicable).

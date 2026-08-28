@@ -21,13 +21,15 @@ class StockTransferServiceTest extends TestCase
     use RefreshDatabase;
 
     protected ActivityLogService $activityLogServiceMock;
+
     protected StockFreezeService $stockFreezeServiceMock;
+
     protected StockTransferService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->activityLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -52,13 +54,13 @@ class StockTransferServiceTest extends TestCase
         $user = User::first();
         $business = $user->business;
         $outlet1 = clone $business->outlets()->first();
-        
+
         $outlet2 = Outlet::create([
             'business_id' => $business->id,
             'name' => 'Outlet 2',
             'is_active' => true,
         ]);
-        
+
         $inventoryItem = InventoryItem::firstOrCreate([
             'business_id' => $business->id,
         ], [
@@ -83,8 +85,8 @@ class StockTransferServiceTest extends TestCase
                 [
                     'inventory_item_id' => $inventoryItem->id,
                     'qty' => 10,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $transfer = $this->service->createTransfer($data, $user);
@@ -104,14 +106,14 @@ class StockTransferServiceTest extends TestCase
             'from_outlet_id' => $outlet1->id,
             'to_outlet_id' => $outlet2->id,
             'transfer_date' => now()->format('Y-m-d'),
-            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty' => 10]]
+            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty' => 10]],
         ], $user);
 
         $updatedTransfer = $this->service->updateTransfer($transfer, [
             'notes' => 'Updated notes',
             'items' => [
-                ['inventory_item_id' => $inventoryItem->id, 'qty' => 20]
-            ]
+                ['inventory_item_id' => $inventoryItem->id, 'qty' => 20],
+            ],
         ]);
 
         $this->assertEquals('Updated notes', $updatedTransfer->notes);
@@ -128,12 +130,12 @@ class StockTransferServiceTest extends TestCase
         // User defaults to no 'business.*' permission in seeder unless assigned.
         // We'll create a user specifically for this.
         $requester = User::factory()->create(['business_id' => $business->id]);
-        
+
         $transfer = $this->service->createTransfer([
             'from_outlet_id' => $outlet1->id,
             'to_outlet_id' => $outlet2->id,
             'transfer_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $requester);
 
         $this->service->approveTransfer($transfer, $requester);
@@ -144,12 +146,12 @@ class StockTransferServiceTest extends TestCase
         [$user, $business, $outlet1, $outlet2, $inventoryItem] = $this->setupBaseData();
 
         $requester = User::factory()->create(['business_id' => $business->id]);
-        
+
         $transfer = $this->service->createTransfer([
             'from_outlet_id' => $outlet1->id,
             'to_outlet_id' => $outlet2->id,
             'transfer_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $requester);
 
         $approvedTransfer = $this->service->approveTransfer($transfer, $user); // $user is admin
@@ -166,7 +168,7 @@ class StockTransferServiceTest extends TestCase
             'from_outlet_id' => $outlet1->id,
             'to_outlet_id' => $outlet2->id,
             'transfer_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $user);
 
         $rejectedTransfer = $this->service->rejectTransfer($transfer, ['notes' => 'Rejected'], $user);
@@ -184,7 +186,7 @@ class StockTransferServiceTest extends TestCase
             'from_outlet_id' => $outlet1->id,
             'to_outlet_id' => $outlet2->id,
             'transfer_date' => now()->format('Y-m-d'),
-            'items' => []
+            'items' => [],
         ], $requester);
 
         $this->service->approveTransfer($transfer, $user);
@@ -210,7 +212,7 @@ class StockTransferServiceTest extends TestCase
             'from_outlet_id' => $outlet1->id,
             'to_outlet_id' => $outlet2->id,
             'transfer_date' => now()->format('Y-m-d'),
-            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty' => 10]]
+            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty' => 10]],
         ], $requester);
 
         $this->service->approveTransfer($transfer, $user);
@@ -223,8 +225,8 @@ class StockTransferServiceTest extends TestCase
                 [
                     'id' => $transferItem->id,
                     'qty_received' => 10,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $completedTransfer = $this->service->completeTransfer($transfer, $receivedData, $user);

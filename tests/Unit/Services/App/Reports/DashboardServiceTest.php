@@ -26,7 +26,7 @@ class DashboardServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new DashboardService();
+        $this->service = new DashboardService;
     }
 
     public function test_it_returns_dashboard_metrics_and_trends()
@@ -57,7 +57,7 @@ class DashboardServiceTest extends TestCase
         ]);
 
         $now = Carbon::now();
-        
+
         $transaction = Transaction::create([
             'outlet_id' => $outlet->id,
             'status' => 'completed',
@@ -114,7 +114,7 @@ class DashboardServiceTest extends TestCase
         // 2. Sales Trend (Today)
         $trend = $this->service->getSalesTrend([$outlet->id], $startDate, $endDate, $prevStartDate, $prevEndDate, true);
         $this->assertCount(24, $trend['label']);
-        
+
         // 3. Category Sales Trend
         $categoryTrend = $this->service->getCategorySalesTrend([$outlet->id], $startDate, $endDate);
         $this->assertContains('Food', $categoryTrend['label']);

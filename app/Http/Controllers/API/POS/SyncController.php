@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\API\POS;
-use App\Services\Shared\Transaction\MasterDataSyncService;
 
 use App\Http\Controllers\Controller;
 use App\Services\Shared\Transaction\MasterDataSyncService as TransactionMasterDataSyncService;

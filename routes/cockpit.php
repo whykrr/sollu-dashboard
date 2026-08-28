@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Cockpit\AuditController;
+use App\Http\Controllers\Cockpit\Auth\ProfileController;
 use App\Http\Controllers\Cockpit\AuthenticationController;
 use App\Http\Controllers\Cockpit\BusinessController;
 use App\Http\Controllers\Cockpit\ConfigController;
@@ -18,6 +19,9 @@ Route::name('cockpit.')->group(function () {
 
     Route::middleware('auth:cockpit')->group(function () {
         Route::delete('/logout', [AuthenticationController::class, 'destroy'])->name('logout');
+
+        Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 

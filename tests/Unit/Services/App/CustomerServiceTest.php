@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App;
 
-use App\Models\Business;
 use App\Models\Master\Customer;
 use App\Models\Outlet;
 use App\Models\Sales\Transaction;
@@ -18,12 +17,13 @@ class CustomerServiceTest extends TestCase
     use RefreshDatabase;
 
     protected CustomerService $service;
+
     protected $activityLogServiceMock;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->service = new CustomerService($this->activityLogServiceMock);
     }
@@ -60,7 +60,7 @@ class CustomerServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $outlet = Outlet::create([
             'business_id' => $user->business_id,
             'name' => 'Main Outlet',

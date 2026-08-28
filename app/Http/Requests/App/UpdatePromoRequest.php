@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests\App;
 
-use App\Http\Requests\BaseInertiaFormRequest;
-
 use App\Enums\PermissionEnum;
 use App\Enums\PromoTarget;
 use App\Enums\PromoType;
+use App\Http\Requests\BaseInertiaFormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdatePromoRequest extends BaseInertiaFormRequest

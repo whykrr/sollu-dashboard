@@ -13,3 +13,4 @@ Saat bekerja di `resources/js`, Anda **WAJIB** menerapkan standar dari skill `so
 5. **Otorisasi Frontend:** Gunakan composable `@/Composable/useAuth` (`can('permission.name')`).
  <!-- 6. **Verifikasi Browser MCP:** Wajib verifikasi perubahan UI secara visual & fungsional dengan `browsermcp` (navigasi URL, DOM snapshot, console log check via `sollu-integration-testing`). -->
 6. **Linter & Build:** Wajib jalankan `npm run fix:eslint` dan `npm run build` sebelum menyelesaikan tugas.
+7. **Remove Dead Code** jika terdapat perubahan atau improvement pada file vue, pastikan kode yang tidak digunakan dihapus.

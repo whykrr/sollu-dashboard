@@ -72,3 +72,12 @@ Gunakan `SelectionGroupField` untuk grup tombol opsi pilihan (mendukung seleksi 
 />
 ```
 
+## 7. Frontend Dead Code Removal Standards
+
+Setiap kali melakukan modifikasi pada komponen Vue (`.vue`), file JavaScript (`.js`), atau style (`.css`):
+
+1. **Clean Unused Imports:** Hapus semua `import` komponen, ikon, composable, atau helper yang tidak dipanggil dalam `<script setup>` atau `<template>`. Jalankan `npm run fix:eslint` untuk merapikan impor.
+2. **Remove Unused Reactive State & Props/Emits:** Hapus variabel `ref`, `reactive`, `computed`, `defineProps`, atau `defineEmits` yang tidak lagi digunakan dalam render template atau logika method.
+3. **No Commented-Out HTML/Vue Code:** Hapus komentar kode HTML/Vue (`<!-- ... -->`, `// ...`) yang ditinggalkan saat merevisi UI layout atau komponen form.
+4. **Obsolete Utility CSS Cleanups:** Hapus aturan `@utility` di `resources/css/app.css` jika kelas CSS tersebut sudah tidak dirujuk oleh halaman/komponen manapun. Pastikan `npm run build` berhasil tanpa warning/error.
+

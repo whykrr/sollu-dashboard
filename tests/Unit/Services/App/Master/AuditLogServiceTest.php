@@ -18,7 +18,7 @@ class AuditLogServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new AuditLogService();
+        $this->service = new AuditLogService;
     }
 
     public function test_it_logs_audit_trail_successfully()
@@ -26,7 +26,7 @@ class AuditLogServiceTest extends TestCase
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
         $business = $user->business;
-        
+
         $this->actingAs($user);
 
         $entityId = Str::uuid()->toString();

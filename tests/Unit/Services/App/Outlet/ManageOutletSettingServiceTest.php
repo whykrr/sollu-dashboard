@@ -17,7 +17,7 @@ class ManageOutletSettingServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ManageOutletSettingService();
+        $this->service = new ManageOutletSettingService;
     }
 
     public function test_it_upserts_settings()
@@ -45,13 +45,13 @@ class ManageOutletSettingServiceTest extends TestCase
                 'category' => 'general',
                 'key' => 'tax_rate',
                 'value' => '10',
-            ]
+            ],
         ];
 
         $result = $this->service->upsertSettings($outlet, $settings, $user);
 
         $this->assertCount(2, $result);
-        
+
         $this->assertDatabaseHas('outlet_settings', [
             'outlet_id' => $outlet->id,
             'category' => 'general',

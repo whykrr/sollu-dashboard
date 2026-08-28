@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\App;
 
-use App\Http\Controllers\Controller;
-
 use App\Constants\FlashDataVariable;
 use App\Constants\ResourceMessage;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Customer\StoreCustomerRequest;
 use App\Http\Requests\App\Customer\UpdateCustomerRequest;
 use App\Models\Master\Customer;

@@ -22,7 +22,7 @@ class ProductReportServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ProductReportService();
+        $this->service = new ProductReportService;
     }
 
     public function test_it_gets_report()
@@ -47,7 +47,7 @@ class ProductReportServiceTest extends TestCase
         ]);
 
         $now = Carbon::now();
-        
+
         $transaction = Transaction::create([
             'outlet_id' => $outlet->id,
             'status' => 'completed',

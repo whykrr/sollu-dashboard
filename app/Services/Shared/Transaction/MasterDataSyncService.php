@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services\Shared\Transaction;
-use App\Services\App\Outlet\OutletProvisioningService;
 
 use App\Models\Master\Customer;
 use App\Models\Master\PaymentMethod;
@@ -174,11 +173,11 @@ class MasterDataSyncService
 
         // 7. Transaksi 1 bulan terakhir
         $transactions = \App\Models\Sales\Transaction::with([
-                'items',
-                'items.modifiers',
-                'payments',
-                'promos'
-            ])
+            'items',
+            'items.modifiers',
+            'payments',
+            'promos',
+        ])
             ->where('outlet_id', $outletId)
             ->where('created_at', '>=', now()->subMonth())
             ->get();

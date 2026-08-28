@@ -17,7 +17,7 @@ class ManageOutletOperationalHourServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ManageOutletOperationalHourService();
+        $this->service = new ManageOutletOperationalHourService;
     }
 
     public function test_it_upserts_operational_hours()
@@ -49,13 +49,13 @@ class ManageOutletOperationalHourServiceTest extends TestCase
                 'open_time' => null,
                 'close_time' => null,
                 'is_closed' => true,
-            ]
+            ],
         ];
 
         $result = $this->service->upsertHours($outlet, $hours, $user);
 
         $this->assertCount(2, $result);
-        
+
         $this->assertDatabaseHas('outlet_operational_hours', [
             'outlet_id' => $outlet->id,
             'day_of_week' => 1,

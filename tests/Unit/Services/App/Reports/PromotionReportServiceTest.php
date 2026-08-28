@@ -21,7 +21,7 @@ class PromotionReportServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new PromotionReportService();
+        $this->service = new PromotionReportService;
     }
 
     public function test_it_gets_report()
@@ -45,7 +45,7 @@ class PromotionReportServiceTest extends TestCase
         ]);
 
         $now = Carbon::now();
-        
+
         $transaction = Transaction::create([
             'outlet_id' => $outlet->id,
             'status' => 'completed',

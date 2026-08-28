@@ -4,11 +4,9 @@ namespace Tests\Unit\Services\App\Inventory;
 
 use App\Enums\AdjustmentReason;
 use App\Enums\AdjustmentStatus;
-use App\Models\Business;
 use App\Models\Inventory\InventoryBalance;
 use App\Models\Inventory\InventoryItem;
 use App\Models\Inventory\StockAdjustment;
-use App\Models\Outlet;
 use App\Models\User;
 use App\Services\App\Inventory\StockAdjustmentService;
 use App\Services\Shared\ActivityLogService;
@@ -21,12 +19,13 @@ class StockAdjustmentServiceTest extends TestCase
     use RefreshDatabase;
 
     protected ActivityLogService $activityLogServiceMock;
+
     protected StockAdjustmentService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->activityLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -45,7 +44,7 @@ class StockAdjustmentServiceTest extends TestCase
         $user = User::first();
         $business = $user->business;
         $outlet = $business->outlets()->first();
-        
+
         $inventoryItem = InventoryItem::firstOrCreate([
             'business_id' => $business->id,
         ], [
@@ -71,8 +70,8 @@ class StockAdjustmentServiceTest extends TestCase
                     'qty_change' => 10,
                     'unit_cost' => 1000,
                     'description' => 'Add 10 items',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $adj = $this->service->create($data, $user);
@@ -98,8 +97,8 @@ class StockAdjustmentServiceTest extends TestCase
                     'qty_change' => 5,
                     'unit_cost' => 100,
                     'description' => 'Add 5',
-                ]
-            ]
+                ],
+            ],
         ];
         $adj = $this->service->create($data, $user);
 
@@ -109,7 +108,7 @@ class StockAdjustmentServiceTest extends TestCase
 
         $balance = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first();
         $this->assertEquals(5, $balance->current_stock);
-        
+
         $movement = $approvedAdj->inventoryMovements()->first();
         $this->assertNotNull($movement);
         $this->assertEquals(5, $movement->qty_change);
@@ -132,8 +131,8 @@ class StockAdjustmentServiceTest extends TestCase
                     'qty_change' => -5,
                     'unit_cost' => null,
                     'description' => 'Remove 5',
-                ]
-            ]
+                ],
+            ],
         ];
         $adj = $this->service->create($data, $user);
 
@@ -154,8 +153,8 @@ class StockAdjustmentServiceTest extends TestCase
                     'qty_change' => 5,
                     'unit_cost' => 100,
                     'description' => 'Add 5',
-                ]
-            ]
+                ],
+            ],
         ];
         $adj = $this->service->create($data, $user);
 
@@ -179,8 +178,8 @@ class StockAdjustmentServiceTest extends TestCase
                     'qty_change' => 10,
                     'unit_cost' => 100,
                     'description' => 'Add 10',
-                ]
-            ]
+                ],
+            ],
         ];
         $adj = $this->service->create($data, $user);
         $this->service->approve($adj, $user);

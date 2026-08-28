@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests\App;
 
-use App\Http\Requests\BaseInertiaFormRequest;
-
 use App\Enums\PermissionEnum;
+use App\Http\Requests\BaseInertiaFormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 

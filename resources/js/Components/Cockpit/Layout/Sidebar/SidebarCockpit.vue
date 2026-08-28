@@ -35,12 +35,17 @@
                 <div
                     class="flex justify-between items-center px-2 min-h-16 relative"
                 >
-                    <Link href="#">
+                    <Link href="#" class="flex items-end gap-2">
                         <img
                             src="/img/logo-colored.png"
-                            class="h-8 w-auto"
+                            class="h-7 w-auto"
                             alt="Sollu Cockpit"
                         />
+                        <span
+                            class="text-[12px] uppercase font-extrabold px-1.5 py-0.5 bg-indigo-600 text-white rounded tracking-wider shadow-xs"
+                        >
+                            Cockpit
+                        </span>
                     </Link>
                     <div
                         class="block sm:hidden text-sm cursor-pointer"
@@ -68,7 +73,7 @@
                     </Transition>
                 </div>
             </div>
-            
+
             <SidebarNavCockpit class="mb-2" />
         </div>
     </aside>
@@ -82,7 +87,7 @@ import {
     faClose,
     faLock,
 } from '@fortawesome/free-solid-svg-icons';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { useAppStore } from '@/store/app';
 import { onMounted, onUnmounted, ref } from 'vue';
 

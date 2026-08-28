@@ -1,26 +1,31 @@
 <template>
     <div
-        class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl border border-neutral-100 relative z-10"
+        class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl border border-indigo-100/80 relative z-10"
     >
         <div>
-            <div class="flex justify-center">
+            <div class="flex justify-center items-center gap-2.5">
                 <img
                     src="/img/logo-colored.png"
                     alt="Sollu"
-                    class="h-12 w-auto"
+                    class="h-10 w-auto"
                 />
+                <span
+                    class="text-xs uppercase font-extrabold px-2 py-0.5 bg-indigo-600 text-white rounded-md tracking-wider shadow-xs"
+                >
+                    Cockpit
+                </span>
             </div>
             <h2
-                class="mt-6 text-center text-3xl font-extrabold text-neutral-900"
+                class="mt-6 text-center text-2xl font-extrabold text-neutral-900"
             >
                 Cockpit Control Center
             </h2>
-            <p class="mt-2 text-center text-sm text-neutral-600">
+            <p class="mt-1.5 text-center text-sm text-neutral-600">
                 Sign in to access the platform management console
             </p>
         </div>
         <form class="mt-8 space-y-6" @submit.prevent="submit">
-            <div class="rounded-md shadow-sm space-y-4">
+            <div class="rounded-md shadow-xs space-y-4">
                 <EmailField
                     v-model="form.email"
                     label="Email address"
@@ -44,7 +49,7 @@
                         v-model="form.remember"
                         name="remember-me"
                         type="checkbox"
-                        class="h-4 w-4 text-main focus:ring-main border-neutral-300 rounded"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-neutral-300 rounded"
                     />
                     <label
                         for="remember-me"
@@ -59,14 +64,14 @@
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-main hover:bg-main-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
                     <span
                         class="absolute left-0 inset-y-0 flex items-center pl-3"
                     >
                         <!-- Icon -->
                         <svg
-                            class="h-5 w-5 text-white/70 group-hover:text-white/90"
+                            class="h-5 w-5 text-indigo-200 group-hover:text-white"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
                             fill="currentColor"

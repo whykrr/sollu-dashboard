@@ -9,7 +9,7 @@ class DashboardSubscriptionServiceTest extends TestCase
 {
     public function test_it_can_be_instantiated()
     {
-        $service = new DashboardSubscriptionService();
+        $service = new DashboardSubscriptionService;
         $this->assertInstanceOf(DashboardSubscriptionService::class, $service);
     }
 }

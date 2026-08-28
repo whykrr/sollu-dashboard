@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App\Master;
 
-use App\Models\Business;
 use App\Models\Master\ModifierGroup;
 use App\Models\User;
 use App\Services\App\Master\AuditLogService;
@@ -16,12 +15,13 @@ class ModifierServiceTest extends TestCase
     use RefreshDatabase;
 
     protected AuditLogService $auditLogServiceMock;
+
     protected ModifierService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->auditLogServiceMock = Mockery::mock(AuditLogService::class);
         $this->auditLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -49,7 +49,7 @@ class ModifierServiceTest extends TestCase
             'options' => [
                 ['name' => 'Cheese', 'additional_price' => 5000, 'is_default' => false],
                 ['name' => 'Boba', 'additional_price' => 3000, 'is_default' => true],
-            ]
+            ],
         ];
 
         $group = $this->service->createGroup($data);
@@ -58,12 +58,12 @@ class ModifierServiceTest extends TestCase
         $this->assertEquals('Toppings', $group->name);
         $this->assertEquals('multi', $group->selection_type);
         $this->assertCount(2, $group->options);
-        
+
         $this->assertDatabaseHas('modifier_groups', [
             'id' => $group->id,
             'name' => 'Toppings',
         ]);
-        
+
         $this->assertDatabaseHas('modifier_options', [
             'modifier_group_id' => $group->id,
             'name' => 'Cheese',
@@ -92,7 +92,7 @@ class ModifierServiceTest extends TestCase
             'options' => [
                 ['name' => 'New Option 1', 'additional_price' => 1000],
                 ['name' => 'New Option 2', 'additional_price' => 2000],
-            ]
+            ],
         ];
 
         $updatedGroup = $this->service->updateGroup($group, $updateData);
@@ -101,7 +101,7 @@ class ModifierServiceTest extends TestCase
         $this->assertEquals('multi', $updatedGroup->selection_type);
         $this->assertEquals(3, $updatedGroup->max_select);
         $this->assertTrue($updatedGroup->is_required);
-        
+
         $this->assertCount(2, $updatedGroup->options); // new options replaced old
         $this->assertDatabaseMissing('modifier_options', [
             'modifier_group_id' => $group->id,

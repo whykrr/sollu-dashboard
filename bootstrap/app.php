@@ -20,9 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/health',
         then: function () {
-            $appDomain     = config('domain.app', 'app.sollu.test');
+            $appDomain = config('domain.app', 'app.sollu.test');
             $cockpitDomain = config('domain.cockpit', 'cockpit.sollu.test');
-            $apiDomain     = config('domain.api', 'api.sollu.test');
+            $apiDomain = config('domain.api', 'api.sollu.test');
 
             Route::middleware(['web', \App\Http\Middleware\HandleAppInertiaRequests::class])
                 ->domain($appDomain)
@@ -72,7 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'stock.not.frozen' => \App\Http\Middleware\EnsureStockNotFrozen::class,
-            'pos.device'       => \App\Http\Middleware\VerifyPosDevice::class,
+            'pos.device' => \App\Http\Middleware\VerifyPosDevice::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

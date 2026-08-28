@@ -7,7 +7,7 @@
                 @click.prevent="togglePanel"
             >
                 <div
-                    class="rounded-full w-10 h-10 bg-white flex items-center justify-center border border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-150 ease-in-out"
+                    class="rounded-full w-10 h-10 bg-white flex items-center justify-center border border-neutral-200 hover:bg-neutral-50 hover:border-indigo-300 transition-all duration-150 ease-in-out font-bold text-indigo-700 text-sm shadow-xs"
                 >
                     {{ initials }}
                 </div>
@@ -30,19 +30,19 @@
                     </div>
                     <div class="flex flex-col items-center mt-2 mb-2">
                         <div
-                            class="rounded-full w-20 h-20 text-2xl bg-neutral-50 flex items-center justify-center border border-neutral-100 text-neutral-600 mb-3 shadow-inner"
+                            class="rounded-full w-20 h-20 text-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100 text-indigo-700 font-bold mb-3 shadow-inner"
                         >
                             {{ initials }}
                         </div>
                         <div
-                            class="text-center font-medium text-lg text-neutral-800 leading-tight"
+                            class="text-center font-semibold text-lg text-neutral-800 leading-tight"
                         >
-                            {{ auth.name }}
+                            {{ auth?.name }}
                         </div>
                         <div
-                            class="text-center text-sm font-normal text-neutral-500"
+                            class="text-center text-xs font-normal text-neutral-500 mt-0.5"
                         >
-                            {{ auth.email }}
+                            {{ auth?.email }}
                         </div>
                     </div>
 
@@ -55,10 +55,23 @@
                                 :key="index"
                                 class="border-b border-neutral-100 last:border-0"
                             >
+                                <button
+                                    v-if="item.action"
+                                    type="button"
+                                    class="flex items-center w-full gap-3 px-4 py-2.5 hover:bg-white text-sm text-neutral-700 font-medium transition-all duration-150 ease-in-out group cursor-pointer"
+                                    @click="item.action"
+                                >
+                                    <div
+                                        class="w-5 flex justify-center text-neutral-400 group-hover:text-indigo-600 transition-colors"
+                                    >
+                                        <FontAwesomeIcon :icon="item.icon" />
+                                    </div>
+                                    {{ item.label }}
+                                </button>
                                 <Link
-                                    v-if="item.method == 'delete'"
+                                    v-else-if="item.method === 'delete'"
                                     :href="item.link"
-                                    class="flex items-center w-full gap-3 px-4 py-2.5 hover:bg-white text-sm text-danger font-medium transition-all duration-150 ease-in-out group"
+                                    class="flex items-center w-full gap-3 px-4 py-2.5 hover:bg-white text-sm text-danger font-medium transition-all duration-150 ease-in-out group cursor-pointer"
                                     method="delete"
                                     as="button"
                                 >
@@ -76,7 +89,7 @@
                                     @click="showPanel = !showPanel"
                                 >
                                     <div
-                                        class="w-5 flex justify-center text-neutral-400 group-hover:text-main transition-colors"
+                                        class="w-5 flex justify-center text-neutral-400 group-hover:text-indigo-600 transition-colors"
                                     >
                                         <FontAwesomeIcon :icon="item.icon" />
                                     </div>
@@ -90,6 +103,7 @@
         </transition>
     </div>
 </template>
+
 <script setup>
 import {
     faClose,
@@ -99,10 +113,13 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeMount, onMounted, ref } from 'vue';
+import { usePopUpStore } from '@/store/popup';
+import CockpitProfilePopUp from '@/Components/Cockpit/Auth/CockpitProfilePopUp.vue';
 
 const auth = computed(() => usePage().props.auth);
 const showPanel = ref(false);
 const dropdownRef = ref(null);
+const popUpStore = usePopUpStore();
 
 const initials = computed(() => {
     const name = auth.value?.name || '';
@@ -122,14 +139,29 @@ const closePanel = () => {
     showPanel.value = false;
 };
 
-const accountLinks = [
+const openProfilePopUp = () => {
+    closePanel();
+    popUpStore.open({
+        title: 'Ubah Profil & Kata Sandi',
+        subTitle: 'Cockpit Admin',
+        size: 'md',
+        component: CockpitProfilePopUp,
+    });
+};
+
+const accountLinks = computed(() => [
+    {
+        label: 'Ubah Profil & Kata Sandi',
+        icon: faUser,
+        action: openProfilePopUp,
+    },
     {
         label: 'Keluar',
         icon: faRightFromBracket,
         link: route().has('cockpit.logout') ? route('cockpit.logout') : '#',
         method: 'delete',
     },
-];
+]);
 
 const handleClickOutside = (event) => {
     if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {

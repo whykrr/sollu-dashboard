@@ -2,11 +2,7 @@
 
 namespace Tests\Unit\Services\App\Master;
 
-use App\Models\Business;
-use App\Models\Inventory\InventoryBalance;
-use App\Models\Inventory\InventoryItem;
 use App\Models\Master\Product;
-use App\Models\Master\VariantGroupOption;
 use App\Models\Outlet;
 use App\Models\User;
 use App\Services\App\Master\InventoryService;
@@ -22,7 +18,7 @@ class InventoryServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new InventoryService();
+        $this->service = new InventoryService;
     }
 
     public function test_it_creates_variant_inventory_and_syncs_balances()
@@ -30,7 +26,7 @@ class InventoryServiceTest extends TestCase
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
         $business = $user->business;
-        
+
         $outlet = Outlet::create([
             'business_id' => $business->id,
             'name' => 'Outlet 1',
@@ -91,7 +87,7 @@ class InventoryServiceTest extends TestCase
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
         $business = $user->business;
-        
+
         $outlet = Outlet::create([
             'business_id' => $business->id,
             'name' => 'Outlet 1',

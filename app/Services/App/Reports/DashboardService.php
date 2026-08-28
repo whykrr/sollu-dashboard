@@ -97,7 +97,7 @@ class DashboardService
     {
         $driver = DB::connection()->getDriverName();
         if ($driver === 'sqlite') {
-            $groupExpr = $isToday ? "strftime('%H', created_at)" : "date(created_at)";
+            $groupExpr = $isToday ? "strftime('%H', created_at)" : 'date(created_at)';
         } else {
             $groupExpr = $isToday ? 'EXTRACT(HOUR FROM created_at)' : 'DATE(created_at)';
         }

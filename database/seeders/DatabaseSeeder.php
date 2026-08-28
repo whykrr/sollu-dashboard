@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Database\Seeders\Development\DummyMinimarketSeeder;
 use Database\Seeders\Production\BusinessTypeSeeder;
+use Database\Seeders\Production\CockpitUserSeeder;
 use Database\Seeders\Production\RolePermissionSeeder;
 use Database\Seeders\Production\SubscriptionPlanSeeder;
 use Database\Seeders\Production\UomSeeder;
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             SubscriptionPlanSeeder::class,
             UomSeeder::class,
+            CockpitUserSeeder::class,
         ]);
         if (! app()->environment('production')) {
             $this->call([

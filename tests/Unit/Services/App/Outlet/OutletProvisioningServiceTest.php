@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App\Outlet;
 
-use App\Models\Business;
 use App\Models\Master\OutletPaymentMethod;
 use App\Models\Master\PaymentMethod;
 use App\Models\Outlet;
@@ -22,7 +21,7 @@ class OutletProvisioningServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new OutletProvisioningService();
+        $this->service = new OutletProvisioningService;
     }
 
     public function test_it_provisions_all()

@@ -2,14 +2,12 @@
 
 namespace Tests\Unit\Services\App\Outlet;
 
-use App\Models\Business;
 use App\Models\Invoice;
 use App\Models\Outlet;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\App\Outlet\ManageOutletStatusService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ManageOutletStatusServiceTest extends TestCase
@@ -21,7 +19,7 @@ class ManageOutletStatusServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ManageOutletStatusService();
+        $this->service = new ManageOutletStatusService;
     }
 
     public function test_it_toggles_status_to_active()
@@ -49,7 +47,7 @@ class ManageOutletStatusServiceTest extends TestCase
         $result = $this->service->toggleStatus($outlet, true, $user);
 
         $this->assertTrue($result->is_active);
-        
+
         $this->assertDatabaseHas('subscription_outlets', [
             'subscription_id' => $subscription->id,
             'outlet_id' => $outlet->id,
@@ -65,7 +63,7 @@ class ManageOutletStatusServiceTest extends TestCase
     public function test_it_fails_to_activate_if_unpaid_invoice()
     {
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        
+
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
         $business = $user->business;
@@ -128,7 +126,7 @@ class ManageOutletStatusServiceTest extends TestCase
         $result = $this->service->toggleStatus($outlet, false, $user);
 
         $this->assertFalse($result->is_active);
-        
+
         $this->assertDatabaseMissing('subscription_outlets', [
             'subscription_id' => $subscription->id,
             'outlet_id' => $outlet->id,

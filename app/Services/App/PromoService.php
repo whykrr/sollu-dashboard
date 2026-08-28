@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Services\App;
-use App\Services\Shared\ActivityLogService;
 
 use App\Enums\PromoStatus;
 use App\Enums\PromoTarget;
 use App\Models\Promo;
+use App\Services\Shared\ActivityLogService;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 

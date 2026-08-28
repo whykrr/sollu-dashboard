@@ -19,7 +19,7 @@ class ManageOutletDeviceServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ManageOutletDeviceService();
+        $this->service = new ManageOutletDeviceService;
     }
 
     public function test_it_creates_device()

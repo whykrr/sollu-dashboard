@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App\Master;
 
-use App\Models\Business;
 use App\Models\Master\InventoryItem;
 use App\Models\Master\Product;
 use App\Models\Master\RecipeVersion;
@@ -18,12 +17,13 @@ class RecipeServiceTest extends TestCase
     use RefreshDatabase;
 
     protected AuditLogService $auditLogServiceMock;
+
     protected RecipeService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->auditLogServiceMock = Mockery::mock(AuditLogService::class);
         $this->auditLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -61,7 +61,7 @@ class RecipeServiceTest extends TestCase
                 'inventory_item_id' => $invItem->id,
                 'qty' => 15,
                 'uom' => 'gr',
-            ]
+            ],
         ];
 
         $recipe1 = $this->service->syncRecipe($product, $items);
@@ -77,7 +77,7 @@ class RecipeServiceTest extends TestCase
                 'inventory_item_id' => $invItem->id,
                 'qty' => 18, // changed qty
                 'uom' => 'gr',
-            ]
+            ],
         ];
 
         $recipe2 = $this->service->syncRecipe($product, $items2);

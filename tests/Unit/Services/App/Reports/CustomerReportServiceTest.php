@@ -20,7 +20,7 @@ class CustomerReportServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new CustomerReportService();
+        $this->service = new CustomerReportService;
     }
 
     public function test_it_gets_report()

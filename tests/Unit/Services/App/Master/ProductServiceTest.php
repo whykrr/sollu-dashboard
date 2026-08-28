@@ -20,17 +20,21 @@ class ProductServiceTest extends TestCase
     use RefreshDatabase;
 
     protected AuditLogService $auditLogServiceMock;
+
     protected InventoryService $inventoryServiceMock;
+
     protected RecipeService $recipeServiceMock;
+
     protected ProductService $service;
-    
+
     protected User $user;
+
     protected Business $business;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $this->user = User::first();
         $this->business = $this->user->business;
@@ -39,7 +43,7 @@ class ProductServiceTest extends TestCase
         $this->auditLogServiceMock->shouldReceive('log')->andReturnNull();
 
         $this->inventoryServiceMock = Mockery::mock(InventoryService::class);
-        
+
         $this->recipeServiceMock = Mockery::mock(RecipeService::class);
         $this->recipeServiceMock->shouldReceive('syncRecipe')->andReturnNull();
 
@@ -59,7 +63,7 @@ class ProductServiceTest extends TestCase
     public function test_it_creates_basic_product_without_variant()
     {
         $invItem = new InventoryItem(['id' => Str::uuid()->toString()]);
-        
+
         $this->inventoryServiceMock->shouldReceive('createVariantInventory')
             ->once()
             ->andReturn($invItem);
@@ -105,7 +109,7 @@ class ProductServiceTest extends TestCase
             'track_inventory' => true,
             'min_stock' => 0,
         ]);
-        
+
         $this->inventoryServiceMock->shouldReceive('syncInventoryBalances')->andReturnNull();
 
         $updateData = [
@@ -138,8 +142,8 @@ class ProductServiceTest extends TestCase
                 [
                     'component_product_id' => $component->id,
                     'qty' => 2,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $product = $this->service->createProduct($data);

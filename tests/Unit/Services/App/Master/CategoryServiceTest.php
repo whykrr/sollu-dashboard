@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\App\Master;
 
-use App\Models\Business;
 use App\Models\Master\Product;
 use App\Models\Master\ProductCategory;
 use App\Models\User;
@@ -18,13 +17,15 @@ class CategoryServiceTest extends TestCase
     use RefreshDatabase;
 
     protected AuditLogService $auditLogServiceMock;
+
     protected CategoryService $service;
+
     protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->auditLogServiceMock = Mockery::mock(AuditLogService::class);
         $this->auditLogServiceMock->shouldReceive('log')->andReturnNull();
 

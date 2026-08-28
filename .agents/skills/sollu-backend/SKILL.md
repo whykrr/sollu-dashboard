@@ -130,3 +130,12 @@ public function store(StoreOutletRequest $request)
     );
 }
 ```
+
+## 8. Backend Dead Code Removal Standards
+
+Setiap kali melakukan modifikasi pada komponen backend (Controller, Model, Service, FormRequest, JsonResource, Migration, Routes):
+
+1. **Clean Unused Statements (`use`):** Hapus semua baris `use App\Models\...` atau `use App\Services\...` yang tidak dipanggil di dalam file. Jalankan `vendor/bin/pint` sebelum menyelesaikan tugas.
+2. **Remove Dead Methods & Helper Functions:** Jika suatu method di Service/Controller tidak lagi digunakan (karena refactoring/perubahan alur), hapus method tersebut beserta unit test-nya jika ada. Dilarang menyisakan method yatim tanpa caller.
+3. **No Commented-Out PHP Code:** Jangan menyisakan blok logika PHP lama dalam bentuk komentar (`//`, `/* */`). Seluruh kode lama harus dihapus murni.
+4. **Obsolete Routes & Requests:** Jika sebuah endpoint atau FormRequest tidak lagi dipakai oleh frontend/API client, hapus `FormRequest` class tersebut dan deklarasi rutenya di `routes/web.php` atau `routes/api.php`.

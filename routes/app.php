@@ -138,4 +138,3 @@ Route::prefix('api')->middleware(['api', \App\Http\Middleware\AttachApiDeprecati
         });
     });
 });
-

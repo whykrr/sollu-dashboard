@@ -2,16 +2,12 @@
 
 namespace Tests\Unit\Services\App\Outlet;
 
-use App\Models\Business;
 use App\Models\Outlet;
-use App\Models\OutletAuditLog;
-use App\Models\SubscriptionInvoice;
 use App\Models\User;
 use App\Services\App\BillingEngine;
 use App\Services\App\Outlet\CreateOutletService;
 use App\Services\App\Outlet\OutletProvisioningService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Mockery;
 use Tests\TestCase;
 
@@ -20,13 +16,15 @@ class CreateOutletServiceTest extends TestCase
     use RefreshDatabase;
 
     protected BillingEngine $billingEngineMock;
+
     protected OutletProvisioningService $provisioningServiceMock;
+
     protected CreateOutletService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->billingEngineMock = Mockery::mock(BillingEngine::class);
         $this->provisioningServiceMock = Mockery::mock(OutletProvisioningService::class);
         $this->provisioningServiceMock->shouldReceive('provisionAll')->andReturnNull();
@@ -47,7 +45,7 @@ class CreateOutletServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first(); // First user is usually root user from seeder
-        
+
         $data = [
             'name' => 'New Outlet',
             'address' => 'Test Address',
@@ -82,10 +80,10 @@ class CreateOutletServiceTest extends TestCase
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
         $business = $user->business;
-        
+
         // Mock active subscription
         $plan = \App\Models\SubscriptionPlan::first();
-        
+
         $subscription = $business->subscriptions()->create([
             'plan_id' => $plan->id,
             'status' => 'active',
@@ -94,7 +92,7 @@ class CreateOutletServiceTest extends TestCase
         ]);
 
         $mockInvoice = new \App\Models\Invoice(['id' => \Illuminate\Support\Str::uuid()]);
-        
+
         $this->billingEngineMock->shouldReceive('generateOutletProratedInvoice')
             ->once()
             ->andReturn($mockInvoice);

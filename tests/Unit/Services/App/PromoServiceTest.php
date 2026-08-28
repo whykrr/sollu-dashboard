@@ -4,7 +4,6 @@ namespace Tests\Unit\Services\App;
 
 use App\Enums\PromoStatus;
 use App\Enums\PromoTarget;
-use App\Models\Business;
 use App\Models\Master\InventoryItem;
 use App\Models\Outlet;
 use App\Models\Promo;
@@ -22,12 +21,13 @@ class PromoServiceTest extends TestCase
     use RefreshDatabase;
 
     protected PromoService $service;
+
     protected $activityLogServiceMock;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->service = new PromoService($this->activityLogServiceMock);
     }
@@ -87,7 +87,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -115,7 +115,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -139,7 +139,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -167,7 +167,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -191,7 +191,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -221,7 +221,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -245,7 +245,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',
@@ -273,7 +273,7 @@ class PromoServiceTest extends TestCase
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
         $user = User::first();
-        
+
         $promo = Promo::create([
             'business_id' => $user->business_id,
             'name' => 'Old Promo',

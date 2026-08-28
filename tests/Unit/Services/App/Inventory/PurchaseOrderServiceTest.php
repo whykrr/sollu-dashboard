@@ -10,20 +10,21 @@ use App\Models\User;
 use App\Services\App\Inventory\PurchaseOrderService;
 use App\Services\Shared\ActivityLogService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Mockery;
+use Tests\TestCase;
 
 class PurchaseOrderServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     protected ActivityLogService $activityLogServiceMock;
+
     protected PurchaseOrderService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->activityLogServiceMock = Mockery::mock(ActivityLogService::class);
         $this->activityLogServiceMock->shouldReceive('log')->andReturnNull();
 
@@ -42,7 +43,7 @@ class PurchaseOrderServiceTest extends TestCase
         $user = User::first();
         $business = $user->business;
         $outlet = $business->outlets()->first();
-        
+
         $inventoryItem = \App\Models\Inventory\InventoryItem::firstOrCreate([
             'business_id' => $business->id,
         ], [
@@ -68,7 +69,7 @@ class PurchaseOrderServiceTest extends TestCase
                     'qty_ordered' => 5,
                     'purchase_price' => 1000,
                 ],
-            ]
+            ],
         ];
 
         $po = $this->service->createPO($data, $user);
@@ -87,13 +88,13 @@ class PurchaseOrderServiceTest extends TestCase
         $po = $this->service->createPO([
             'outlet_id' => $outlet->id,
             'order_date' => now()->format('Y-m-d'),
-            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]]
+            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]],
         ], $user);
 
         $updateData = [
             'items' => [
-                ['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 10, 'purchase_price' => 1000]
-            ]
+                ['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 10, 'purchase_price' => 1000],
+            ],
         ];
 
         $poUpdated = $this->service->updatePO($po, $updateData, $user);
@@ -109,7 +110,7 @@ class PurchaseOrderServiceTest extends TestCase
 
         [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
         $po = $this->service->createPO(['outlet_id' => $outlet->id, 'order_date' => now()->format('Y-m-d'), 'items' => []], $user);
-        
+
         $po->status = PurchaseOrder::STATUS_ORDERED;
         $po->save();
 
@@ -144,9 +145,9 @@ class PurchaseOrderServiceTest extends TestCase
         $po = $this->service->createPO([
             'outlet_id' => $outlet->id,
             'order_date' => now()->format('Y-m-d'),
-            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]]
+            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]],
         ], $user);
-        
+
         $po->status = PurchaseOrder::STATUS_ORDERED;
         $po->save();
         $poItem = $po->items()->first();
@@ -156,15 +157,15 @@ class PurchaseOrderServiceTest extends TestCase
                 [
                     'id' => $poItem->id,
                     'qty_received' => 5,
-                    'conversion_factor' => 1.0
-                ]
-            ]
+                    'conversion_factor' => 1.0,
+                ],
+            ],
         ];
 
         $poReceived = $this->service->receivePO($po, $receivedData, $user);
 
         $this->assertEquals(PurchaseOrder::STATUS_RECEIVED, $poReceived->status);
-        
+
         $balance = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first();
         $this->assertNotNull($balance);
         $this->assertEquals(5, $balance->current_stock);
@@ -184,7 +185,7 @@ class PurchaseOrderServiceTest extends TestCase
         $po = $this->service->createPO([
             'outlet_id' => $outlet->id,
             'order_date' => now()->format('Y-m-d'),
-            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]]
+            'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]],
         ], $user);
         $po->status = PurchaseOrder::STATUS_ORDERED;
         $po->save();
@@ -192,8 +193,8 @@ class PurchaseOrderServiceTest extends TestCase
         $poItem = $po->items()->first();
         $this->service->receivePO($po, [
             'items' => [
-                ['id' => $poItem->id, 'qty_received' => 5, 'conversion_factor' => 1.0]
-            ]
+                ['id' => $poItem->id, 'qty_received' => 5, 'conversion_factor' => 1.0],
+            ],
         ], $user);
 
         $poVoided = $this->service->void($po, $user);
@@ -202,9 +203,9 @@ class PurchaseOrderServiceTest extends TestCase
 
         $balance = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first();
         $this->assertEquals(0, $balance->current_stock);
-        
+
         $this->assertDatabaseMissing('inventory_cost_layers', [
-            'reference_id' => $po->id
+            'reference_id' => $po->id,
         ]);
     }
 }

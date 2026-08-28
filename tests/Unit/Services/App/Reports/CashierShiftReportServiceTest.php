@@ -19,7 +19,7 @@ class CashierShiftReportServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new CashierShiftReportService();
+        $this->service = new CashierShiftReportService;
     }
 
     public function test_it_gets_report()
