@@ -95,7 +95,12 @@ class DashboardService
 
     private function queryTrend(array $outletIds, Carbon $start, Carbon $end, bool $isToday): array
     {
-        $groupExpr = $isToday ? 'EXTRACT(HOUR FROM created_at)' : 'DATE(created_at)';
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlite') {
+            $groupExpr = $isToday ? "strftime('%H', created_at)" : "date(created_at)";
+        } else {
+            $groupExpr = $isToday ? 'EXTRACT(HOUR FROM created_at)' : 'DATE(created_at)';
+        }
         $selectExpr = $isToday ? "$groupExpr as time_key" : "$groupExpr as date_key";
 
         $results = DB::table('transactions')
