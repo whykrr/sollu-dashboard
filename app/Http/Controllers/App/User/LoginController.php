@@ -28,6 +28,10 @@ class LoginController extends Controller
                 'email' => 'Autentikasi gagal, silakan periksa kembali email dan kata sandi Anda!',
             ]);
         }
+        
+        $user = Auth::user();
+        $user->last_login_at = now();
+        $user->save();
 
         $request->session()->regenerate();
 

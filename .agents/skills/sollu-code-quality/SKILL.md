@@ -45,6 +45,7 @@ Sebelum menyelesaikan tugas atau mengirimkan perubahan kode:
 3. **NO Soft Delete / Audit Log Removal:** NEVER delete audit log records (`AuditLogService`) or bypass soft-delete traits (`SoftDeletes`).
 4. **NO Raw SQL Injection Risks:** Never bypass Eloquent with raw SQL string concatenation.
 5. **NO Direct Role Hardcoding:** NEVER write `$user->role == 'admin'`. Always use Spatie permission checks (`$user->can('permission.name')`).
+6. **NO Unoptimized Queries / N+1:** NEVER execute unbounded `Model::all()` or `Model::get()` on growing tables, never trigger lazy loading inside loops (N+1), never use `count() > 0` for existence checks, and never execute mutation loops where batch `insert()` / `upsert()` should be used.
 7. **NO Deadcode Leftovers (Pembersihan Dead Code Wajib):** DILARANG meninggalkan kode mati (*dead code*) dalam bentuk apa pun (commented-out code, unused imports, orphaned methods/variables, obsolete files/routes). Seluruh kode mati WAJIB DIHAPUS pada sesi perubahan codebase yang sama.
 
 ## 4. 🧹 Dead Code Elimination Protocol (Aturan Pembersihan Kode Mati)
@@ -62,6 +63,7 @@ Setiap kali membuat atau memodifikasi file di codebase, WAJIB menerapkan protoko
 A feature or bugfix is considered **DONE** only when:
 - [ ] Backend logic & endpoints tested and returning accurate HTTP status codes.
 - [ ] Controller response messages use `App\Constants\*` (`ResourceMessage`, `FlashDataVariable`) or `lang/` translation files without any hardcoded strings.
+- [ ] Query & Eloquent teroptimasi (Eager loading diterapkan untuk mencegah N+1, seleksi kolom spesifik, pengecekan eksistensi via `exists()`, batch insert/upsert, dan bebas dari unbounded queries).
 - [ ] Frontend UI verified visually and functionally via `browsermcp` (navigasi URL, screenshot, snapshot, console log check), and layout aligns with design standards.
 - [ ] Semua dead code (commented-out code, unused imports, orphaned methods/variables, obsolete files/routes) telah diverifikasi dan dihapus.
 - [ ] Code formatted with `vendor/bin/pint` and `npm run fix:eslint`.

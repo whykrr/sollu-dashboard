@@ -40,6 +40,7 @@ import PopUpContainer from '@/Components/UI/PopUpContainer.vue';
 import i18n from '@/i18n';
 import { router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useAppStore } from '@/store/app';
 
 // Event listener for Inertia start/finish
 router.on('start', (event) => {
@@ -52,6 +53,7 @@ router.on('start', (event) => {
 router.on('finish', () => (loading.value = false));
 
 const loading = ref(false);
+const appStore = useAppStore();
 
 // Check if locale exists before setting
 if (usePage().props.locale) {

@@ -70,10 +70,15 @@ description: >-
 ## 5. Query Optimization & Performance Limits (Max 5s)
 
 - **Waktu Eksekusi Query/Response:** Dilarang melebihi **5 detik**.
-- **N+1 Query Prevention:** Selalu gunakan Eager Loading (`with()`) untuk query standar Eloquent.
+- **N+1 Query Prevention:** Selalu gunakan Eager Loading (`with()`) untuk query standar Eloquent. Dilarang memicu lazy loading di dalam perulangan (`foreach`) atau template.
+- **Selective Column Loading (`select()`):** Hindari pemanggilan `SELECT *` secara membabi-buta pada query berat atau tabel dengan kolom besar (`TEXT`, `JSON`). Pilih hanya kolom yang dibutuhkan (`select(['id', 'name', 'status', ...])`), terutama saat me-load relasi via eager loading (`with(['relation:id,parent_id,name'])`).
+- **Existence Checks (`exists()` / `doesntExist()`):** Gunakan `exists()` atau `doesntExist()` saat mengecek keberadaan data. Dilarang keras menggunakan `count() > 0` atau `first() !== null` hanya untuk pengecekan boolean eksistensi.
+- **Batch Processing & Mutations:** Dilarang melakukan perulangan mutasi model (`foreach (...) { Model::create(...) }` atau `->save()`). Gunakan batch `insert()` atau `upsert()` untuk manipulasi data massal.
+- **Index & Filtering Awareness:** Sebelum menambahkan klausa `where`, `orderBy`, atau `join` baru, periksa ketersediaan indeks pada kolom terkait menggunakan MCP tool `sollu-db`. Kolom pencarian, filter status, tenant ID, atau relasi yang sering digunakan wajib memiliki indeks di database.
 - **DataTables & Pagination:**
     - Jangan load relasi berat pada `index()`; gunakan `withCount()` untuk jumlah data relasi.
     - Jika memerlukan _sorting_ atau _filtering_ pada kolom tabel relasi, gunakan `join()` atau `leftJoin()` di tingkat database untuk efisiensi memori.
+    - **No Unbounded Queries:** Dilarang memanggil `get()` atau `all()` tanpa batasan (`limit` atau `paginate`) pada tabel yang berpotensi terus bertambah (transaksi, mutasi stok, audit log, dsb).
 - **Offload Complex Detail & Secondary Data:** Sediakan endpoint API JSON (`JsonResource`) tersendiri untuk data detail kompleks (diakses via PopUpPage) atau data sekunder (opsi dropdown dinamis), dilarang di-load di Inertia `index()`.
 - **Large Datasets:** Gunakan `chunk()`, `lazy()`, atau `cursor()` untuk pengolahan data dalam jumlah besar.
 

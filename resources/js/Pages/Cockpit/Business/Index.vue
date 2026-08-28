@@ -2,22 +2,9 @@
     <MainPage>
         <template #header>
             <div class="flex flex-row justify-between gap-2">
-                <div class="flex gap-2">
-                    <TextField
-                        v-model="params.search"
-                        placeholder="Search name, email, ID..."
-                        class="w-64"
-                        @keyup.enter="applyFilters"
-                    />
-                    <DropdownField
-                        v-model="params.status"
-                        placeholder="All Status"
-                        :options="[
-                            { value: 'active', label: 'Active' },
-                            { value: 'suspended', label: 'Suspended' },
-                        ]"
-                        @change="applyFilters"
-                    />
+                <div class="flex items-center gap-2">
+                    <FilterSearch v-model="filterForm.search" placeholder="Search name, email, ID..." class="w-64" />
+                    <FilterStatus v-model="filterForm.status" />
                 </div>
             </div>
         </template>
@@ -29,10 +16,8 @@
             :sort="filters.sort"
             :sort-direction="filters.direction"
         >
-            <template #id="{ row }">
-                <span class="text-neutral-500 font-medium text-xs">{{
-                    row.id.substring(0, 8)
-                }}</span>
+            <template #owner_name="{ row }">
+                {{ row.owner_name || '-' }}
             </template>
             <template #name="{ row }">
                 <div>
@@ -62,14 +47,20 @@
             <template #created_at="{ row }">
                 {{ new Date(row.created_at).toLocaleDateString() }}
             </template>
+            <template #last_login_at="{ row }">
+                <span v-if="row.users_max_last_login_at" class="text-xs text-neutral-600">
+                    {{ new Date(row.users_max_last_login_at).toLocaleDateString() }}
+                </span>
+                <span v-else class="text-xs text-neutral-400">-</span>
+            </template>
             <template #actions="{ row }">
-                <Link
-                    :href="route('cockpit.merchants.show', row.id)"
+                <button
                     class="btn btn-neutral-100 text-neutral-600 btn-sm"
                     title="View Detail"
+                    @click="openDetail(row.id)"
                 >
                     <FontAwesomeIcon :icon="faEye" />
-                </Link>
+                </button>
                 <button
                     v-if="row.status === 'active'"
                     class="btn btn-danger/10 text-danger btn-sm"
@@ -102,24 +93,31 @@
 </template>
 
 <script setup>
+import { reactive, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
+import debounce from 'lodash/debounce';
+
 import MainPage from '@/Components/UI/MainPage.vue';
 import Table from '@/Components/Tables/Table.vue';
 import Pagination from '@/Components/Tables/Pagination.vue';
-import TextField from '@/Components/Form/TextField.vue';
-import DropdownField from '@/Components/Form/DropdownField.vue';
+import FilterSearch from '@/Components/UI/Filter/FilterSearch.vue';
+import FilterStatus from '@/Components/UI/Filter/FilterStatus.vue';
+import BusinessDetailPopUp from './Components/BusinessDetailPopUp.vue';
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { Link, router } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { usePopUpStore } from '@/store/popup';
 
 const props = defineProps({
     businesses: Object,
     filters: Object,
 });
 
+const popUpStore = usePopUpStore();
+
 const tableHeaders = [
-    { field: 'id', label: 'ID', slot: 'id' },
     { field: 'name', label: 'Merchant', slot: 'name', sortable: true },
+    { field: 'owner_name', label: 'Owner', slot: 'owner_name', sortable: true },
     { field: 'outlets', label: 'Outlets', slot: 'outlets' },
     { field: 'status', label: 'Status', slot: 'status', sortable: true },
     {
@@ -128,17 +126,51 @@ const tableHeaders = [
         slot: 'created_at',
         sortable: true,
     },
+    { field: 'last_login_at', label: 'Last Activity', slot: 'last_login_at' },
 ];
 
-const params = reactive({
+const filterForm = reactive({
     search: props.filters.search || '',
     status: props.filters.status || '',
 });
 
-const applyFilters = () => {
-    router.get(route('cockpit.merchants.index'), params, {
+const updateQuery = () => {
+    const query = { ...route().params, ...filterForm };
+    
+    Object.keys(query).forEach((key) => {
+        if (query[key] === '' || query[key] === null || query[key] === undefined) {
+            delete query[key];
+        }
+    });
+
+    query.page = 1;
+
+    router.get(location.pathname, query, {
         preserveState: true,
         preserveScroll: true,
+    });
+};
+
+watch(
+    () => filterForm.search,
+    debounce(() => {
+        updateQuery();
+    }, 500)
+);
+
+watch(
+    () => filterForm.status,
+    () => {
+        updateQuery();
+    }
+);
+
+const openDetail = (id) => {
+    popUpStore.open({
+        title: 'Detail Merchant',
+        size: 'xl',
+        component: BusinessDetailPopUp,
+        props: { businessId: id },
     });
 };
 

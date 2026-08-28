@@ -15,7 +15,8 @@ class BusinessController extends Controller
     {
         $query = Business::query()
             ->with(['type'])
-            ->withCount(['outlets']);
+            ->withCount(['outlets'])
+            ->withMax('users', 'last_login_at');
 
         // Search
         if ($search = $request->input('search')) {
@@ -51,12 +52,13 @@ class BusinessController extends Controller
     public function show($id)
     {
         $business = Business::with(['type'])
+            ->with(['users' => function ($query) {
+                $query->with('roles');
+            }])
             ->withCount(['outlets', 'users'])
             ->findOrFail($id);
 
-        return Inertia::render('Cockpit/Business/Show', [
-            'business' => $business,
-        ]);
+        return response()->json($business);
     }
 
     public function toggleStatus(Request $request, $id)
@@ -81,5 +83,15 @@ class BusinessController extends Controller
         }
 
         return back()->with('success', 'Status merchant berhasil diperbarui.');
+    }
+
+    public function impersonate(Request $request, $id, $userId)
+    {
+        $business = Business::findOrFail($id);
+        $user = $business->users()->findOrFail($userId);
+
+        Auth::guard('business')->loginUsingId($user->id);
+
+        return redirect()->route('overview');
     }
 }

@@ -11,4 +11,5 @@ Saat bekerja di `app/Services`, Anda **WAJIB** menerapkan standar dari skill `so
 3. **100% Code Coverage:** Pastikan seluruh skenario (happy path, error path, exception) teruji 100%.
 4. **Service Architecture:** Single-file Service (<= 500 baris) vs Split-file Single-Action Service (> 500 baris dengan method `execute()`).
 5. **Database Transactions:** Bungkus mutasi multi-tabel dalam `DB::transaction(function () { ... });`.
-6. **Formatting & Testing:** Wajib jalankan `vendor/bin/pint` dan `vendor/bin/phpunit`.
+6. **Query & Eloquent Optimization:** Hindari query N+1 (wajib eager loading), gunakan `exists()` alih-alih `count() > 0`, gunakan batch `insert()` / `upsert()` untuk manipulasi data banyak, dan cegah query tak berbatas (`get()` tanpa limit pada data dinamis).
+7. **Formatting & Testing:** Wajib jalankan `vendor/bin/pint` dan `vendor/bin/phpunit`.

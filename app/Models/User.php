@@ -56,6 +56,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'photo',
         'is_root_user',
         'email_verified_at',
+        'last_login_at',
     ];
 
     /**
@@ -95,6 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'pin' => 'hashed',
             'is_root_user' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 
