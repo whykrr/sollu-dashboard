@@ -25,9 +25,42 @@
             "key": "hardwareSignature",
             "value": "a3f8c...",
             "type": "string"
+        },
+        {
+            "key": "apiBaseUrl",
+            "value": "http://api.sollu.test",
+            "type": "string"
         }
     ],
     "item": [
+        {
+            "name": "System & Health",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{apiBaseUrl}}/health",
+                            "host": [
+                                "{{apiBaseUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Cek status kesehatan sistem (Database, Cache/Redis, Storage)."
+                    },
+                    "response": []
+                }
+            ]
+        },
         {
             "name": "Device Pairing & Connection",
             "item": [

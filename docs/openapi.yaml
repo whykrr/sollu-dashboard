@@ -272,7 +272,65 @@ components:
                     type: string
                     description: 'Beli es batu kristal'
 
+        HealthCheckResponse:
+            type: object
+            properties:
+                status:
+                    type: string
+                    example: 'healthy'
+                timestamp:
+                    type: string
+                    example: '2026-08-29T02:50:48+07:00'
+                environment:
+                    type: string
+                    example: 'production'
+                services:
+                    type: object
+                    properties:
+                        database:
+                            type: object
+                            properties:
+                                status:
+                                    type: string
+                                    example: 'healthy'
+                                latency_ms:
+                                    type: number
+                                    example: 1.25
+                        cache:
+                            type: object
+                            properties:
+                                status:
+                                    type: string
+                                    example: 'healthy'
+                                driver:
+                                    type: string
+                                    example: 'redis'
+                        storage:
+                            type: object
+                            properties:
+                                status:
+                                    type: string
+                                    example: 'healthy'
+
 paths:
+    /health:
+        get:
+            summary: Health Check Endpoint
+            description: Endpoint pemantauan status kesehatan aplikasi, koneksi database, cache/redis, dan storage.
+            responses:
+                '200':
+                    description: Sistem berjalan normal (healthy)
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HealthCheckResponse'
+                '503':
+                    description: Satu atau lebih dependensi kritis sistem mengalami gangguan (unhealthy)
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HealthCheckResponse'
+
     /device/connect:
         post:
             summary: Connect Device & Pairing POS

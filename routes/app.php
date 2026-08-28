@@ -112,6 +112,8 @@ if (app()->environment('local', 'development')) {
 |
 */
 Route::prefix('api')->middleware(['api', \App\Http\Middleware\AttachApiDeprecationHeader::class])->group(function () {
+    Route::get('/health', [\App\Http\Controllers\API\HealthCheckController::class, 'index'])->name('legacy.api.health');
+
     Route::post('midtrans/notification', \App\Http\Controllers\API\Midtrans\NotificationController::class)
         ->name('legacy.midtrans.notification');
 

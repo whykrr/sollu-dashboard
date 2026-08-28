@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\HealthCheckController;
 use App\Http\Controllers\API\Midtrans\NotificationController;
 use App\Http\Controllers\Docs\SwaggerController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/health', [HealthCheckController::class, 'index'])->name('api.health');
 
 Route::post('midtrans/notification', NotificationController::class)->name('midtrans.notification');
 

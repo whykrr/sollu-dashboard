@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
-        health: '/health',
+        health: '/up',
         then: function () {
             $appDomain = config('domain.app', 'app.sollu.test');
             $cockpitDomain = config('domain.cockpit', 'cockpit.sollu.test');
