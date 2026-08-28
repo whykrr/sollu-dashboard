@@ -16,14 +16,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/health',
         then: function () {
-            // This is where you can add any additional middleware to the web routes.
-            // For example, you can add authentication or authorization middleware here.
+            $appDomain = config('domain.app', 'app.sollu.test');
+            $cockpitDomain = config('domain.cockpit', 'cockpit.sollu.id');
+            $apiDomain = config('domain.api', 'api.sollu.test');
+
+            Route::middleware('web')
+                ->domain($appDomain)
+                ->group(base_path('routes/app.php'));
+
+            Route::middleware('web')
+                ->domain($cockpitDomain)
+                ->group(base_path('routes/cockpit.php'));
+
+            Route::middleware('api')
+                ->domain($apiDomain)
+                ->group(base_path('routes/api.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -41,7 +52,21 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
         ]);
 
-        $middleware->redirectUsersTo(fn ($request) => route('overview'));
+        $middleware->redirectGuestsTo(function (Request $request) {
+            if ($request->getHost() === config('domain.cockpit')) {
+                return route('cockpit.login');
+            }
+
+            return route('login');
+        });
+
+        $middleware->redirectUsersTo(function (Request $request) {
+            if ($request->getHost() === config('domain.cockpit')) {
+                return route('cockpit.dashboard');
+            }
+
+            return route('overview');
+        });
 
         $middleware->alias([
             'stock.not.frozen' => \App\Http\Middleware\EnsureStockNotFrozen::class,

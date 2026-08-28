@@ -34,6 +34,9 @@ class SettingController extends Controller
         }
 
         $currentConfig['paper_size'] = $paperSize;
+        if (isset($validated['auto_print'])) {
+            $currentConfig['auto_print'] = $validated['auto_print'];
+        }
         $receiptRow->id = $receiptRow->id ?? (string) Str::uuid();
         $receiptRow->value = $currentConfig;
         $receiptRow->save();
@@ -68,6 +71,7 @@ class SettingController extends Controller
         return $this->successResponse([
             'paper_size' => $paperSize,
             'receipt_format' => $paperSize === '80mm' ? 'large' : 'standard',
+            'auto_print' => $validated['auto_print'] ?? null,
         ], 'Pengaturan printer berhasil disinkronkan ke database pusat.');
     }
 }

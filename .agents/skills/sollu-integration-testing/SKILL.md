@@ -13,7 +13,7 @@ Standard pengujian integrasi antarmuka web (End-to-End / E2E Integration Testing
 
 ## 1. Prerequisites & Dev Server Verification
 
-- Pastikan Anda menjalankan aplikasi menggunakan Valet dengan URL **http://dashboard.sollu.test/**.
+- Pastikan Anda menjalankan aplikasi menggunakan Valet dengan URL **http://app.sollu.test/**.
 - Jika terdapat file Dusk test di `tests/Browser`, gunakan Dusk untuk menjalankan alur pengujian, bukan browsermcp.
 
 Sebelum melakukan pengujian browser via MCP tools:

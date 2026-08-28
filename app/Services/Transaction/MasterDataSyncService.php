@@ -171,6 +171,49 @@ class MasterDataSyncService
             ->get()
             ->makeHidden('business_id');
 
+        // 7. Transaksi 1 bulan terakhir
+        $transactions = \App\Models\Sales\Transaction::with([
+                'items',
+                'items.modifiers',
+                'payments',
+                'promos'
+            ])
+            ->where('outlet_id', $outletId)
+            ->where('created_at', '>=', now()->subMonth())
+            ->get();
+
+        $transactionData = [];
+        $transactionItems = [];
+        $transactionItemModifiers = [];
+        $transactionPayments = [];
+        $transactionPromos = [];
+
+        foreach ($transactions as $transaction) {
+            $tArray = $transaction->toArray();
+
+            foreach ($transaction->items as $item) {
+                $iArray = $item->toArray();
+                foreach ($item->modifiers as $mod) {
+                    $transactionItemModifiers[] = $mod->toArray();
+                }
+                unset($iArray['modifiers']);
+                $transactionItems[] = $iArray;
+            }
+            unset($tArray['items']);
+
+            foreach ($transaction->payments as $payment) {
+                $transactionPayments[] = $payment->toArray();
+            }
+            unset($tArray['payments']);
+
+            foreach ($transaction->promos as $promo) {
+                $transactionPromos[] = $promo->toArray();
+            }
+            unset($tArray['promos']);
+
+            $transactionData[] = $tArray;
+        }
+
         return [
             'outlet' => [
                 'id' => $outlet->id,
@@ -198,6 +241,11 @@ class MasterDataSyncService
             'inventory_balances' => $inventoryBalances,
             'inventory_item_variant_group_options' => $inventoryItemVariantGroupOptions,
             'promos' => $promos,
+            'transactions' => $transactionData,
+            'transaction_items' => $transactionItems,
+            'transaction_item_modifiers' => $transactionItemModifiers,
+            'transaction_payments' => $transactionPayments,
+            'transaction_promos' => $transactionPromos,
         ];
     }
 }

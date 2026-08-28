@@ -14,10 +14,10 @@ class CustomerTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             // 1. Authentication
-            $browser->visit('http://dashboard.sollu.test/bypass-auth')
+            $browser->visit('http://app.sollu.test/bypass-auth')
                 ->assertPathIs('/')
                 // 2. Navigate to Customers
-                ->visit('http://dashboard.sollu.test/customers')
+                ->visit('http://app.sollu.test/customers')
                 ->waitForText('Daftar Pelanggan', 10)
                 // 3. Open Create PopUp
                 ->click('.btn-highlight-main')

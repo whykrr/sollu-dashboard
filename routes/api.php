@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Midtrans\NotificationController;
+use App\Http\Controllers\Docs\SwaggerController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('midtrans/notification', NotificationController::class)->name('midtrans.notification');
@@ -31,3 +32,11 @@ Route::prefix('pos')->name('api.pos.')->group(function () {
         Route::post('/logs/error', [\App\Http\Controllers\API\POS\LogController::class, 'error'])->name('logs.error');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Development-Only Swagger API Docs Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/docs/api', [SwaggerController::class, 'index'])->name('docs.swagger');
+Route::get('/docs/openapi.yaml', [SwaggerController::class, 'yaml'])->name('docs.openapi');

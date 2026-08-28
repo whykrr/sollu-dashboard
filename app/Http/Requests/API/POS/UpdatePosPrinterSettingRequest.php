@@ -19,6 +19,7 @@ class UpdatePosPrinterSettingRequest extends FormRequest
             'printer_mac_address' => ['nullable', 'string', 'max:255'],
             'auto_cut' => ['nullable', 'boolean'],
             'open_cash_drawer' => ['nullable', 'boolean'],
+            'auto_print' => ['nullable', 'boolean'],
         ];
     }
 }

@@ -33,7 +33,7 @@
                             :feedback="form.errors.paper_size"
                         />
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        <div class="pt-1">
                             <label
                                 for="auto_print"
                                 class="flex items-center justify-between p-3 border border-slate-200 rounded-lg cursor-pointer select-none hover:bg-slate-50/80 hover:border-slate-300 transition-colors"
@@ -51,26 +51,6 @@
                                 <Switch
                                     id="auto_print"
                                     v-model="form.auto_print"
-                                    size="md"
-                                />
-                            </label>
-                            <label
-                                for="print_kitchen_copy"
-                                class="flex items-center justify-between p-3 border border-slate-200 rounded-lg cursor-pointer select-none hover:bg-slate-50/80 hover:border-slate-300 transition-colors"
-                            >
-                                <div>
-                                    <div
-                                        class="font-medium text-sm text-slate-700"
-                                    >
-                                        Salinan Dapur
-                                    </div>
-                                    <div class="text-xs text-slate-500">
-                                        Cetak tiket pesanan dapur
-                                    </div>
-                                </div>
-                                <Switch
-                                    id="print_kitchen_copy"
-                                    v-model="form.print_kitchen_copy"
                                     size="md"
                                 />
                             </label>
@@ -377,8 +357,15 @@
                                 v-if="form.show_logo"
                                 class="flex justify-center mb-2"
                             >
+                                <img
+                                    v-if="business?.logo_url || selectedOutlet?.logo_url"
+                                    :src="business?.logo_url || selectedOutlet?.logo_url"
+                                    class="h-16 object-contain"
+                                    alt="Logo Usaha"
+                                />
                                 <div
-                                    class="w-12 h-12 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-500 text-sm font-bold"
+                                    v-else
+                                    class="w-16 h-16 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-500 text-sm font-bold"
                                 >
                                     LOGO
                                 </div>
@@ -386,7 +373,7 @@
 
                             <!-- Header Title -->
                             <div
-                                class="font-bold text-sm uppercase text-slate-900 tracking-wide"
+                                class="font-bold text-base uppercase text-slate-900 tracking-wide"
                             >
                                 {{
                                     form.custom_header_title ||
@@ -414,7 +401,7 @@
                                 v-if="form.show_email && selectedOutlet?.email"
                                 class="text-[11px] text-slate-600"
                             >
-                                {{ selectedOutlet.email }}
+                                Email: {{ selectedOutlet.email }}
                             </div>
 
                             <!-- Header Note -->
@@ -422,8 +409,10 @@
                                 v-if="form.header_notes"
                                 class="text-[11px] italic text-slate-600 mt-1.5"
                             >
-                                "{{ form.header_notes }}"
+                                {{ form.header_notes }}
                             </div>
+
+
                         </div>
 
                         <!-- Meta Info -->
@@ -455,28 +444,36 @@
                             class="border-b border-dashed border-slate-300 pb-2 mb-2 text-[11px]"
                         >
                             <!-- Item 1 -->
-                            <div class="flex justify-between font-medium">
-                                <span>2x Kopi Susu Aren</span>
+                            <div class="font-medium">
+                                Kopi Susu Aren
+                            </div>
+                            <div class="flex justify-between">
+                                <span>2 x Rp 25.000</span>
                                 <span>Rp 50.000</span>
                             </div>
                             <div
                                 v-if="form.show_modifiers"
-                                class="text-[10px] text-slate-500 pl-3"
+                                class="text-[10px] text-slate-500"
                             >
                                 + Less Sugar, Extra Shot (+Rp 5.000)
                             </div>
                             <div
                                 v-if="form.show_item_notes"
-                                class="text-[10px] italic text-slate-500 pl-3"
+                                class="text-[10px] italic text-slate-500"
                             >
-                                Catatan: Sedikit es
+                                * Sedikit es
+                            </div>
+                            <div class="flex justify-between text-[10px] text-slate-500">
+                                <span>Diskon Item</span>
+                                <span>-Rp 0</span>
                             </div>
 
                             <!-- Item 2 -->
-                            <div
-                                class="flex justify-between font-medium mt-1.5"
-                            >
-                                <span>1x Croissant Butter</span>
+                            <div class="font-medium mt-1.5">
+                                Croissant Butter
+                            </div>
+                            <div class="flex justify-between">
+                                <span>1 x Rp 25.000</span>
                                 <span>Rp 25.000</span>
                             </div>
                         </div>
@@ -490,21 +487,21 @@
                                 <span>Rp 75.000</span>
                             </div>
                             <div class="flex justify-between text-slate-600">
-                                <span>Diskon Promo</span>
+                                <span>Diskon</span>
                                 <span>-Rp 5.000</span>
                             </div>
                             <div
                                 v-if="form.show_tax_detail"
                                 class="flex justify-between text-slate-600"
                             >
-                                <span>PB1 / Pajak (10%)</span>
+                                <span>Pajak (PB1/PPN)</span>
                                 <span>Rp 7.000</span>
                             </div>
                             <div
                                 v-if="form.show_service_charge"
                                 class="flex justify-between text-slate-600"
                             >
-                                <span>Service Fee (5%)</span>
+                                <span>Service Charge</span>
                                 <span>Rp 3.500</span>
                             </div>
                             <div
@@ -516,7 +513,7 @@
                             <div
                                 class="flex justify-between text-slate-600 mt-1"
                             >
-                                <span>Tunai (Cash)</span>
+                                <span>Tunai</span>
                                 <span>Rp 100.000</span>
                             </div>
                             <div class="flex justify-between text-slate-600">
@@ -543,11 +540,10 @@
                             </div>
                             <div
                                 v-if="form.wifi_info"
-                                class="text-[10px] text-slate-500"
+                                class="text-[11px] text-slate-600"
                             >
-                                {{ form.wifi_info }}
+                                WiFi: {{ form.wifi_info }}
                             </div>
-
                             <!-- QR Code Preview -->
                             <div
                                 v-if="form.show_qr_code"
@@ -625,8 +621,6 @@ const defaultSettings = {
     show_qr_code: false,
     qr_type: 'invoice',
     auto_print: true,
-    print_kitchen_copy: false,
-    print_checker_copy: false,
 };
 
 const form = useForm({

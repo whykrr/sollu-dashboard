@@ -14,7 +14,7 @@ class TransactionController extends Controller
 
         // Data payload
         $data = $request->validated();
-        
+
         // Atur shift_id jika tidak dikirim (atau tidak valid)
         $shiftId = $data['shift_id'] ?? null;
         if (! empty($shiftId)) {

@@ -19,10 +19,10 @@ class IntegrationTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             // Visit the Valet URL and trigger bypass auth
-            $browser->visit('http://dashboard.sollu.test/bypass-auth')
+            $browser->visit('http://app.sollu.test/bypass-auth')
                 ->assertPathIs('/')
                     // Now perform a sample UI interaction, e.g., open dashboard
-                ->visit('http://dashboard.sollu.test/')
+                ->visit('http://app.sollu.test/')
                 ->assertSee('Dashboard')
                     // Example: click a button with text "Tambah Data"
                 ->clickLink('Tambah Data')

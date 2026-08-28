@@ -41,7 +41,13 @@ resources/
     └── pdf/             # DomPDF Blade templates & pdf.partials.header
 ```
 
-## 3. Localization & Language Rules
+## 3. Subdomain & Guard Routing Architecture
+
+- **`app.sollu.test`** (Guard: `business`, Middleware: `web`): Merchant Web Application & Inertia Dashboard (`routes/app.php` & `routes/app/*.php`).
+- **`cockpit.sollu.id`** (Guard: `cockpit`, Middleware: `web`): Internal Admin & Operations Panel (`routes/cockpit.php`).
+- **`api.sollu.test`** (Guard: `sanctum` / Public, Middleware: `api`): POS Device APIs, Webhooks, and OpenAPI Docs (`routes/api.php`).
+
+## 4. Localization & Language Rules
 
 - **UI Text & Error Messages:** MUST strictly use **Indonesian** (e.g. `"Anda tidak memiliki akses."`, `"Data berhasil disimpan."`).
 - **Code Documentation & Comments:** Code comments, docstrings, variable names, and architectural rules MUST be written in **English**.
