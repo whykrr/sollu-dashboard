@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Master\ModifierGroupController;
-use App\Http\Controllers\Master\ProductCategoryController;
-use App\Http\Controllers\Master\ProductController;
+use App\Http\Controllers\App\Master\ModifierGroupController;
+use App\Http\Controllers\App\Master\ProductCategoryController;
+use App\Http\Controllers\App\Master\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('master')

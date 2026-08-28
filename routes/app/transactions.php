@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Transaction\InvoiceController;
-use App\Http\Controllers\Transaction\SalesController;
-use App\Http\Controllers\Transaction\ShiftController;
+use App\Http\Controllers\App\Transaction\InvoiceController;
+use App\Http\Controllers\App\Transaction\SalesController;
+use App\Http\Controllers\App\Transaction\ShiftController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('transactions')->name('transactions.')->group(function () {

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Outlet;
-use App\Services\Outlet\OutletProvisioningService;
+use App\Services\App\Outlet\OutletProvisioningService;
 use Illuminate\Console\Command;
 
 class RepairDefaultOutletSettingsCommand extends Command

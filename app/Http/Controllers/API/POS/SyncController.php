@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\API\POS;
+use App\Services\Shared\Transaction\MasterDataSyncService;
 
 use App\Http\Controllers\Controller;
-use App\Services\Transaction\MasterDataSyncService as TransactionMasterDataSyncService;
+use App\Services\Shared\Transaction\MasterDataSyncService as TransactionMasterDataSyncService;
 use Illuminate\Http\Request;
 
 class SyncController extends Controller

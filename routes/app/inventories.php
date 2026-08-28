@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\Inventory\InventoryMovementController;
-use App\Http\Controllers\Inventory\RawMaterialController;
-use App\Http\Controllers\Inventory\StockAdjustmentController;
-use App\Http\Controllers\Inventory\StockController;
-use App\Http\Controllers\Inventory\StockOpnameController;
-use App\Http\Controllers\Inventory\StockPurchasesController;
-use App\Http\Controllers\Inventory\StockTransferController;
-use App\Http\Controllers\Inventory\SupplierController;
+use App\Http\Controllers\App\Inventory\InventoryMovementController;
+use App\Http\Controllers\App\Inventory\RawMaterialController;
+use App\Http\Controllers\App\Inventory\StockAdjustmentController;
+use App\Http\Controllers\App\Inventory\StockController;
+use App\Http\Controllers\App\Inventory\StockOpnameController;
+use App\Http\Controllers\App\Inventory\StockPurchasesController;
+use App\Http\Controllers\App\Inventory\StockTransferController;
+use App\Http\Controllers\App\Inventory\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('inventories')->group(function () {
@@ -76,8 +76,8 @@ Route::prefix('inventories')->group(function () {
         Route::get('adjustments/{id}', [StockAdjustmentController::class, 'show'])->name('adjustments.show');
 
         // Outlets (Generic Inventory Outlet Actions)
-        Route::post('outlets/freeze', [\App\Http\Controllers\Inventory\OutletFreezeController::class, 'freeze'])->name('outlets.freeze');
-        Route::post('outlets/unfreeze', [\App\Http\Controllers\Inventory\OutletFreezeController::class, 'unfreeze'])->name('outlets.unfreeze');
+        Route::post('outlets/freeze', [\App\Http\Controllers\App\Inventory\OutletFreezeController::class, 'freeze'])->name('outlets.freeze');
+        Route::post('outlets/unfreeze', [\App\Http\Controllers\App\Inventory\OutletFreezeController::class, 'unfreeze'])->name('outlets.unfreeze');
 
         Route::middleware(['stock.not.frozen'])->group(function () {
             Route::post('adjustments', [StockAdjustmentController::class, 'store'])->name('adjustments.store');

@@ -17,8 +17,8 @@ createInertiaApp({
         showSpinner: false,
     },
     resolve: async (name) => {
-        const pages = import.meta.glob('./Pages/**/*.vue')
-        const page = await pages[`./Pages/${name}.vue`]()
+        const pages = import.meta.glob('./Pages/App/**/*.vue')
+        const page = await pages[`./Pages/App/${name}.vue`]()
         page.default.layout ??= AppLayout
         return page
     },

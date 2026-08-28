@@ -9,7 +9,7 @@ use App\Models\Outlet;
 use App\Models\Uom;
 use App\Models\User;
 use App\Notifications\ExcelImportCompleted;
-use App\Services\Master\ProductService;
+use App\Services\App\Master\ProductService;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;

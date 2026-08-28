@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Reports\CashierShiftReportController;
-use App\Http\Controllers\Reports\CustomerReportController;
-use App\Http\Controllers\Reports\ProductReportController;
-use App\Http\Controllers\Reports\PromotionReportController;
-use App\Http\Controllers\Reports\SalesReportController;
-use App\Http\Controllers\Reports\StockAssetReportController;
+use App\Http\Controllers\App\Reports\CashierShiftReportController;
+use App\Http\Controllers\App\Reports\CustomerReportController;
+use App\Http\Controllers\App\Reports\ProductReportController;
+use App\Http\Controllers\App\Reports\PromotionReportController;
+use App\Http\Controllers\App\Reports\SalesReportController;
+use App\Http\Controllers\App\Reports\StockAssetReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('reports')->name('reports.')->group(function () {

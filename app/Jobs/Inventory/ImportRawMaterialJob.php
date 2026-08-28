@@ -7,7 +7,7 @@ use App\Models\Business;
 use App\Models\Inventory\InventoryItem;
 use App\Models\Uom;
 use App\Models\User;
-use App\Services\Inventory\RawMaterialService;
+use App\Services\App\Inventory\RawMaterialService;
 use Exception;
 
 class ImportRawMaterialJob extends AbstractExcelImportJob

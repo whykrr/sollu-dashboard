@@ -1,11 +1,11 @@
 <?php
 
 use App\Helpers\SelectedOutlet;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\OverviewController;
-use App\Http\Controllers\User\ForgotPasswordController;
-use App\Http\Controllers\User\LoginController;
-use App\Http\Controllers\User\RegisterController;
+use App\Http\Controllers\App\NotificationController;
+use App\Http\Controllers\App\OverviewController;
+use App\Http\Controllers\App\User\ForgotPasswordController;
+use App\Http\Controllers\App\User\LoginController;
+use App\Http\Controllers\App\User\RegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
@@ -75,7 +75,7 @@ Route::middleware('auth:business')->group(function () {
         Route::get('/payment-methods', [\App\Http\Controllers\API\PaymentMethodController::class, 'index'])->name('payment-methods.index');
     });
 
-    Route::get('/exports/download', [\App\Http\Controllers\ExportDownloadController::class, 'download'])->name('exports.download');
+    Route::get('/exports/download', [App\Http\Controllers\App\ExportDownloadController::class, 'download'])->name('exports.download');
 
     Route::get('/', OverviewController::class)->name('overview');
 

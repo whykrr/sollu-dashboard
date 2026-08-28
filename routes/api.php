@@ -38,5 +38,5 @@ Route::prefix('pos')->name('api.pos.')->group(function () {
 | Development-Only Swagger API Docs Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/docs/api', [SwaggerController::class, 'index'])->name('docs.swagger');
+Route::get('/docs', [SwaggerController::class, 'index'])->name('docs.swagger');
 Route::get('/docs/openapi.yaml', [SwaggerController::class, 'yaml'])->name('docs.openapi');

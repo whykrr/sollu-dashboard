@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
@@ -10,6 +9,7 @@ use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -20,15 +20,15 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/health',
         then: function () {
-            $appDomain = config('domain.app', 'app.sollu.test');
-            $cockpitDomain = config('domain.cockpit', 'cockpit.sollu.id');
-            $apiDomain = config('domain.api', 'api.sollu.test');
+            $appDomain     = config('domain.app', 'app.sollu.test');
+            $cockpitDomain = config('domain.cockpit', 'cockpit.sollu.test');
+            $apiDomain     = config('domain.api', 'api.sollu.test');
 
-            Route::middleware('web')
+            Route::middleware(['web', \App\Http\Middleware\HandleAppInertiaRequests::class])
                 ->domain($appDomain)
                 ->group(base_path('routes/app.php'));
 
-            Route::middleware('web')
+            Route::middleware(['web', \App\Http\Middleware\HandleCockpitInertiaRequests::class])
                 ->domain($cockpitDomain)
                 ->group(base_path('routes/cockpit.php'));
 
@@ -48,12 +48,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            // HandleInertiaRequests::class,
-            HandleInertiaRequests::class,
         ]);
 
         $middleware->redirectGuestsTo(function (Request $request) {
-            if ($request->getHost() === config('domain.cockpit')) {
+            if (str_starts_with($request->getHost(), 'cockpit.') || $request->getHost() === config('domain.cockpit')) {
                 return route('cockpit.login');
             }
 
@@ -61,7 +59,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $middleware->redirectUsersTo(function (Request $request) {
-            if ($request->getHost() === config('domain.cockpit')) {
+            if (str_starts_with($request->getHost(), 'cockpit.') || $request->getHost() === config('domain.cockpit')) {
                 return route('cockpit.dashboard');
             }
 
@@ -70,7 +68,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'stock.not.frozen' => \App\Http\Middleware\EnsureStockNotFrozen::class,
-            'pos.device' => \App\Http\Middleware\VerifyPosDevice::class,
+            'pos.device'       => \App\Http\Middleware\VerifyPosDevice::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

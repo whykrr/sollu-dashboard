@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\App\PromotionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('promotions')->name('promotions.')->group(function () {
