@@ -1,7 +1,6 @@
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
-import { ZiggyVue } from 'ziggy-js'
-import { Ziggy } from './ziggy.js'
+import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
 import AppLayout from '@/Layout/AppCockpitLayout.vue'
 import { createPinia } from 'pinia'
@@ -25,13 +24,9 @@ createInertiaApp({
     },
 
     setup({ el, App, props, plugin }) {
-        const ziggyConfig = {
-            ...(typeof window !== 'undefined' && window.Ziggy ? window.Ziggy : Ziggy),
-            location: typeof window !== 'undefined' ? new URL(window.location.href) : undefined,
-        }
         createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue, ziggyConfig)
+            .use(ZiggyVue)
             .use(createPinia())
             .use(AccessHandle)
             .mount(el)
