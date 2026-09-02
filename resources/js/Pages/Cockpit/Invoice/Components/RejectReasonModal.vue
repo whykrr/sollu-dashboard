@@ -1,0 +1,68 @@
+<template>
+    <Modal
+        :show="show"
+        title="Tolak Pembayaran"
+        type="danger"
+        @close="closeModal"
+    >
+        <div class="flex flex-col gap-4">
+            <p>Masukkan alasan penolakan bukti pembayaran. Alasan ini akan dikirimkan ke email merchant.</p>
+            <TextAreaField
+                label="Alasan Penolakan"
+                v-model="form.reason"
+                :error="form.errors.reason"
+                placeholder="Contoh: Gambar bukti transfer blur, nominal tidak sesuai, dll."
+                rows="4"
+            />
+        </div>
+
+        <template #footer>
+            <button class="btn btn-outline-main" @click="closeModal" :disabled="form.processing">
+                Batal
+            </button>
+            <button class="btn btn-danger" @click="submit" :disabled="form.processing || !form.reason">
+                {{ form.processing ? 'Menyimpan...' : 'Tolak Pembayaran' }}
+            </button>
+        </template>
+    </Modal>
+</template>
+
+<script setup>
+import Modal from '@/Components/Notifications/Modal.vue';
+import TextAreaField from '@/Components/Form/TextAreaField.vue';
+import { useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
+    show: {
+        type: Boolean,
+        default: false,
+    },
+    invoiceId: {
+        type: String,
+        default: null,
+    },
+});
+
+const emit = defineEmits(['close', 'success']);
+
+const form = useForm({
+    reason: '',
+});
+
+const closeModal = () => {
+    form.reset();
+    form.clearErrors();
+    emit('close');
+};
+
+const submit = () => {
+    if (!props.invoiceId) return;
+
+    form.post(route('cockpit.invoices.reject', props.invoiceId), {
+        onSuccess: () => {
+            closeModal();
+            emit('success');
+        },
+    });
+};
+</script>

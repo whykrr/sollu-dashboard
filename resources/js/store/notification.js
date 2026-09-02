@@ -1,5 +1,4 @@
 import { markRaw } from 'vue'
-import i18n from '@/i18n'
 import { defineStore } from 'pinia'
 import { useToastStore } from './toast'
 
@@ -64,7 +63,7 @@ export const useModalStore = defineStore('modal', {
         /**
          * Shortcut for a confirmation dialog
          */
-    confirm({ title = 'Konfirmasi Tindakan', message, type = 'warning', confirmText = 'Ya, Lanjutkan', cancelText = 'Batal', confirmClass, onConfirm, onCancel }) {
+        confirm({ title = 'Konfirmasi Tindakan', message, type = 'warning', confirmText = 'Ya, Lanjutkan', cancelText = 'Batal', confirmClass, onConfirm, onCancel }) {
             this.open({
                 type,
                 title,

@@ -13,4 +13,6 @@ class ResourceMessage
     public const RESTORE_SUCCESS = 'Data berhasil di kembalikan!';
 
     public const PURGE_SUCCESS = 'Data berhasil di hapus!';
+
+    public const REGISTER_SUCCESS = 'Pendaftaran Berhasil!, Cek email Anda untuk verifikasi';
 }

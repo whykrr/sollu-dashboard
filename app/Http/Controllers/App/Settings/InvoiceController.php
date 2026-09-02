@@ -56,12 +56,16 @@ class InvoiceController extends Controller
                 ],
             ];
 
-            // Assuming MidtransService exists and works as in old code
-            if (class_exists(MidtransService::class)) {
-                $midtrans = new MidtransService;
-                $transaction = $midtrans->createTransaction($midtrans_request);
-            } else {
-                $transaction = ['token' => 'dummy-token']; // Mock if service not found
+            try {
+                if (class_exists(MidtransService::class)) {
+                    $midtrans = new MidtransService;
+                    $transaction = (array) $midtrans->createTransaction($midtrans_request);
+                } else {
+                    $transaction = ['token' => 'dummy-token']; // Mock if service not found
+                }
+            } catch (\Exception $e) {
+                return redirect()->route('settings.billing.index')
+                    ->with(FlashDataVariable::WARNING->value, 'Gagal terhubung ke layanan pembayaran (Midtrans). Silakan coba lagi nanti atau gunakan metode manual. Detail: ' . $e->getMessage());
             }
 
             $payment = $invoice->payments()->create([
@@ -129,8 +133,20 @@ class InvoiceController extends Controller
                 'validation_status' => 'pending',
                 'reviewed_by' => null,
                 'reviewed_at' => null,
+                'rejection_reason' => null,
             ]
         );
+
+        // Ensure there is a pending manual payment
+        $payment = $invoice->payments()->where('payment_method', 'manual')->latest()->first();
+        if (! $payment || $payment->status === 'failed') {
+            $invoice->payments()->create([
+                'amount' => $invoice->total_amount,
+                'payment_method' => 'manual',
+                'status' => 'pending',
+                'payment_reference' => "{$invoice->invoice_number}-MANUAL-".\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(4)),
+            ]);
+        }
 
         return redirect()->route('settings.billing.invoices.show', $invoice_number)
             ->with(FlashDataVariable::SUCCESS->value, 'Bukti transfer berhasil diunggah. Tim kami akan segera melakukan verifikasi.');
@@ -198,17 +214,10 @@ class InvoiceController extends Controller
     public function finish(Request $req, $invoice_number)
     {
         $business = $req->user()->business;
-        Invoice::where('invoice_number', $invoice_number)->where('business_id', $business->id)->update([
-            'status' => 'paid',
-            'paid_at' => \Carbon\Carbon::now(),
-        ]);
+        $invoice = Invoice::where('invoice_number', $invoice_number)->where('business_id', $business->id)->firstOrFail();
 
-        $subscription = $business->subscriptions()->latest()->first();
-        if ($subscription) {
-            $subscription->update([
-                'status' => 'active',
-            ]);
-        }
+        $completeService = app(\App\Services\App\Invoice\CompleteInvoiceService::class);
+        $completeService->execute($invoice);
 
         return redirect()->route('settings.billing.invoices.show', $invoice_number)->with(
             FlashDataVariable::SUCCESS->value,

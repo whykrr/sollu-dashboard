@@ -312,16 +312,28 @@
                             Lunas
                         </label>
                         <label
-                            v-else-if="row.status === 'open'"
-                            class="badge pill text-xs badge-warning"
-                        >
-                            Menunggu Pembayaran
-                        </label>
-                        <label
                             v-else-if="row.status === 'void'"
                             class="badge pill text-xs badge-danger"
                         >
                             Dibatalkan
+                        </label>
+                        <label
+                            v-else-if="row.payment_manual_validation?.validation_status === 'pending'"
+                            class="badge pill text-xs badge-warning"
+                        >
+                            Pending Review
+                        </label>
+                        <label
+                            v-else-if="row.payment_manual_validation?.validation_status === 'rejected'"
+                            class="badge pill text-xs badge-danger"
+                        >
+                            Ditolak
+                        </label>
+                        <label
+                            v-else-if="row.status === 'open'"
+                            class="badge pill text-xs badge-warning"
+                        >
+                            Menunggu Pembayaran
                         </label>
                         <label
                             v-else

@@ -7,7 +7,6 @@ use App\Http\Controllers\Cockpit\BusinessController;
 use App\Http\Controllers\Cockpit\ConfigController;
 use App\Http\Controllers\Cockpit\DashboardController;
 use App\Http\Controllers\Cockpit\InvoiceController;
-use App\Http\Controllers\Cockpit\SubscriptionController;
 use App\Http\Controllers\Cockpit\UomController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,10 +29,9 @@ Route::name('cockpit.')->group(function () {
         Route::get('/business/{id}', [BusinessController::class, 'show'])->name('merchants.show');
         Route::get('/business/{id}/impersonate/{userId}', [BusinessController::class, 'impersonate'])->name('merchants.impersonate');
 
-        Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-        Route::get('/subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
-
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+        Route::post('/invoices/{invoice}/approve', [InvoiceController::class, 'approve'])->name('invoices.approve');
+        Route::post('/invoices/{invoice}/reject', [InvoiceController::class, 'reject'])->name('invoices.reject');
 
         Route::get('/uoms', [UomController::class, 'index'])->name('uoms.index');
 

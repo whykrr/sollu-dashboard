@@ -1,7 +1,6 @@
 import {
     faChartPie,
     faStore,
-    faMoneyCheckDollar,
     faTags,
     faFileInvoice,
     faUsersGear
@@ -23,11 +22,11 @@ export const cockpitSidebars = [
         activeRoute: 'cockpit.merchants',
     },
     {
-        route: 'cockpit.subscriptions.index',
-        icon: faMoneyCheckDollar,
-        label: 'Subscription & Billing',
+        route: 'cockpit.invoices.index',
+        icon: faFileInvoice,
+        label: 'Invoice Langganan',
         permissions: '',
-        activeRoute: 'cockpit.subscriptions',
+        activeRoute: 'cockpit.invoices',
     },
     {
         route: 'cockpit.uoms.index',
@@ -35,13 +34,6 @@ export const cockpitSidebars = [
         label: 'Global UOM',
         permissions: '',
         activeRoute: 'cockpit.uoms',
-    },
-    {
-        route: 'cockpit.payments.index',
-        icon: faFileInvoice,
-        label: 'Payment Validation',
-        permissions: '',
-        activeRoute: 'cockpit.payments',
     },
     {
         route: 'cockpit.config.index',

@@ -14,7 +14,9 @@ Saat membuat atau mengedit komponen UI di `resources/js/Components`, Anda **WAJI
 ## 2. Aturan Layout Utama & Side Drawer (`@/Components/UI/`)
 - **`<MainPage>`:** Wajib digunakan sebagai wrapper halaman utama/index dengan slot `#header`, default slot (konten tabel/halaman), dan slot `#footer`.
 - **`<PopUpPage>` / `usePopUpStore()`:** Wajib digunakan untuk drawer panel sebelah kanan pada halaman formulir *Create*, *Edit*, *Detail*, dan *Sub-page*. Dilarang menggunakan *full page redirect* (`router.get()`) untuk formulir sub-halaman.
-- **Sticky Footer Teleport:** Kirim tombol aksi formulir PopUpPage ke footer sticky drawer menggunakan `<Teleport v-if="isMounted" to="#popUpFooter">`.
+  - **Cara Penggunaan Global:** Import `usePopUpStore` dari `@/store/popup`. Panggil `popUpStore.open({ component: YourComponent, props: { ... }, events: { ... } })`.
+  - **DILARANG BUNGKUS DENGAN `<PopUpPage>`:** Komponen Vue dinamis (`YourComponent`) **TIDAK PERLU** dibungkus `<PopUpPage>` di templatenya, cukup *div content* biasa (sebab `PopUpContainer` global sudah merendernya).
+- **Sticky Footer Teleport:** Kirim tombol aksi di komponen PopUpPage ke footer sticky drawer menggunakan `<Teleport v-if="isMounted" to="#popUpFooter">`. Pastikan variabel `const isMounted = ref(false)` di-set `true` saat `onMounted`.
 
 ## 3. Aturan Modal Konfirmasi (`@/Components/Notifications/Modal.vue` / `useModalStore()`)
 - **`<Modal>`:** STRICTLY hanya digunakan untuk dialog konfirmasi singkat (contoh: Konfirmasi Hapus Data, Archive, Alert Peringatan).

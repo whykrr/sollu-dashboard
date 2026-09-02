@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Mail;
+
+use App\Models\Invoice;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class PaymentRejectedMail extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    public function __construct(
+        public Invoice $invoice,
+        public string $rejectionReason
+    ) {}
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Pemberitahuan: Pembayaran Invoice Ditolak ('.$this->invoice->invoice_number.')',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.invoices.payment_rejected',
+            with: [
+                'invoiceNumber' => $this->invoice->invoice_number,
+                'rejectionReason' => $this->rejectionReason,
+            ],
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+}

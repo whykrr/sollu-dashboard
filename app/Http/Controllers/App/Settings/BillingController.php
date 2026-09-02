@@ -21,7 +21,7 @@ class BillingController extends Controller
         $business = $req->user()->business;
 
         $invoices = $business->invoices()
-            ->with(['items'])
+            ->with(['items', 'paymentManualValidation'])
             ->latest();
 
         $activeSubscription = $business->subscriptions()->with('plan')->where('status', 'active')->first();

@@ -46,26 +46,18 @@ class NotificationController extends Controller
         DB::beginTransaction();
         try {
             $invoice = $payment->invoice;
-            $business = $invoice->business;
-            $subscription = $business->subscriptions()->latest()->first();
 
             if ($transactionStatus === 'capture' || $transactionStatus === 'settlement') {
                 $payment->status = 'success';
                 $payment->paid_at = Carbon::now();
 
-                $invoice->update([
-                    'status' => 'paid',
-                    'paid_at' => Carbon::now(),
-                ]);
-
-                if ($subscription) {
-                    $subscription->update([
-                        'status' => 'active',
-                    ]);
-                }
+                $completeService = app(\App\Services\App\Invoice\CompleteInvoiceService::class);
+                $completeService->execute($invoice);
             } elseif (in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure'])) {
                 $payment->status = 'failed';
 
+                $business = $invoice->business;
+                $subscription = $business->subscriptions()->latest()->first();
                 if ($subscription) {
                     $subscription->update([
                         'status' => 'inactive',

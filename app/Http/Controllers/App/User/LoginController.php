@@ -28,7 +28,7 @@ class LoginController extends Controller
                 'email' => 'Autentikasi gagal, silakan periksa kembali email dan kata sandi Anda!',
             ]);
         }
-        
+
         $user = Auth::user();
         $user->last_login_at = now();
         $user->save();
@@ -42,7 +42,7 @@ class LoginController extends Controller
     {
         $id = Auth::id();
 
-        Auth::logout();
+        Auth::guard('business')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

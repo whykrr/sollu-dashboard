@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\App\User;
 
+use App\Constants\FlashDataVariable;
+use App\Constants\ResourceMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\User\RegisterRequest;
-use App\Models\Business;
 use App\Models\BusinessType;
-use App\Models\User;
 use App\Notifications\WelcomeUser;
+use App\Services\App\User\RegisterBusinessService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
 
 class RegisterController extends Controller
 {
+    public function __construct(
+        protected RegisterBusinessService $registerBusinessService
+    ) {}
+
     public function index(Request $request)
     {
         $businessTypes = BusinessType::where('is_visible', true)->get()->map(function ($row) {
@@ -26,61 +30,20 @@ class RegisterController extends Controller
         return inertia('User/Register', [
             'business_types' => $businessTypes,
         ]);
-
     }
 
     public function store(RegisterRequest $request)
     {
-        DB::beginTransaction();
+        $result = $this->registerBusinessService->execute($request->validated());
 
-        try {
-            $type = BusinessType::find($request->business_type_id);
+        Auth::guard('business')->login($result['user']);
 
-            $business = Business::create([
-                'name' => $request->name,
-                'owner_name' => $request->owner_name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'status' => 'active',
-                'business_type_id' => $request->business_type_id,
-                'settings' => $type->default_settings,
-                'trial_end_at' => now()->addDays(15),
-            ]);
+        $result['user']->sendEmailVerificationNotification();
+        $result['user']->notify(new WelcomeUser($result['user']));
 
-            $outlet = $business->outlets()->create([
-                'name' => $request->outlet_name,
-                'is_main_outlet' => true,
-            ]);
-
-            /**
-             * @var User
-             */
-            $user = $business->users()->create([
-                'name' => $request->owner_name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'password' => $request->password,
-                'is_root_user' => true,
-            ]);
-
-            // assign user role
-            $user->assignRole('owner');
-            $user->outlets()->attach($outlet->id);
-
-            // Provision default settings & payment methods
-            app(\App\Services\App\Outlet\OutletProvisioningService::class)->provisionAll($outlet);
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-        Auth::login($user);
-
-        $user->sendEmailVerificationNotification();
-        $user->notify(new WelcomeUser($user));
-
-        return redirect()->route('overview')->with('success', 'Pendaftaran Berhasil!, Cek email Anda untuk verifikasi');
+        return redirect()->route('overview')->with(
+            FlashDataVariable::SUCCESS->value,
+            ResourceMessage::REGISTER_SUCCESS
+        );
     }
 }

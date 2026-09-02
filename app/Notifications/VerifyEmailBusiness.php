@@ -4,12 +4,13 @@ namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\VerifyEmail as NotificationsVerifyEmail;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 
-class VerifyEmailBusiness extends NotificationsVerifyEmail
+class VerifyEmailBusiness extends NotificationsVerifyEmail implements ShouldQueue
 {
     use Queueable;
 
@@ -18,7 +19,7 @@ class VerifyEmailBusiness extends NotificationsVerifyEmail
      */
     public function __construct()
     {
-        //
+        $this->afterCommit = true;
     }
 
     /**

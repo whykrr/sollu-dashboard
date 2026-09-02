@@ -39,13 +39,7 @@ class SubscriptionController extends Controller
             $invoice = $this->billingEngine->generateRecurringInvoice($business, $subscription);
 
             if ($invoice->total_amount == 0) {
-                $invoice->update([
-                    'status' => 'paid',
-                    'paid_at' => \Carbon\Carbon::now(),
-                ]);
-                $subscription->update([
-                    'status' => 'active',
-                ]);
+                app(\App\Services\App\Invoice\CompleteInvoiceService::class)->execute($invoice);
 
                 return redirect()->route('settings.billing.index')->with(
                     FlashDataVariable::SUCCESS->value,
@@ -96,13 +90,7 @@ class SubscriptionController extends Controller
         $invoice = $this->billingEngine->generateRecurringInvoice($business, $subscription);
 
         if ($invoice->total_amount == 0) {
-            $invoice->update([
-                'status' => 'paid',
-                'paid_at' => \Carbon\Carbon::now(),
-            ]);
-            $subscription->update([
-                'status' => 'active',
-            ]);
+            app(\App\Services\App\Invoice\CompleteInvoiceService::class)->execute($invoice);
 
             return redirect()->route('settings.billing.index')->with(
                 FlashDataVariable::SUCCESS->value,
