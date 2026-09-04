@@ -26,8 +26,16 @@ class BillingController extends Controller
 
         $activeSubscription = $business->subscriptions()->with('plan')->where('status', 'active')->first();
 
+        $pendingInvoice = $business->invoices()
+            ->where('status', 'open')
+            ->where('due_date', '>', Carbon::now())
+            ->latest()
+            ->first();
+
         return Inertia::render('Settings/Billing/Index', [
             'subscription' => $activeSubscription,
+            'pendingInvoice' => $pendingInvoice,
+            'maxOutlets' => $business->maxOutletsAllowed(),
             'invoices' => $invoices->paginate($req->get('perpage', 20)),
         ]);
     }
@@ -48,7 +56,15 @@ class BillingController extends Controller
             ->where('due_date', '>', Carbon::now())
             ->first();
 
-        $plans = SubscriptionPlan::orderBy('price_per_outlet', 'asc')->get();
+        $plans = SubscriptionPlan::query()
+            ->where(function ($query) use ($subscription) {
+                $query->where('is_active', true);
+                if ($subscription?->plan_id) {
+                    $query->orWhere('id', $subscription->plan_id);
+                }
+            })
+            ->orderBy('price_per_outlet', 'asc')
+            ->get();
 
         return Inertia::render('Settings/Billing/Plans', [
             'subscription' => $subscription,
@@ -79,6 +95,11 @@ class BillingController extends Controller
         }
 
         $plan = SubscriptionPlan::findOrFail($plan_id);
+
+        if (! $plan->is_active) {
+            return redirect()->route('settings.billing.plans')
+                ->with(FlashDataVariable::WARNING->value, 'Paket langganan ini sudah tidak aktif.');
+        }
 
         return Inertia::render('Settings/Billing/Checkout', [
             'subscription' => $subscription,

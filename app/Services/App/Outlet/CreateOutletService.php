@@ -61,6 +61,15 @@ class CreateOutletService
 
             if ($subscription && $subscription->plan) {
                 $invoice = $this->billingEngine->generateOutletProratedInvoice($user->business, $subscription, $outlet);
+
+                if ($invoice && isset($data['payment_method']) && $data['payment_method'] === 'manual') {
+                    $invoice->payments()->create([
+                        'amount' => $invoice->total_amount,
+                        'payment_method' => 'manual',
+                        'status' => 'pending',
+                        'payment_reference' => "{$invoice->invoice_number}-MANUAL-".\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(4)),
+                    ]);
+                }
             }
 
             return [

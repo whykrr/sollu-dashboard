@@ -7,6 +7,7 @@ use App\Http\Controllers\Cockpit\BusinessController;
 use App\Http\Controllers\Cockpit\ConfigController;
 use App\Http\Controllers\Cockpit\DashboardController;
 use App\Http\Controllers\Cockpit\InvoiceController;
+use App\Http\Controllers\Cockpit\SubscriptionPlanController;
 use App\Http\Controllers\Cockpit\UomController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,11 @@ Route::name('cockpit.')->group(function () {
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
         Route::post('/invoices/{invoice}/approve', [InvoiceController::class, 'approve'])->name('invoices.approve');
         Route::post('/invoices/{invoice}/reject', [InvoiceController::class, 'reject'])->name('invoices.reject');
+
+        Route::get('/subscription-plans', [SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
+        Route::get('/subscription-plans/{id}', [SubscriptionPlanController::class, 'show'])->name('subscription-plans.show');
+        Route::put('/subscription-plans/{id}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
+        Route::post('/subscription-plans/{id}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle-status');
 
         Route::get('/uoms', [UomController::class, 'index'])->name('uoms.index');
 

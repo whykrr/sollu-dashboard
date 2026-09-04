@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-6" v-if="invoice">
+    <div v-if="invoice" class="flex flex-col gap-6">
         <!-- Info Umum -->
         <div class="grid grid-cols-2 gap-4">
             <div>
@@ -48,11 +48,11 @@
             <button class="btn btn-outline-main" @click="closeDrawer">
                 Tutup
             </button>
-            <div class="flex gap-2" v-if="invoice && invoice.status === 'pending review'">
+            <div v-if="invoice && invoice.status === 'pending review'" class="flex gap-2">
                 <button class="btn btn-danger" @click="onReject">
                     Reject
                 </button>
-                <button class="btn btn-main" @click="onApprove" :disabled="form.processing">
+                <button class="btn btn-main" :disabled="form.processing" @click="onApprove">
                     {{ form.processing ? 'Menyimpan...' : 'Approve' }}
                 </button>
             </div>

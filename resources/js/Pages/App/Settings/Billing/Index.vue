@@ -17,73 +17,171 @@
         </template>
 
         <div class="flex flex-col gap-4">
-            <!-- TAMPILAN JIKA BELUM BERLANGGANAN -->
+            <!-- BANNER TAGIHAN BELUM DIBAYAR -->
             <div
-                v-if="!subscription"
-                class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-6 md:p-8 text-center flex flex-col items-center justify-center"
+                v-if="pendingInvoice"
+                class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-amber-900"
             >
-                <div
-                    class="w-14 h-14 bg-blue-100/80 rounded-full flex items-center justify-center text-blue-600 mb-4 shadow-sm"
-                >
-                    <FontAwesomeIcon :icon="faCreditCard" class="text-xl" />
-                </div>
-                <h2 class="text-xl font-bold text-gray-900">
-                    Belum Berlangganan Paket
-                </h2>
-                <p class="text-gray-600 max-w-md mt-2 mb-6 text-sm">
-                    Aktifkan langganan Anda sekarang untuk menikmati akses penuh
-                    ke semua fitur, kelola outlet tanpa batas, dan optimalkan
-                    operasional bisnis Anda.
-                </p>
-                <div class="flex flex-wrap gap-3 justify-center mb-6 max-w-lg">
+                <div class="flex items-start gap-3">
                     <div
-                        class="flex items-center gap-2 text-xs font-medium text-gray-700 bg-white/90 backdrop-blur px-3.5 py-2 rounded-full border border-slate-150 shadow-sm"
+                        class="p-2 bg-amber-100 rounded-lg text-amber-700 shrink-0 mt-0.5"
                     >
                         <FontAwesomeIcon
-                            :icon="faCheck"
-                            class="text-emerald-500 text-sm"
+                            :icon="faCircleExclamation"
+                            class="text-base"
                         />
-                        <span>Kelola Multi-Outlet</span>
                     </div>
-                    <div
-                        class="flex items-center gap-2 text-xs font-medium text-gray-700 bg-white/90 backdrop-blur px-3.5 py-2 rounded-full border border-slate-150 shadow-sm"
-                    >
-                        <FontAwesomeIcon
-                            :icon="faCheck"
-                            class="text-emerald-500 text-sm"
-                        />
-                        <span>Laporan Terintegrasi</span>
-                    </div>
-                    <div
-                        class="flex items-center gap-2 text-xs font-medium text-gray-700 bg-white/90 backdrop-blur px-3.5 py-2 rounded-full border border-slate-150 shadow-sm"
-                    >
-                        <FontAwesomeIcon
-                            :icon="faCheck"
-                            class="text-emerald-500 text-sm"
-                        />
-                        <span>Dukungan Prioritas</span>
+                    <div>
+                        <h4 class="font-bold text-amber-955 text-sm">
+                            Tagihan Menunggu Pembayaran
+                        </h4>
+                        <p class="text-amber-800 text-xs mt-0.5">
+                            Invoice
+                            <strong>#{{ pendingInvoice.invoice_number }}</strong>
+                            sebesar
+                            <strong>{{
+                                formatIDR(pendingInvoice.total_amount)
+                            }}</strong>
+                            jatuh tempo pada
+                            <strong>{{
+                                formatDateID(pendingInvoice.due_date)
+                            }}</strong>.
+                        </p>
                     </div>
                 </div>
-                <Link
-                    :href="route('settings.billing.plans')"
-                    class="btn btn-main rounded-lg font-semibold shadow hover:shadow-md transition-all duration-200"
-                >
-                    <FontAwesomeIcon :icon="faGem" />
-                    Pilih Paket Sekarang
-                </Link>
+                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                    <button
+                        class="btn btn-warning btn-sm font-semibold"
+                        @click="getDetail(pendingInvoice.invoice_number)"
+                    >
+                        Bayar Tagihan
+                        <FontAwesomeIcon
+                            :icon="faArrowRight"
+                            class="text-[10px]"
+                        />
+                    </button>
+                </div>
             </div>
 
-            <!-- TAMPILAN JIKA SUDAH BERLANGGANAN -->
+            <!-- TAMPILAN JIKA BELUM BERLANGGANAN (MASA UJI COBA / TRIAL) -->
             <div
-                v-else
-                class="bg-white border border-slate-200 rounded-xl p-4 md:p-3"
+                v-if="!subscription"
+                class="bg-white border border-slate-200 rounded-xl p-4 md:p-5"
             >
                 <div
                     class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 mb-4"
                 >
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3.5">
                         <div
-                            class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shadow-sm"
+                            class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center text-main shadow-xs"
+                        >
+                            <FontAwesomeIcon :icon="faBolt" class="text-lg" />
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-base font-bold text-gray-900">
+                                    Masa Uji Coba Gratis (Free Trial)
+                                </h2>
+                                <span
+                                    class="badge text-xs"
+                                    :class="
+                                        gapDaysFromNow(auth.business?.trial_end_at) > 0
+                                            ? 'badge-info'
+                                            : 'badge-danger'
+                                    "
+                                >
+                                    {{
+                                        gapDaysFromNow(auth.business?.trial_end_at) > 0
+                                            ? 'Aktif'
+                                            : 'Berakhir'
+                                    }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                Tingkatkan ke paket berbayar untuk menikmati akses penuh dan kelola multi-outlet tanpa batasan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <Link
+                        :href="route('settings.billing.plans')"
+                        class="btn btn-main btn-sm text-xs font-semibold py-2 px-4 rounded-lg w-full md:w-auto text-center"
+                    >
+                        <FontAwesomeIcon :icon="faGem" />
+                        Pilih Paket Langganan
+                    </Link>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Masa Berlaku Trial -->
+                    <div
+                        class="border border-slate-100 rounded-lg p-3.5 bg-slate-50/50 flex items-start gap-3"
+                    >
+                        <div class="p-2 bg-slate-100 rounded-lg text-slate-500">
+                            <FontAwesomeIcon
+                                :icon="faCalendarDays"
+                                class="w-4 h-4"
+                            />
+                        </div>
+                        <div>
+                            <span class="block text-xs font-medium text-gray-500">
+                                Masa Berlaku Uji Coba
+                            </span>
+                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
+                                {{
+                                    auth.business?.trial_end_at
+                                        ? formatDateID(auth.business.trial_end_at)
+                                        : '-'
+                                }}
+                                <span
+                                    v-if="
+                                        auth.business?.trial_end_at &&
+                                        gapDaysFromNow(auth.business.trial_end_at) > 0
+                                    "
+                                    class="text-xs font-normal text-amber-600 ml-1"
+                                >
+                                    (tersisa {{ gapDaysFromNow(auth.business.trial_end_at) }} hari)
+                                </span>
+                                <span
+                                    v-else-if="auth.business?.trial_end_at"
+                                    class="text-xs font-normal text-rose-600 ml-1"
+                                >
+                                    (telah berakhir)
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Kuota Outlet -->
+                    <div
+                        class="border border-slate-100 rounded-lg p-3.5 bg-slate-50/50 flex items-start gap-3"
+                    >
+                        <div class="p-2 bg-slate-100 rounded-lg text-slate-500">
+                            <FontAwesomeIcon :icon="faShop" class="w-4 h-4" />
+                        </div>
+                        <div>
+                            <span class="block text-xs font-medium text-gray-500">
+                                Penggunaan Outlet
+                            </span>
+                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
+                                {{ auth.outlets ? auth.outlets.length : 0 }} / {{ maxOutlets ?? 1 }} Outlet Digunakan
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAMPILAN JIKA SUDAH BERLANGGANAN AKTIF -->
+            <div
+                v-else
+                class="bg-white border border-slate-200 rounded-xl p-4 md:p-5"
+            >
+                <div
+                    class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 mb-4"
+                >
+                    <div class="flex items-center gap-3.5">
+                        <div
+                            class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center text-main shadow-xs"
                         >
                             <FontAwesomeIcon
                                 :icon="faCreditCard"
@@ -91,17 +189,19 @@
                             />
                         </div>
                         <div>
-                            <div class="flex items-center gap-2">
-                                <h2 class="text-lg font-bold text-gray-900">
-                                    Paket {{ subscription.plan.name }}
+                            <div class="flex flex-wrap items-center gap-2">
+                                <h2 class="text-base font-bold text-gray-900">
+                                    Paket {{ subscription.plan?.name }}
                                 </h2>
                                 <span
                                     class="capitalize text-xs font-medium px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100"
                                 >
-                                    {{ subscription.billing_cycle }}
+                                    {{
+                                        subscription.billing_cycle === 'yearly'
+                                            ? 'Tahunan'
+                                            : 'Bulanan'
+                                    }}
                                 </span>
-                            </div>
-                            <div class="flex items-center gap-2 mt-1">
                                 <span
                                     class="badge text-xs"
                                     :class="
@@ -114,15 +214,6 @@
                                         subscription.status === 'active'
                                             ? 'Aktif'
                                             : 'Tidak Aktif'
-                                    }}
-                                </span>
-                                <span class="text-xs text-gray-400">•</span>
-                                <span class="text-xs text-gray-500">
-                                    Terdaftar sejak
-                                    {{
-                                        formatDateTimeSimple(
-                                            auth.business.created_at,
-                                        )
                                     }}
                                 </span>
                             </div>
@@ -142,18 +233,18 @@
                 <!-- Expiring Warning Alert -->
                 <div
                     v-if="gapDaysFromNow(subscription.expired_at) <= 10"
-                    class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3 mb-5 text-amber-900"
+                    class="bg-amber-50 border border-amber-200 rounded-lg p-3.5 flex items-start gap-3 mb-4 text-amber-900"
                 >
                     <FontAwesomeIcon
                         :icon="faCircleExclamation"
-                        class="text-amber-600 text-lg mt-0.5"
+                        class="text-amber-600 text-base mt-0.5 shrink-0"
                     />
-                    <div class="flex-1 text-sm">
+                    <div class="flex-1 text-xs sm:text-sm">
                         <h4 class="font-bold text-amber-955">
                             Masa Langganan Hampir Habis!
                         </h4>
                         <p class="text-amber-800 mt-0.5">
-                            Paket langganan Anda akan berakhir pada
+                            Paket Anda akan berakhir pada
                             <strong>{{
                                 formatDateID(subscription.expired_at)
                             }}</strong>
@@ -163,13 +254,12 @@
                                     gapDaysFromNow(subscription.expired_at)
                                 }}
                                 hari</strong
-                            >). Segera perpanjang agar operasional outlet Anda
-                            tidak terganggu.
+                            >). Segera perpanjang agar operasional outlet tidak terganggu.
                         </p>
-                        <div class="mt-2.5">
+                        <div class="mt-2">
                             <Link
                                 :href="route('settings.billing.plans')"
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-955 hover:underline"
+                                class="inline-flex items-center gap-1 text-xs font-bold text-amber-955 hover:underline"
                             >
                                 Perpanjang Sekarang
                                 <FontAwesomeIcon
@@ -181,30 +271,8 @@
                     </div>
                 </div>
 
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-                >
-                    <!-- Billing Cycle Info -->
-                    <div
-                        class="border border-slate-100 rounded-lg p-3.5 bg-slate-50/50 flex items-start gap-3"
-                    >
-                        <div class="p-2 bg-slate-100 rounded-lg text-slate-500">
-                            <FontAwesomeIcon :icon="faClock" class="w-4 h-4" />
-                        </div>
-                        <div>
-                            <span
-                                class="block text-xs font-medium text-gray-500"
-                                >Siklus Tagihan</span
-                            >
-                            <span
-                                class="block text-sm font-bold text-gray-800 mt-0.5 capitalize"
-                            >
-                                {{ subscription.billing_cycle }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- End Date Info -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Masa Berlaku -->
                     <div
                         class="border border-slate-100 rounded-lg p-3.5 bg-slate-50/50 flex items-start gap-3"
                     >
@@ -215,23 +283,26 @@
                             />
                         </div>
                         <div>
-                            <span
-                                class="block text-xs font-medium text-gray-500"
-                                >Tanggal Berakhir</span
-                            >
-                            <span
-                                class="block text-sm font-bold text-gray-800 mt-0.5"
-                            >
+                            <span class="block text-xs font-medium text-gray-500">
+                                Masa Berlaku
+                            </span>
+                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
                                 {{
                                     subscription.expired_at
                                         ? formatDateID(subscription.expired_at)
                                         : '-'
                                 }}
+                                <span
+                                    v-if="subscription.expired_at"
+                                    class="text-xs font-normal text-gray-500 ml-1"
+                                >
+                                    (tersisa {{ gapDaysFromNow(subscription.expired_at) }} hari)
+                                </span>
                             </span>
                         </div>
                     </div>
 
-                    <!-- Active Outlets Count -->
+                    <!-- Kuota Outlet -->
                     <div
                         class="border border-slate-100 rounded-lg p-3.5 bg-slate-50/50 flex items-start gap-3"
                     >
@@ -239,38 +310,11 @@
                             <FontAwesomeIcon :icon="faShop" class="w-4 h-4" />
                         </div>
                         <div>
-                            <span
-                                class="block text-xs font-medium text-gray-500"
-                                >Jumlah Outlet Aktif</span
-                            >
-                            <span
-                                class="block text-sm font-bold text-gray-800 mt-0.5"
-                            >
-                                {{ auth.outlets ? auth.outlets.length : 0 }}
-                                Outlet
+                            <span class="block text-xs font-medium text-gray-500">
+                                Penggunaan Outlet
                             </span>
-                        </div>
-                    </div>
-
-                    <!-- Email Notification -->
-                    <div
-                        class="border border-slate-100 rounded-lg p-3.5 bg-slate-50/50 flex items-start gap-3 sm:col-span-2 lg:col-span-3"
-                    >
-                        <div class="p-2 bg-slate-100 rounded-lg text-slate-500">
-                            <FontAwesomeIcon
-                                :icon="faEnvelope"
-                                class="w-4 h-4"
-                            />
-                        </div>
-                        <div>
-                            <span
-                                class="block text-xs font-medium text-gray-500"
-                                >Email Notifikasi Tagihan</span
-                            >
-                            <span
-                                class="block text-sm font-bold text-gray-800 mt-0.5"
-                            >
-                                {{ auth.business.email }}
+                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
+                                {{ auth.outlets ? auth.outlets.length : 0 }} / {{ maxOutlets ?? subscription.plan?.max_outlet ?? 1 }} Outlet Digunakan
                             </span>
                         </div>
                     </div>
@@ -296,7 +340,7 @@
                     </template>
                     <template #created_at="{ row }">
                         <span class="text-gray-600 text-sm">
-                            {{ formatDateTimeSimple(row.created_at) }}
+                            {{ formatDateID(row.created_at) }}
                         </span>
                     </template>
                     <template #total_amount="{ row }">
@@ -380,20 +424,16 @@ import { usePopUpStore } from '@/store/popup';
 import { router } from '@inertiajs/vue3';
 import {
     formatDateID,
-    formatDateTimeSimple,
     gapDaysFromNow,
 } from '@/Composable/date';
 import {
-    faArrowUp,
     faArrowRight,
-    faCheck,
-    faCreditCard,
+    faBolt,
     faCalendarDays,
-    faShop,
-    faEnvelope,
     faCircleExclamation,
-    faClock,
+    faCreditCard,
     faGem,
+    faShop,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { Link, usePage } from '@inertiajs/vue3';
@@ -401,8 +441,10 @@ import { computed } from 'vue';
 
 import { formatIDR } from '@/Composable/currency-format';
 
-const props = defineProps({
+defineProps({
     subscription: Object,
+    pendingInvoice: Object,
+    maxOutlets: Number,
     invoices: Object,
 });
 

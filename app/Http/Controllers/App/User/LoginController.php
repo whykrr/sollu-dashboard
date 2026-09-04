@@ -17,7 +17,7 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-        if (! Auth::attempt(
+        if (! Auth::guard('business')->attempt(
             $request->validate([
                 'email' => ['required', 'email'],
                 'password' => ['required'],

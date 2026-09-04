@@ -107,6 +107,7 @@ import BusinessDetailPopUp from './Components/BusinessDetailPopUp.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { usePopUpStore } from '@/store/popup';
+import { useModalStore } from '@/store/notification.js';
 
 const props = defineProps({
     businesses: Object,
@@ -114,6 +115,7 @@ const props = defineProps({
 });
 
 const popUpStore = usePopUpStore();
+const modalStore = useModalStore();
 
 const tableHeaders = [
     { field: 'name', label: 'Merchant', slot: 'name', sortable: true },
@@ -175,20 +177,27 @@ const openDetail = (id) => {
 };
 
 const toggleStatus = (id, newStatus) => {
-    if (
-        confirm(
-            `Are you sure you want to change this merchant's status to ${newStatus}?`,
-        )
-    ) {
-        router.post(
-            route('cockpit.merchants.toggle-status', id),
-            {
-                status: newStatus,
-            },
-            {
-                preserveScroll: true,
-            },
-        );
-    }
+    const isSuspending = newStatus === 'suspended';
+    modalStore.confirm({
+        title: isSuspending ? 'Tangguhkan Merchant' : 'Aktifkan Merchant',
+        message: isSuspending
+            ? 'Apakah Anda yakin ingin menangguhkan merchant ini? Merchant dan seluruh outletnya tidak akan dapat mengakses sistem.'
+            : 'Apakah Anda yakin ingin mengaktifkan kembali merchant ini?',
+        type: isSuspending ? 'danger' : 'info',
+        confirmText: isSuspending ? 'Ya, Tangguhkan' : 'Ya, Aktifkan',
+        cancelText: 'Batal',
+        confirmClass: isSuspending ? 'btn-danger' : 'btn-main',
+        onConfirm: () => {
+            router.post(
+                route('cockpit.merchants.toggle-status', id),
+                {
+                    status: newStatus,
+                },
+                {
+                    preserveScroll: true,
+                },
+            );
+        },
+    });
 };
 </script>

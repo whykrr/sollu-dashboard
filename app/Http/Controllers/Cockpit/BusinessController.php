@@ -7,6 +7,8 @@ use App\Models\Business;
 use App\Models\BusinessStatusLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class BusinessController extends Controller
@@ -90,8 +92,22 @@ class BusinessController extends Controller
         $business = Business::findOrFail($id);
         $user = $business->users()->findOrFail($userId);
 
-        Auth::guard('business')->loginUsingId($user->id);
+        $token = Str::random(64);
 
-        return redirect()->route('overview');
+        Cache::put("impersonate:token:{$token}", [
+            'user_id' => $user->id,
+            'business_id' => $business->id,
+            'admin_id' => Auth::guard('cockpit')->id(),
+            'created_at' => now()->timestamp,
+        ], now()->addMinutes(2));
+
+        $appDomain = config('domain.app', 'app.sollu.test');
+        if ($request->getPort() && ! in_array($request->getPort(), [80, 443]) && ! str_contains($appDomain, ':')) {
+            $appDomain .= ':'.$request->getPort();
+        }
+
+        $url = "{$request->getScheme()}://{$appDomain}/impersonate/{$token}";
+
+        return redirect()->away($url);
     }
 }

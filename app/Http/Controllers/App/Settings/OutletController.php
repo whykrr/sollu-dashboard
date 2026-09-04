@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Outlet\CreateOutletRequest;
 use App\Http\Requests\App\Outlet\UpdateOutletRequest;
 use App\Models\Outlet;
+use App\Services\App\BillingEngine;
 use App\Services\App\Outlet\CreateOutletService;
 use App\Services\App\Outlet\ManageOutletStatusService;
 use App\Services\App\Outlet\UpdateOutletService;
@@ -18,7 +19,8 @@ class OutletController extends Controller
     public function __construct(
         protected CreateOutletService $createOutletService,
         protected UpdateOutletService $updateOutletService,
-        protected ManageOutletStatusService $manageStatusService
+        protected ManageOutletStatusService $manageStatusService,
+        protected BillingEngine $billingEngine
     ) {}
 
     /**
@@ -37,6 +39,8 @@ class OutletController extends Controller
         $subscription = $business->subscriptions()->with('plan')->where('status', 'active')->first();
         $isTrial = $business->trial_end_at ? \Carbon\Carbon::parse($business->trial_end_at)->isFuture() : false;
 
+        $proratedAmount = $subscription ? $this->billingEngine->calculateProratedCost($subscription) : 0;
+
         return inertia('Settings/Outlet/Index', [
             'outlets' => $outlets,
             'params' => $req->all(),
@@ -48,6 +52,7 @@ class OutletController extends Controller
                 'is_trial' => $isTrial,
             ],
             'subscription' => $subscription,
+            'proratedAmount' => $proratedAmount,
         ]);
     }
 

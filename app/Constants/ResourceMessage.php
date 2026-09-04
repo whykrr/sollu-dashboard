@@ -15,4 +15,6 @@ class ResourceMessage
     public const PURGE_SUCCESS = 'Data berhasil di hapus!';
 
     public const REGISTER_SUCCESS = 'Pendaftaran Berhasil!, Cek email Anda untuk verifikasi';
+
+    public const IMPERSONATE_SUCCESS = 'Berhasil masuk sebagai merchant!';
 }

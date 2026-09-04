@@ -3,7 +3,8 @@ import {
     faStore,
     faTags,
     faFileInvoice,
-    faUsersGear
+    faUsersGear,
+    faLayerGroup
 } from '@fortawesome/free-solid-svg-icons'
 
 export const cockpitSidebars = [
@@ -27,6 +28,13 @@ export const cockpitSidebars = [
         label: 'Invoice Langganan',
         permissions: '',
         activeRoute: 'cockpit.invoices',
+    },
+    {
+        route: 'cockpit.subscription-plans.index',
+        icon: faLayerGroup,
+        label: 'Paket Langganan',
+        permissions: '',
+        activeRoute: 'cockpit.subscription-plans',
     },
     {
         route: 'cockpit.uoms.index',

@@ -15,4 +15,6 @@ class AuthorizationMessage
     public const EDIT_DATA_NOT_ALLOWED = 'Anda tidak diperbolehkan mengubah data ini!';
 
     public const DELETE_DATA_NOT_ALLOWED = 'Anda tidak diperbolehkan menghapus data ini!';
+
+    public const IMPERSONATE_INVALID = 'Tautan impersonasi tidak valid atau telah kedaluwarsa!';
 }

@@ -65,7 +65,7 @@ class InvoiceController extends Controller
                 }
             } catch (\Exception $e) {
                 return redirect()->route('settings.billing.index')
-                    ->with(FlashDataVariable::WARNING->value, 'Gagal terhubung ke layanan pembayaran (Midtrans). Silakan coba lagi nanti atau gunakan metode manual. Detail: ' . $e->getMessage());
+                    ->with(FlashDataVariable::WARNING->value, 'Gagal terhubung ke layanan pembayaran (Midtrans). Silakan coba lagi nanti atau gunakan metode manual. Detail: '.$e->getMessage());
             }
 
             $payment = $invoice->payments()->create([

@@ -11,3 +11,5 @@ Saat bekerja di `app/Http/Controllers`, Anda **WAJIB** menerapkan standar dari s
 3. **No Hardcoded Messages:** Dilarang keras menuliskan pesan sukses/gagal manual (misal: `->with('success', 'Data berhasil dibuat')`). Wajib gunakan `App\Constants\ResourceMessage` atau `__('messages.key')`.
 4. **Dokumentasi API:** Jika menambahkan/memodifikasi endpoint atau struktur JSON response, wajib perbarui file dokumentasi di `docs/` (`sollu-api-documentation`).
 5. **Formatting:** Wajib jalankan `vendor/bin/pint` sebelum menyelesaikan tugas.
+6. **Error Investigation:** Jika Controller mengalami error 500 saat diuji, segera periksa penyebabnya dengan tool MCP `laravel-boost` (`LastError`).
+

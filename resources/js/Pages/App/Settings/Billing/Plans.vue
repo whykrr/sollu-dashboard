@@ -40,71 +40,164 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div v-for="(plan, index) in plans" :key="index">
+        <div class="grid gap-4" :class="gridClass">
+            <div
+                v-for="(plan, index) in activePlans"
+                :key="index"
+                class="bg-white rounded-xl border flex flex-col h-full shadow-xs hover:shadow-md transition-shadow relative overflow-hidden"
+                :class="{
+                    'border-main ring-2 ring-main/20':
+                        subscription && subscription.plan_id === plan.id,
+                    'border-neutral-200':
+                        !subscription || subscription.plan_id !== plan.id,
+                    'opacity-80 bg-neutral-50/50': !plan.is_active,
+                }"
+            >
+                <!-- Top Status Stripe -->
                 <div
-                    class="p-4 space-y-4 rounded-xl border bg-white flex flex-col h-full hover:shadow-md transition-shadow relative"
-                    :class="{
-                        'border-main ':
-                            subscription && subscription.plan_id === plan.id,
-                        'border-gray-200':
-                            !subscription || subscription.plan_id !== plan.id,
-                    }"
-                >
-                    <div
-                        v-if="subscription && subscription.plan_id === plan.id"
-                        class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-main text-white text-xs font-bold px-3 py-1 rounded-full"
-                    >
-                        Paket Saat Ini
+                    class="h-1.5 w-full"
+                    :class="
+                        subscription && subscription.plan_id === plan.id
+                            ? 'bg-main'
+                            : plan.is_active
+                              ? 'bg-main'
+                              : 'bg-neutral-300'
+                    "
+                />
+
+                <div class="p-4 flex-1 flex flex-col">
+                    <!-- Header Info & Badges -->
+                    <div class="flex items-start justify-between gap-2 mb-3">
+                        <div>
+                            <span
+                                class="text-xs font-mono uppercase tracking-wider text-neutral-400 font-semibold"
+                            >
+                                {{ plan.code }}
+                            </span>
+                            <h2 class="text-xl font-bold text-neutral-800">
+                                {{ plan.name }}
+                            </h2>
+                        </div>
+                        <div>
+                            <span
+                                v-if="
+                                    subscription &&
+                                    subscription.plan_id === plan.id
+                                "
+                                class="px-2.5 py-1 bg-main text-white text-xs rounded-full font-semibold inline-flex items-center gap-1 shadow-xs"
+                            >
+                                <span
+                                    class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"
+                                ></span>
+                                Paket Saat Ini
+                            </span>
+                            <span
+                                v-else-if="!plan.is_active"
+                                class="px-2.5 py-1 bg-neutral-200 text-neutral-600 text-xs rounded-full font-semibold inline-flex items-center gap-1"
+                            >
+                                <span
+                                    class="w-1.5 h-1.5 rounded-full bg-neutral-400"
+                                ></span>
+                                Tidak Tersedia
+                            </span>
+                        </div>
                     </div>
 
-                    <div class="text-center pb-4 border-b">
-                        <div class="font-bold text-2xl text-gray-800 mb-1">
-                            {{ plan.name }}
-                        </div>
-                        <div class="text-3xl font-extrabold text-main my-2">
+                    <!-- Pricing Info -->
+                    <div
+                        class="py-3 border-y border-neutral-100 mb-3 text-center"
+                    >
+                        <div class="text-2xl font-black text-main">
                             {{ formatIDR(plan.price_per_outlet) }}
                         </div>
-                        <div class="text-sm text-gray-500 font-medium">
+                        <div
+                            class="text-xs text-neutral-500 font-medium mt-0.5"
+                        >
                             per bulan / outlet
                         </div>
                         <div
                             v-if="plan.yearly_discount_percent > 0"
-                            class="mt-2 text-xs font-bold text-success bg-success/10 py-1 px-2 rounded-md inline-block"
+                            class="mt-2 text-xs font-bold text-success bg-success/10 py-0.5 px-2 rounded-md inline-block"
                         >
-                            Hemat {{ plan.yearly_discount_percent }}% jika Bayar
-                            Tahunan!
+                            Diskon Tahunan {{ plan.yearly_discount_percent }}%
                         </div>
                     </div>
 
-                    <div class="flex-1 mt-4">
-                        <ul class="space-y-3">
+                    <!-- Meta Specs -->
+                    <div
+                        class="space-y-1.5 text-xs text-neutral-600 mb-4 bg-neutral-50 p-2.5 rounded-lg border border-neutral-100"
+                    >
+                        <div class="flex justify-between">
+                            <span class="text-neutral-500">Batas Outlet:</span>
+                            <span class="font-semibold text-neutral-800">
+                                {{
+                                    plan.max_outlet
+                                        ? `${plan.max_outlet} Outlet`
+                                        : 'Tanpa Batas'
+                                }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-neutral-500"
+                                >Siklus Penagihan:</span
+                            >
+                            <span class="font-semibold text-neutral-800">
+                                Bulanan / Tahunan
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Features List -->
+                    <div class="flex-1 mb-4">
+                        <div
+                            class="text-xs font-bold text-neutral-700 uppercase tracking-wider mb-2"
+                        >
+                            Fitur Termasuk:
+                        </div>
+                        <ul
+                            v-if="plan.features && plan.features.length"
+                            class="space-y-2"
+                        >
                             <li
                                 v-for="(feature, fIndex) in plan.features"
                                 :key="fIndex"
-                                class="flex items-start gap-3"
+                                class="flex items-start gap-2 text-xs text-neutral-700"
                             >
                                 <FontAwesomeIcon
                                     :icon="faCheckCircle"
-                                    class="text-success mt-1"
+                                    class="text-success mt-0.5 shrink-0"
                                 />
-                                <div class="text-sm text-gray-700">
-                                    <p class="font-bold">{{ feature.title }}</p>
-                                    <p>{{ feature.detail }}</p>
+                                <div>
+                                    <div
+                                        class="font-medium text-neutral-800"
+                                    >
+                                        {{ feature.title }}
+                                    </div>
+                                    <div
+                                        v-if="feature.detail"
+                                        class="text-neutral-500 text-[11px]"
+                                    >
+                                        {{ feature.detail }}
+                                    </div>
                                 </div>
                             </li>
                         </ul>
+                        <div v-else class="text-xs text-neutral-400 italic">
+                            Belum ada fitur tercatat
+                        </div>
                     </div>
 
-                    <div class="mt-6 pt-4">
+                    <!-- Actions -->
+                    <div class="pt-3 border-t border-neutral-100">
                         <Link
                             v-if="
                                 !invoice &&
                                 (!subscription ||
-                                    subscription.plan_id !== plan.id)
+                                    subscription.plan_id !== plan.id) &&
+                                plan.is_active
                             "
                             :href="route('settings.billing.checkout', plan.id)"
-                            class="btn btn-highlight-main w-full py-3"
+                            class="btn btn-highlight-main w-full py-2.5 text-sm"
                         >
                             {{
                                 subscription
@@ -118,9 +211,17 @@
                                 subscription && subscription.plan_id === plan.id
                             "
                             disabled
-                            class="btn btn-outline-main w-full py-3 opacity-50 cursor-not-allowed"
+                            class="btn btn-outline-main w-full py-2.5 text-sm opacity-60 cursor-not-allowed"
                         >
                             Paket Aktif
+                        </button>
+
+                        <button
+                            v-else-if="!plan.is_active"
+                            disabled
+                            class="btn btn-neutral-100 text-neutral-400 w-full py-2.5 text-sm cursor-not-allowed"
+                        >
+                            Tidak Tersedia
                         </button>
                     </div>
                 </div>
@@ -129,6 +230,7 @@
     </MainPage>
 </template>
 <script setup>
+import { computed } from 'vue';
 import MainPage from '@/Components/UI/MainPage.vue';
 import { formatIDR } from '@/Composable/currency-format';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -139,5 +241,27 @@ const props = defineProps({
     subscription: Object,
     plans: Array,
     invoice: Object,
+});
+
+const activePlans = computed(() => {
+    return (props.plans || []).filter(
+        (plan) =>
+            plan.is_active ||
+            (props.subscription && props.subscription.plan_id === plan.id),
+    );
+});
+
+const gridClass = computed(() => {
+    const count = activePlans.value.length;
+    if (count <= 1) {
+        return 'grid-cols-1 max-w-md mx-auto';
+    }
+    if (count === 2) {
+        return 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto';
+    }
+    if (count === 3) {
+        return 'grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto';
+    }
+    return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 });
 </script>

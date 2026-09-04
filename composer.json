@@ -24,6 +24,7 @@
         "barryvdh/laravel-debugbar": "^3.14",
         "barryvdh/laravel-ide-helper": "^3.1",
         "fakerphp/faker": "^1.23",
+        "laravel/boost": "^2.7",
         "laravel/dusk": "^8.6",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
@@ -88,6 +89,11 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
         }
     },
     "minimum-stability": "stable",

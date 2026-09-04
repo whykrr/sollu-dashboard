@@ -8,8 +8,8 @@
         <div class="flex flex-col gap-4">
             <p>Masukkan alasan penolakan bukti pembayaran. Alasan ini akan dikirimkan ke email merchant.</p>
             <TextAreaField
-                label="Alasan Penolakan"
                 v-model="form.reason"
+                label="Alasan Penolakan"
                 :error="form.errors.reason"
                 placeholder="Contoh: Gambar bukti transfer blur, nominal tidak sesuai, dll."
                 rows="4"
@@ -17,10 +17,10 @@
         </div>
 
         <template #footer>
-            <button class="btn btn-outline-main" @click="closeModal" :disabled="form.processing">
+            <button class="btn btn-outline-main" :disabled="form.processing" @click="closeModal">
                 Batal
             </button>
-            <button class="btn btn-danger" @click="submit" :disabled="form.processing || !form.reason">
+            <button class="btn btn-danger" :disabled="form.processing || !form.reason" @click="submit">
                 {{ form.processing ? 'Menyimpan...' : 'Tolak Pembayaran' }}
             </button>
         </template>

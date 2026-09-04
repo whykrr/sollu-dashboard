@@ -43,6 +43,7 @@ class CreateOutletRequest extends FormRequest
             'email' => ['nullable', 'email', 'max:255'],
             'timezone' => ['nullable', 'string', 'max:50'],
             'currency_code' => ['nullable', 'string', 'max:3'],
+            'payment_method' => ['nullable', 'string', 'in:midtrans,manual'],
         ];
     }
 }

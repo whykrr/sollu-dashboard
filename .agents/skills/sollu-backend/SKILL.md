@@ -18,11 +18,14 @@ description: >-
 - **`sollu-pdf`**: Generic header Blade PDF generation standards.
 - **`sollu-code-quality`**: Pre-completion Pint linter (`vendor/bin/pint`) & DoD checklist.
 
-## 0. Mandatory Database Verification (Live Database Condition Check)
+## 0. Mandatory Database Verification & Diagnostics (Live Database Check & Laravel Boost)
 
-- **MANDATORY BEFORE & DURING BACKEND CHANGES:** Setiap kali membuat atau memodifikasi file backend (Model, Controller, Form Request, Service, DB Migration, JsonResource), **WAJIB** melakukan verifikasi kondisi skema database asli terlebih dahulu menggunakan MCP tool `sollu-db` (query SQL `information_schema` atau `pg_attribute`).
+- **MANDATORY BEFORE & DURING BACKEND CHANGES:** Setiap kali membuat atau memodifikasi file backend (Model, Controller, Form Request, Service, DB Migration, JsonResource), **WAJIB** melakukan verifikasi kondisi skema database asli terlebih dahulu.
+    - **Primary Low-Level Catalog:** Gunakan MCP tool `sollu-db` (query SQL `information_schema` atau `pg_attribute`) untuk presisi level PostgreSQL (tipe data native, nullability, primary & foreign key constraints).
+    - **Laravel-Level Inspection:** Alternatif atau pelengkap, gunakan MCP tool `laravel-boost` (`DatabaseSchema` dan `DatabaseQuery`) untuk membaca skema langsung dari sudut pandang Laravel DB connection.
 - **Verifikasi Kolom & Data Type:** Pastikan nama kolom, tipe data, nulabilitas (`nullable`), default value, dan Foreign Key pada Model/FormRequest/Service **persis sama** dengan skema nyata di database.
 - **Verifikasi Relasi (FK):** Cek keberadaan Foreign Key constraint di database sebelum menuliskan method relasi Eloquent (`belongsTo`, `hasMany`, dll) atau validasi `exists:table,id`.
+
 
 ## 1. Architecture & Controllers
 
@@ -144,3 +147,21 @@ Setiap kali melakukan modifikasi pada komponen backend (Controller, Model, Servi
 2. **Remove Dead Methods & Helper Functions:** Jika suatu method di Service/Controller tidak lagi digunakan (karena refactoring/perubahan alur), hapus method tersebut beserta unit test-nya jika ada. Dilarang menyisakan method yatim tanpa caller.
 3. **No Commented-Out PHP Code:** Jangan menyisakan blok logika PHP lama dalam bentuk komentar (`//`, `/* */`). Seluruh kode lama harus dihapus murni.
 4. **Obsolete Routes & Requests:** Jika sebuah endpoint atau FormRequest tidak lagi dipakai oleh frontend/API client, hapus `FormRequest` class tersebut dan deklarasi rutenya di `routes/web.php` atau `routes/api.php`.
+
+## 9. Laravel Boost MCP Tooling Guidelines
+
+Gunakan MCP tools dari server `laravel-boost` untuk mempercepat siklus investigasi, debugging, dan dokumentasi:
+
+- **`LastError` & `ReadLogEntries` (Direct Error Log):** Saat backend melempar error 500 atau exception saat testing / endpoint call, **WAJIB** gunakan tool `mcp_laravel-boost_LastError` atau `mcp_laravel-boost_ReadLogEntries` untuk segera menginspeksi stack trace tanpa perlu memanggil shell `tail storage/logs/laravel.log`.
+- **`SearchDocs` (Official Laravel Documentation Search):** Jika membutuhkan referensi resmi Laravel 11 (misalnya sintaks API baru, casts, queued events, cache locks, benchmark helper), gunakan `mcp_laravel-boost_SearchDocs` untuk pencarian vektor langsung ke dokumentasi resmi Laravel.
+- **`Tinker` (Safe Dynamic Execution):** Gunakan `mcp_laravel-boost_Tinker` untuk memverifikasi kalkulasi matematis, helper, mutator model, atau query builder sebelum di-commit ke dalam codebase.
+- **`ApplicationInfo`:** Gunakan untuk mengecek status konfigurasi, service provider, dan environment Laravel.
+
+## 10. Filesystem Operations: Native Tools vs Filesystem MCP
+
+- **Primary / Default Tools (Antigravity Native):** Untuk membaca, membuat, dan mengedit file proyek (`view_file`, `replace_file_content`, `write_to_file`, `find_by_name`, `grep_search`), **WAJIB** menggunakan native tools bawaan Antigravity. Native tools terintegrasi langsung dengan IDE diff viewer, line tracking, sandboxing, dan token management.
+- **Secondary MCP Tools (`filesystem`):** Gunakan MCP server `filesystem` (`read_multiple_files`, `directory_tree`, `move_file`, `get_file_info`) khusus untuk skenario berikut:
+    - Membaca beberapa file secara serentak (`read_multiple_files`).
+    - Membuat visualisasi struktur hierarki direktori lengkap (`directory_tree`).
+    - Memindahkan/mengganti nama file (`move_file`) secara aman tanpa menjalankan command shell mentah.
+

@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\SelectedOutlet;
+use App\Http\Controllers\App\ImpersonateController;
 use App\Http\Controllers\App\NotificationController;
 use App\Http\Controllers\App\OverviewController;
 use App\Http\Controllers\App\User\ForgotPasswordController;
@@ -11,6 +12,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/impersonate/{token}', [ImpersonateController::class, 'authenticate'])->name('impersonate.authenticate');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');

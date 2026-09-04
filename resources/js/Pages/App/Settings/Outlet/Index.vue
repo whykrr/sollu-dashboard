@@ -53,7 +53,9 @@
         >
             <template #name="{ row }">
                 <div class="flex items-center gap-2">
-                    <span class="font-medium text-slate-800">{{ row.name }}</span>
+                    <span class="font-medium text-slate-800">{{
+                        row.name
+                    }}</span>
                     <span
                         v-if="row.is_main_outlet"
                         class="badge badge-info text-xs font-semibold whitespace-nowrap"
@@ -70,7 +72,9 @@
                     v-if="row.is_active"
                     class="badge pill text-xs badge-success font-semibold px-2.5 py-0.5 inline-flex items-center gap-1"
                 >
-                    <span class="size-1.5 rounded-full bg-white animate-pulse"></span>
+                    <span
+                        class="size-1.5 rounded-full bg-white animate-pulse"
+                    ></span>
                     Aktif
                 </label>
                 <label
@@ -155,6 +159,7 @@ const props = defineProps({
     params: Object,
     limit: Object,
     subscription: Object,
+    proratedAmount: Number,
 });
 
 const showUpgradeModal = ref(false);
@@ -167,8 +172,12 @@ const handleAddOutlet = () => {
     } else {
         popUpStore.open({
             title: 'Tambahkan Outlet Baru',
-            size: 'md',
+            size: 'lg',
             component: Wizard,
+            props: {
+                subscription: props.subscription,
+                proratedAmount: props.proratedAmount,
+            },
         });
     }
 };
@@ -176,7 +185,6 @@ const handleAddOutlet = () => {
 const openEdit = (outlet) => {
     popUpStore.open({
         title: 'Ubah Data Outlet',
-        size: 'md',
         component: EditOutletPopUp,
         props: {
             outlet,

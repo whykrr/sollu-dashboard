@@ -168,6 +168,25 @@ When reviewing code:
 
 ---
 
+## Tooling Integration: Laravel Boost & MCP Ecosystem
+
+Senior Laravel development in this environment leverages integrated MCP servers:
+
+1. **Laravel Boost MCP (`laravel-boost`)**:
+   - **`SearchDocs`**: Always query official documentation via vector search when researching framework changes, modern syntax (e.g. Laravel 11/12/13 updates), or official package behaviors.
+   - **`LastError` / `ReadLogEntries`**: Check framework error logs directly via MCP whenever debugging 500 responses or background job failures.
+   - **`Tinker`**: Run dynamic one-off expressions, test Eloquent relations, or verify casts in the application bootstrap context.
+   - **`DatabaseSchema`**: Review table definitions and relationship structures from Laravel's database connection.
+
+2. **Database System Catalog MCP (`sollu-db`)**:
+   - Use for deep PostgreSQL-specific catalog queries (`information_schema`, PostgreSQL indexes, triggers, constraints).
+
+3. **Filesystem Operations**:
+   - Primary: Antigravity native file tools (`view_file`, `replace_file_content`, `write_to_file`).
+   - Secondary: `filesystem` MCP for multi-file operations (`read_multiple_files`), recursive directory trees (`directory_tree`), or safe moving (`move_file`).
+
+---
+
 ## Output Structure
 
 When designing a feature:

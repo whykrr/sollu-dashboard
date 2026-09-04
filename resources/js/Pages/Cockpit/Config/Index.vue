@@ -99,43 +99,24 @@
                 class="bg-white rounded-xl shadow-sm border border-neutral-200/60 lg:col-span-2 overflow-hidden flex flex-col p-4"
             >
                 <div
-                    class="flex justify-between items-center mb-2 pb-2 border-b border-neutral-200"
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
                 >
-                    <h3 class="font-bold text-neutral-800">
-                        Subscription Pricing Packages
-                    </h3>
-                    <button class="btn btn-outline-main btn-sm">
-                        <FontAwesomeIcon :icon="faPlus" />Add Package
-                    </button>
+                    <div>
+                        <h3 class="font-bold text-neutral-800">
+                            Pengaturan Paket Langganan
+                        </h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">
+                            Kelola harga paket langganan per outlet, fitur, kuota outlet, dan status aktif/nonaktif.
+                        </p>
+                    </div>
+                    <Link
+                        :href="route('cockpit.subscription-plans.index')"
+                        class="btn btn-outline-main btn-sm inline-flex items-center gap-1.5"
+                    >
+                        <FontAwesomeIcon :icon="faLayerGroup" />
+                        Buka Pengaturan Langganan
+                    </Link>
                 </div>
-                <Table
-                    :headers="tableHeaders"
-                    :data="packages.data"
-                    :action="true"
-                >
-                    <template #name="{ row }">
-                        <span class="font-medium text-neutral-800">{{
-                            row.name
-                        }}</span>
-                    </template>
-                    <template #monthly_price="{ row }">
-                        {{ row.monthly_price }}
-                    </template>
-                    <template #yearly_price="{ row }">
-                        {{ row.yearly_price }}
-                    </template>
-                    <template #max_outlets="{ row }">
-                        {{ row.max_outlets }}
-                    </template>
-                    <template #actions="{ row }">
-                        <button
-                            class="btn btn-neutral-100 text-main btn-sm"
-                            title="Edit"
-                        >
-                            <FontAwesomeIcon :icon="faPencil" />
-                        </button>
-                    </template>
-                </Table>
             </div>
         </div>
     </MainPage>
@@ -143,45 +124,8 @@
 
 <script setup>
 import MainPage from '@/Components/UI/MainPage.vue';
-import Table from '@/Components/Tables/Table.vue';
 import Switch from '@/Components/Form/Switch.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSave, faPlus, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { ref } from 'vue';
-
-const tableHeaders = [
-    { field: 'name', label: 'Package Name', slot: 'name', sortable: true },
-    {
-        field: 'monthly_price',
-        label: 'Monthly Price',
-        slot: 'monthly_price',
-        sortable: true,
-    },
-    {
-        field: 'yearly_price',
-        label: 'Yearly Price',
-        slot: 'yearly_price',
-        sortable: true,
-    },
-    { field: 'max_outlets', label: 'Max Outlets', slot: 'max_outlets' },
-];
-
-const packages = ref({
-    data: [
-        {
-            id: 1,
-            name: 'Basic',
-            monthly_price: 'Rp 150.000',
-            yearly_price: 'Rp 1.500.000',
-            max_outlets: '1',
-        },
-        {
-            id: 2,
-            name: 'Premium',
-            monthly_price: 'Rp 450.000',
-            yearly_price: 'Rp 4.500.000',
-            max_outlets: '5',
-        },
-    ],
-});
+import { faSave, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { Link } from '@inertiajs/vue3';
 </script>

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Notifications\SubscriptionActivatedNotification;
 use App\Services\App\Invoice\CompleteInvoiceService;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -139,7 +140,6 @@ class CompleteInvoiceServiceTest extends TestCase
         // Just let it find the outlet (or not) natively since we can't easily mock the static method here
         // without complex runInSeparateProcess setup that conflicts with prior tests.
         // We will just verify it doesn't fail.
-
 
         // Mock ManageOutletStatusService
         $ownerMock = Mockery::mock(User::class)->makePartial();

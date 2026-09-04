@@ -29,6 +29,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'max_outlet' => 3,
                 'yearly_discount_percent' => 20,
                 'features' => $features,
+                'is_active' => true,
             ],
             [
                 'code' => 'basic',
@@ -37,6 +38,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'max_outlet' => 10,
                 'yearly_discount_percent' => 20,
                 'features' => $features,
+                'is_active' => true,
             ],
             [
                 'code' => 'pro',
@@ -45,6 +47,18 @@ class SubscriptionPlanSeeder extends Seeder
                 'max_outlet' => 99,
                 'yearly_discount_percent' => 20,
                 'features' => $features,
+                'is_active' => true,
+            ],
+            [
+                'code' => 'ultimate',
+                'name' => 'Paket Ultimate',
+                'price_per_outlet' => 499000,
+                'max_outlet' => null,
+                'yearly_discount_percent' => 25,
+                'features' => array_merge($features, [
+                    ['title' => 'Dedicated Account Manager', 'detail' => 'layanan prioritas khusus enterprise'],
+                ]),
+                'is_active' => true,
             ],
         ];
 

@@ -58,8 +58,23 @@ resources/
 - **UI Text & Error Messages:** MUST strictly use **Indonesian** (e.g. `"Anda tidak memiliki akses."`, `"Data berhasil disimpan."`).
 - **Code Documentation & Comments:** Code comments, docstrings, variable names, and architectural rules MUST be written in **English**.
 
-## 4. Security & Isolation Baseline
+## 5. Security & Isolation Baseline
 
 - **Tenant Isolation:** Enforce `business_id` or `outlet_id` checks on every query mutation.
 - **ORM Enforcements:** Use Eloquent or Query Builder bindings exclusively. Never construct raw SQL strings with inline variable interpolations.
 - **Environment Secrets:** Store secret keys, webhooks, and API credentials exclusively in `.env`. Never commit secrets directly in code.
+
+## 6. MCP Tooling Architecture Matrix
+
+Sollu App integrates specialized Model Context Protocol (MCP) servers to aid development and automation:
+
+| MCP Server | Transport / Runtime | Primary Purpose | Key Tools |
+| :--- | :--- | :--- | :--- |
+| **`sollu-db`** | Stdio (`@modelcontextprotocol/server-postgres`) | Direct PostgreSQL system catalog queries, index inspection, and raw SQL validation | `query` |
+| **`laravel-boost`** | Stdio (`php artisan boost:mcp` via `laravel/boost`) | Application-level schema inspection, error logs, documentation vector search, and dynamic code evaluation | `DatabaseSchema`, `DatabaseQuery`, `LastError`, `ReadLogEntries`, `SearchDocs`, `Tinker`, `ApplicationInfo` |
+| **`filesystem`** | Stdio (`@modelcontextprotocol/server-filesystem`) | Multi-file inspections, directory trees, and safe file moves | `read_multiple_files`, `directory_tree`, `move_file`, `get_file_info` |
+| **`browsermcp`** | Stdio (`@browsermcp/mcp`) | E2E browser automation, screenshot capture, DOM inspection, and console logs | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_screenshot` |
+
+> [!NOTE]
+> For standard file editing and viewing within the codebase, Antigravity's native tools (`view_file`, `replace_file_content`, `write_to_file`) remain the primary mechanism. Use `filesystem` MCP for bulk operations and directory tree overviews.
+
