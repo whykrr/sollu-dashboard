@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Outlet;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * @property Outlet $cached
@@ -15,12 +14,9 @@ class SelectedOutlet
 {
     private $user;
 
-    private $cache_key;
-
     public function __construct()
     {
         $this->user = request()->user();
-        $this->cache_key = "auth:user:{$this->user?->id}:selectedOutlet";
     }
 
     // static factory
@@ -31,50 +27,43 @@ class SelectedOutlet
 
     public function cached()
     {
-        return Cache::remember(
-            $this->cache_key,
-            60 * 60,
-            function () {
+        $sessionKey = $this->getSessionKey();
 
-                if ($this->user->outlets()->count() === 1) {
-                    $outlet = $this->user->business->outlets()->first();
-                } else {
-                    $outlet = null;
-                }
+        if (session()->has($sessionKey)) {
+            return session()->get($sessionKey);
+        }
 
-                return $outlet;
-            }
-        );
+        if ($this->user && $this->user->outlets()->count() === 1) {
+            $outlet = $this->user->business->outlets()->first();
+            session()->put($sessionKey, $outlet);
+            return $outlet;
+        }
+
+        return null;
     }
 
     public function change($outlet_id)
     {
-        Cache::delete($this->cache_key);
+        $outlet = Outlet::find($outlet_id);
+        session()->put($this->getSessionKey(), $outlet);
 
-        return Cache::remember(
-            $this->cache_key,
-            60 * 60,
-            function () use ($outlet_id) {
-                return Outlet::find($outlet_id);
-            }
-        );
+        return $outlet;
     }
 
     public function get()
     {
-        return Cache::get($this->cache_key, null);
+        return session()->get($this->getSessionKey(), null);
     }
 
     public function all()
     {
-        Cache::forget($this->cache_key);
+        session()->forget($this->getSessionKey());
 
-        return Cache::remember(
-            $this->cache_key,
-            60 * 60,
-            function () {
-                return null;
-            }
-        );
+        return null;
+    }
+
+    private function getSessionKey()
+    {
+        return 'selected_outlet_' . ($this->user ? $this->user->id : 'guest');
     }
 }

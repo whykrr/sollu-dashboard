@@ -480,4 +480,17 @@ const getDetail = (invoice_number) => {
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
+
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const openInvoice = urlParams.get('open_invoice');
+    if (openInvoice) {
+        getDetail(openInvoice);
+        // Membersihkan URL setelah popup dibuka
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({path: newUrl}, '', newUrl);
+    }
+});
 </script>

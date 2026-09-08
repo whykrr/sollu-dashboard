@@ -63,5 +63,12 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             });
         }
+        
+        \App\Models\User::observe(\App\Observers\UserCacheObserver::class);
+        \App\Models\Business::observe(\App\Observers\UserCacheObserver::class);
+        \App\Models\Outlet::observe(\App\Observers\UserCacheObserver::class);
+        \App\Models\Subscription::observe(\App\Observers\UserCacheObserver::class);
+        \Spatie\Permission\Models\Role::observe(\App\Observers\UserCacheObserver::class);
+        \Spatie\Permission\Models\Permission::observe(\App\Observers\UserCacheObserver::class);
     }
 }

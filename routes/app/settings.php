@@ -78,6 +78,7 @@ Route::prefix('settings')
                 ->group(function () {
                     Route::post('/subscribe', [\App\Http\Controllers\App\Settings\SubscriptionController::class, 'subscribe'])->name('subscribe');
                     Route::post('/change-plan', [\App\Http\Controllers\App\Settings\SubscriptionController::class, 'changePlan'])->name('change-plan');
+                    Route::post('/renew', [\App\Http\Controllers\App\Settings\SubscriptionController::class, 'renew'])->name('renew');
                     Route::delete('/cancel', [\App\Http\Controllers\App\Settings\SubscriptionController::class, 'cancel'])->name('cancel');
                 });
         });

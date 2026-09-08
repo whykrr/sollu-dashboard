@@ -57,7 +57,6 @@ class ManageOutletStatusService
             }
         }
 
-        SummaryUser::cacheDelete();
 
         $action = $isActive ? 'enabled' : 'disabled';
         OutletAuditLog::create([
@@ -78,7 +77,6 @@ class ManageOutletStatusService
                 'action' => 'deleted',
             ]);
             $outlet->delete();
-            SummaryUser::cacheDelete();
         });
     }
 
@@ -93,7 +91,6 @@ class ManageOutletStatusService
                 'user_id' => $user->id,
                 'action' => 'restored',
             ]);
-            SummaryUser::cacheDelete();
 
             return $outlet;
         });

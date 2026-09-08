@@ -39,7 +39,6 @@ class AccountController extends Controller
         $user->phone = $req->validated('phone');
         $user->save();
 
-        SummaryUser::cacheDelete();
         Cache::delete("auth:user:{$user->id}:info");
 
         return redirect()->back()->with(
@@ -84,7 +83,6 @@ class AccountController extends Controller
         $user->photo = $path;
         $user->save();
 
-        SummaryUser::cacheDelete();
 
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,
@@ -103,7 +101,6 @@ class AccountController extends Controller
         $user->photo = null;
         $user->save();
 
-        SummaryUser::cacheDelete();
 
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,

@@ -42,11 +42,17 @@ import { gapDaysFromNow } from '@/Composable/date';
 import { useAuth } from '@/Composable/useAuth';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const { business, subscription } = useAuth();
+const page = usePage();
 
 const shouldShowWidget = computed(() => {
+    // Sembunyikan widget jika ada invoice perpanjangan yang belum dibayar
+    if (page.props.auth.has_pending_renewal_invoice) {
+        return false;
+    }
+
     // Tampilkan selalu jika masih dalam masa uji coba (tidak ada subscription aktif)
     if (!subscription.value) {
         return true;

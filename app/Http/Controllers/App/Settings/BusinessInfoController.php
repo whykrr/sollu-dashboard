@@ -46,7 +46,6 @@ class BusinessInfoController extends Controller
         $business->address = $req->validated('address');
         $business->save();
 
-        SummaryUser::cacheDelete();
 
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,
@@ -66,7 +65,6 @@ class BusinessInfoController extends Controller
             $business->logo = null;
             $business->save();
 
-            SummaryUser::cacheDelete();
 
             return redirect()->back()->with(
                 FlashDataVariable::SUCCESS->value,
@@ -83,7 +81,6 @@ class BusinessInfoController extends Controller
         $business->logo = $path;
         $business->save();
 
-        SummaryUser::cacheDelete();
 
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,

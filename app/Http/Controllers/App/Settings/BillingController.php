@@ -104,6 +104,7 @@ class BillingController extends Controller
         return Inertia::render('Settings/Billing/Checkout', [
             'subscription' => $subscription,
             'plan' => $plan,
+            'isRenewal' => $req->boolean('is_renewal'),
         ]);
     }
 }

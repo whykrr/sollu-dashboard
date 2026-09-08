@@ -244,13 +244,20 @@
                                         : 'Tahunan'
                                 }}</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600"
-                                    >Jumlah Outlet Aktif</span
-                                >
-                                <span class="font-medium"
-                                    >{{ activeOutlets }} Outlet</span
-                                >
+                            <div class="flex flex-col">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600"
+                                        >Jumlah Outlet Aktif</span
+                                    >
+                                    <span class="font-medium"
+                                        >{{ activeOutlets }} Outlet</span
+                                    >
+                                </div>
+                                <div v-if="activeOutletsList.length > 0" class="mt-2 text-xs text-gray-500 pl-2 border-l-2 border-gray-200">
+                                    <div v-for="outlet in activeOutletsList" :key="outlet.id">
+                                        - {{ outlet.name }}
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="border-t pt-3 mt-3"></div>
@@ -294,13 +301,11 @@
                         <div class="mt-6">
                             <Link
                                 :href="
-                                    subscription
-                                        ? route(
-                                              'settings.subscriptions.change-plan',
-                                          )
-                                        : route(
-                                              'settings.subscriptions.subscribe',
-                                          )
+                                    isRenewal
+                                        ? route('settings.subscriptions.renew')
+                                        : (subscription
+                                            ? route('settings.subscriptions.change-plan')
+                                            : route('settings.subscriptions.subscribe'))
                                 "
                                 method="post"
                                 as="button"
@@ -341,6 +346,10 @@ import { computed, ref } from 'vue';
 const props = defineProps({
     plan: Object,
     subscription: Object,
+    isRenewal: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const page = usePage();
@@ -352,11 +361,16 @@ const billingCycle = ref(
 );
 const paymentMethod = ref('midtrans');
 
-const activeOutlets = computed(() => {
+const activeOutletsList = computed(() => {
     return auth.value.outlets
-        ? auth.value.outlets.filter((o) => o.is_active).length ||
-              auth.value.outlets.length
-        : 0;
+        ? auth.value.outlets.filter((o) => o.is_active)
+        : [];
+});
+
+const activeOutlets = computed(() => {
+    return activeOutletsList.value.length > 0 
+        ? activeOutletsList.value.length 
+        : (auth.value.outlets ? auth.value.outlets.length : 0);
 });
 
 // Calculations

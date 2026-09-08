@@ -87,7 +87,7 @@ class BillingEngine
     /**
      * Generate a recurring invoice for the business
      */
-    public function generateRecurringInvoice(Business $business, Subscription $subscription): Invoice
+    public function generateRecurringInvoice(Business $business, Subscription $subscription, string $itemType = 'recurring_plan'): Invoice
     {
         $plan = $subscription->plan;
 
@@ -114,13 +114,14 @@ class BillingEngine
         ]);
 
         $invoice->items()->create([
-            'item_type' => 'recurring_plan',
-            'description' => 'Recurring billing for '.$plan->name.' ('.$activeOutlets.' outlets)',
+            'item_type' => $itemType,
+            'description' => ($itemType === 'plan_renewal' ? 'Perpanjangan Paket: ' : 'Langganan Paket: ').$plan->name.' ('.$activeOutlets.' outlets)',
             'quantity' => $activeOutlets,
             'unit_price' => $price,
             'subtotal' => $subtotal,
             'metadata' => [
                 'active_outlets' => $activeOutlets,
+                'subscription_id' => $subscription->id,
             ],
         ]);
 

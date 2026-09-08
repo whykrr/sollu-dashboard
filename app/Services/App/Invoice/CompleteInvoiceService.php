@@ -16,12 +16,13 @@ class CompleteInvoiceService
      */
     public function execute(Invoice $invoice): Invoice
     {
-        return DB::transaction(function () use ($invoice) {
+        /** @var Invoice $invoice */
+        $invoice = DB::transaction(function () use ($invoice): Invoice {
             $now = Carbon::now();
 
             // Mark invoice as paid
             $invoice->update([
-                'status' => 'paid',
+                'status'  => 'paid',
                 'paid_at' => $now,
             ]);
 
@@ -29,15 +30,51 @@ class CompleteInvoiceService
 
             // Check if this invoice is an outlet addition
             $isOutletAddition = false;
+            $isPlanRenewal    = false;
             if ($invoice->items()->where('item_type', 'outlet_addition')->exists()) {
                 $isOutletAddition = true;
+            }
+            if ($invoice->items()->where('item_type', 'plan_renewal')->exists()) {
+                $isPlanRenewal = true;
             }
 
             // Only activate the subscription if it is a recurring plan, OR if the subscription isn't active yet.
             // Generally, we just ensure the latest subscription is set to active.
             $subscription = $business->subscriptions()->latest()->first();
 
-            if ($subscription && $subscription->status !== 'active' && ! $isOutletAddition) {
+            if ($isPlanRenewal) {
+                $renewalItem    = $invoice->items()->where('item_type', 'plan_renewal')->first();
+                $subscriptionId = $renewalItem->metadata['subscription_id'] ?? null;
+                if ($subscriptionId) {
+                    $targetSub = $business->subscriptions()->find($subscriptionId);
+                    if ($targetSub) {
+                        // Perpanjang expired_at sesuai billing_cycle (365 atau 30 hari dari expired_at yang ada)
+                        // Jika sudah lewat expired_at, mulai dari waktu sekarang
+                        $daysToAdd = $targetSub->billing_cycle === 'yearly' ? 365 : 30;
+                        $baseDate  = $targetSub->expired_at && $targetSub->expired_at->isFuture()
+                            ? $targetSub->expired_at
+                            : $now;
+
+                        $targetSub->update([
+                            'expired_at' => $baseDate->copy()->addDays($daysToAdd),
+                            'status'     => 'active',
+                        ]);
+
+                        $owner = $business->users()->first();
+                        if ($owner) {
+                            try {
+                                $owner->notify(new SubscriptionActivatedNotification(
+                                    $business,
+                                    $targetSub->plan,
+                                    $targetSub->expired_at->translatedFormat('d F Y')
+                                ));
+                            } catch (\Exception $e) {
+                                Log::error('Gagal mengirim notifikasi perpanjangan langganan: '.$e->getMessage());
+                            }
+                        }
+                    }
+                }
+            } elseif ($subscription && $subscription->status !== 'active' && ! $isOutletAddition) {
                 $subscription->update([
                     'status' => 'active',
                 ]);
@@ -82,5 +119,7 @@ class CompleteInvoiceService
 
             return $invoice;
         });
+
+        return $invoice;
     }
 }

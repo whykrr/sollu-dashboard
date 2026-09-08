@@ -78,3 +78,8 @@ Sollu App integrates specialized Model Context Protocol (MCP) servers to aid dev
 > [!NOTE]
 > For standard file editing and viewing within the codebase, Antigravity's native tools (`view_file`, `replace_file_content`, `write_to_file`) remain the primary mechanism. Use `filesystem` MCP for bulk operations and directory tree overviews.
 
+## 7. State Management & Caching Boundary
+
+- **UI State (Session Boundary):** Segala bentuk pilihan antarmuka yang mengikat pada pengguna di suatu perangkat (contoh: *Selected Outlet*, *Active Tab*, pilihan *Filter*) **WAJIB** disimpan menggunakan `session()` Laravel. Pendekatan ini mencegah kebocoran state (*state bleed*) antar perangkat/browser ketika pengguna login di berbagai device secara bersamaan.
+- **Query Performance (Cache Boundary):** Penggunaan Redis atau global `Cache::` HANYA diizinkan untuk optimasi performa *query* database (contoh: caching `SummaryUser`). Data yang disimpan di Cache wajib berupa tipe data primitif atau *Pure Array*, **DILARANG** menyimpan *Eloquent Model* untuk menghindari masalah *serialization*.
+- **Cache Invalidation:** Jika menggunakan Redis cache untuk performa, invalidasi data cache (seperti menghapus `SummaryUser` saat *Role* berubah) wajib dilakukan secara otomatis melalui *Eloquent Observers* atau *Model Events* (contoh: `UserCacheObserver`), BUKAN dengan cara manual memanggil `cacheDelete()` dari dalam controller atau layer service.

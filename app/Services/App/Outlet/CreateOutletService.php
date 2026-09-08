@@ -51,7 +51,6 @@ class CreateOutletService
                 'metadata' => ['data' => $data],
             ]);
 
-            SummaryUser::cacheDelete();
 
             // Generate prorated invoice if business is subscribed to an active plan
             $invoice = null;

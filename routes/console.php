@@ -19,3 +19,5 @@ Schedule::call(function () {
         }
     }
 })->daily();
+
+Schedule::command('subscription:renewal-notification')->dailyAt('08:00');

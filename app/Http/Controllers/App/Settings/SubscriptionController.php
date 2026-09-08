@@ -128,4 +128,50 @@ class SubscriptionController extends Controller
             'Berlangganan berhasil dibatalkan.'
         );
     }
+
+    public function renew(Request $request, \App\Services\App\Subscription\GenerateRenewalInvoiceService $renewService)
+    {
+        $request->validate([
+            'plan_id' => 'required|exists:subscription_plans,id',
+            'billing_cycle' => 'required|in:monthly,yearly',
+            'payment_method' => 'required|in:midtrans,manual',
+        ]);
+
+        $business = $request->user()->business;
+        $plan = SubscriptionPlan::findOrFail($request->plan_id);
+
+        try {
+            $invoice = $renewService->execute($business, $plan, $request->billing_cycle);
+        } catch (\Symfony\Component\HttpKernel\Exception\BadRequestHttpException $e) {
+            return redirect()->route('settings.billing.index')->with(
+                FlashDataVariable::FAILED->value,
+                $e->getMessage()
+            );
+        }
+
+        if ($invoice->total_amount == 0) {
+            app(\App\Services\App\Invoice\CompleteInvoiceService::class)->execute($invoice);
+
+            return redirect()->route('settings.billing.index')->with(
+                FlashDataVariable::SUCCESS->value,
+                'Perpanjangan paket berhasil.'
+            );
+        }
+
+        if ($request->payment_method === 'manual') {
+            $invoice->payments()->create([
+                'amount' => $invoice->total_amount,
+                'payment_method' => 'manual',
+                'status' => 'pending',
+                'payment_reference' => "{$invoice->invoice_number}-MANUAL-".\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(4)),
+            ]);
+        }
+
+
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice->invoice_number])
+            ->with(
+                FlashDataVariable::SUCCESS->value,
+                'Invoice perpanjangan terbuat. Silakan selesaikan pembayaran.'
+            );
+    }
 }

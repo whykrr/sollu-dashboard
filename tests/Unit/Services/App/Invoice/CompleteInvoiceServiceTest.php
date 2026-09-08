@@ -164,9 +164,89 @@ class CompleteInvoiceServiceTest extends TestCase
         $this->assertSame($invoiceMock, $result);
     }
 
+    public function test_it_extends_subscription_when_it_is_a_plan_renewal()
+    {
+        Carbon::setTestNow(Carbon::create(2026, 1, 1, 12, 0, 0));
+
+        $invoiceMock = Mockery::mock(Invoice::class)->makePartial();
+        $businessMock = Mockery::mock(Business::class)->makePartial();
+        
+        $planMock = Mockery::mock(SubscriptionPlan::class)->makePartial();
+        $planMock->shouldReceive('getAttribute')->with('name')->andReturn('Pro Plan');
+
+        $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
+        $subscriptionMock->shouldReceive('getAttribute')->with('billing_cycle')->andReturn('yearly');
+        
+        $expiredDate = Carbon::now()->addDays(5);
+        $subscriptionMock->shouldReceive('getAttribute')->with('expired_at')->andReturn($expiredDate);
+        $subscriptionMock->shouldReceive('getAttribute')->with('plan')->andReturn($planMock);
+
+        $invoiceMock->shouldReceive('getAttribute')->with('business')->andReturn($businessMock);
+
+        DB::shouldReceive('transaction')
+            ->once()
+            ->andReturnUsing(function ($callback) {
+                return $callback();
+            });
+
+        $invoiceMock->shouldReceive('update')
+            ->once()
+            ->with([
+                'status' => 'paid',
+                'paid_at' => Carbon::now(),
+            ])
+            ->andReturnTrue();
+
+        $itemsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $invoiceMock->shouldReceive('items')->andReturn($itemsQueryMock);
+        
+        // where('item_type', 'outlet_addition')->exists() -> false
+        $outletAdditionQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $outletAdditionQuery->shouldReceive('exists')->andReturn(false);
+        $itemsQueryMock->shouldReceive('where')->with('item_type', 'outlet_addition')->andReturn($outletAdditionQuery);
+        
+        // where('item_type', 'plan_renewal')->exists() -> true
+        // where('item_type', 'plan_renewal')->first() -> $renewalItemMock
+        $renewalItemMock = Mockery::mock();
+        $renewalItemMock->metadata = ['subscription_id' => 99];
+        
+        $planRenewalQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $planRenewalQuery->shouldReceive('exists')->andReturn(true);
+        $planRenewalQuery->shouldReceive('first')->andReturn($renewalItemMock);
+        $itemsQueryMock->shouldReceive('where')->with('item_type', 'plan_renewal')->andReturn($planRenewalQuery);
+        
+        $subsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $businessMock->shouldReceive('subscriptions')->andReturn($subsQueryMock);
+        $subsQueryMock->shouldReceive('latest')->andReturnSelf();
+        $subsQueryMock->shouldReceive('first')->andReturn($subscriptionMock);
+        
+        $subsQueryMock->shouldReceive('find')->with(99)->andReturn($subscriptionMock);
+
+        $subscriptionMock->shouldReceive('update')
+            ->once()
+            ->withArgs(function($args) use ($expiredDate) {
+                return $args['status'] === 'active' && 
+                       $args['expired_at']->equalTo($expiredDate->copy()->addDays(365));
+            })
+            ->andReturnTrue();
+
+        $ownerMock = Mockery::mock(User::class)->makePartial();
+        $usersQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $businessMock->shouldReceive('users')->once()->andReturn($usersQueryMock);
+        $usersQueryMock->shouldReceive('first')->once()->andReturn($ownerMock);
+
+        $ownerMock->shouldReceive('notify')
+            ->once()
+            ->with(Mockery::type(SubscriptionActivatedNotification::class));
+
+        $result = $this->service->execute($invoiceMock);
+        $this->assertSame($invoiceMock, $result);
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
+        \Illuminate\Support\Facades\DB::clearResolvedInstances();
         parent::tearDown();
     }
 }

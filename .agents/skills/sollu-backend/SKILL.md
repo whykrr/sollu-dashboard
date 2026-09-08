@@ -165,3 +165,8 @@ Gunakan MCP tools dari server `laravel-boost` untuk mempercepat siklus investiga
     - Membuat visualisasi struktur hierarki direktori lengkap (`directory_tree`).
     - Memindahkan/mengganti nama file (`move_file`) secara aman tanpa menjalankan command shell mentah.
 
+## 11. State Management & Caching Standards
+
+- **Session vs Cache untuk UI State (STRICT RULE):** *State* pilihan antarmuka pengguna (seperti `SelectedOutlet`, *active tab*, *UI preference*) **WAJIB** disimpan dalam Laravel Session (`session()`). **DILARANG KERAS** menggunakan Redis / `Cache::` global berdasarkan `user_id` untuk menyimpan state UI, karena akan menyebabkan *cross-device state bleed* (pilihan di satu perangkat menimpa perangkat lain).
+- **Pure Arrays in Redis Cache:** Caching berbasis Redis hanya diperbolehkan untuk optimasi performa *query* (contoh: `SummaryUser`). Saat melakukan caching, **WAJIB** menyimpan pure array (menggunakan `->toArray()` atau `->only()`). Dilarang me-return *Eloquent Model* langsung ke dalam Cache untuk menghindari *stale connection* dan *serialization bugs*.
+- **Automated Cache Invalidation:** Invalidasi cache Redis (seperti pembersihan `SummaryUser`) wajib diotomatisasi melalui Eloquent Observers (misal: `UserCacheObserver`) atau Model Events (`booted()`). **Dilarang** memanggil `Cache::forget` atau class helper invalidasi cache secara manual / sporadis di dalam Service Layer maupun Controller.

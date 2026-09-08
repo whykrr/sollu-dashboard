@@ -43,19 +43,26 @@ class SummaryUser
                         'label' => $role->label,
                     ])->toArray(),
                     'permissions' => $user->getAllPermissions()->pluck('name')->toArray(),
-                    'business' => $user->business,
-                    'subscription' => $user->business->subscriptions()->with('plan')->latest()->first(),
+                    'business' => $user->business ? $user->business->only('id', 'name', 'type', 'trial_end_at') : null,
+                    'subscription' => $user->business->subscriptions()->with('plan')->latest()->first()?->toArray(),
                     'outlets' => $user->outlets()->where('is_active', '=', true)
                         ->get()
                         ->map(fn ($outlet) => $outlet->only('id', 'name')),
+                    'has_pending_renewal_invoice' => $user->business->invoices()
+                        ->where('status', 'open')
+                        ->whereHas('items', function ($query) {
+                            $query->where('item_type', 'plan_renewal');
+                        })
+                        ->exists(),
                 ];
             }
         );
     }
 
-    public static function cacheDelete()
+    public static function cacheDelete(?string $user_id = null)
     {
         $instance = new self;
-        Cache::delete($instance->cache_key);
+        $key = $user_id ? "auth:user:{$user_id}:summary" : $instance->cache_key;
+        Cache::forget($key);
     }
 }
