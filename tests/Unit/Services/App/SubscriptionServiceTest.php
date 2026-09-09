@@ -64,10 +64,10 @@ class SubscriptionServiceTest extends TestCase
         $activeCount = $business->outlets()->where('is_active', true)->count();
         $this->assertCount($activeCount, $newSubscription->subscriptionOutlets);
 
-        // Check old subscription cancelled
+        // Check old subscription remains active
         $currentSubscription->refresh();
-        $this->assertEquals('canceled', $currentSubscription->status);
-        $this->assertEquals($now, $currentSubscription->canceled_at);
+        $this->assertEquals('active', $currentSubscription->status);
+        $this->assertNull($currentSubscription->canceled_at);
     }
 
     public function test_it_cancels_subscription()

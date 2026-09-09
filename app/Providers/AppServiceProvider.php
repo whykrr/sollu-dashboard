@@ -59,15 +59,16 @@ class AppServiceProvider extends ServiceProvider
                 // Log query yang dijalankan pada mode development
                 Log::channel('query_log')->info("Query executed: {$query->sql}", [
                     'bindings' => $query->bindings,
-                    'time' => $query->time,
+                    'time'     => $query->time,
                 ]);
             });
         }
-        
+
         \App\Models\User::observe(\App\Observers\UserCacheObserver::class);
         \App\Models\Business::observe(\App\Observers\UserCacheObserver::class);
         \App\Models\Outlet::observe(\App\Observers\UserCacheObserver::class);
         \App\Models\Subscription::observe(\App\Observers\UserCacheObserver::class);
+        \App\Models\SubscriptionPlan::observe(\App\Observers\UserCacheObserver::class);
         \Spatie\Permission\Models\Role::observe(\App\Observers\UserCacheObserver::class);
         \Spatie\Permission\Models\Permission::observe(\App\Observers\UserCacheObserver::class);
     }

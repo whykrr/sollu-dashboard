@@ -6,8 +6,11 @@
         @close="closeModal"
     >
         <div class="flex flex-col gap-4">
-            <p>Masukkan alasan penolakan bukti pembayaran. Alasan ini akan dikirimkan ke email merchant.</p>
-            <TextAreaField
+            <p>
+                Masukkan alasan penolakan bukti pembayaran. Alasan ini akan
+                dikirimkan ke email merchant.
+            </p>
+            <TextareaField
                 v-model="form.reason"
                 label="Alasan Penolakan"
                 :error="form.errors.reason"
@@ -17,10 +20,18 @@
         </div>
 
         <template #footer>
-            <button class="btn btn-outline-main" :disabled="form.processing" @click="closeModal">
+            <button
+                class="btn btn-outline-main"
+                :disabled="form.processing"
+                @click="closeModal"
+            >
                 Batal
             </button>
-            <button class="btn btn-danger" :disabled="form.processing || !form.reason" @click="submit">
+            <button
+                class="btn btn-danger"
+                :disabled="form.processing || !form.reason"
+                @click="submit"
+            >
                 {{ form.processing ? 'Menyimpan...' : 'Tolak Pembayaran' }}
             </button>
         </template>
@@ -28,8 +39,8 @@
 </template>
 
 <script setup>
+import TextareaField from '@/Components/Form/TextareaField.vue';
 import Modal from '@/Components/Notifications/Modal.vue';
-import TextAreaField from '@/Components/Form/TextAreaField.vue';
 import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({

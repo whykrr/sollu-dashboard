@@ -101,10 +101,17 @@ class BillingController extends Controller
                 ->with(FlashDataVariable::WARNING->value, 'Paket langganan ini sudah tidak aktif.');
         }
 
+        $manualPaymentMethods = \App\Models\Master\SubscriptionManualPaymentMethod::where('is_active', true)
+            ->orderBy('bank_name')
+            ->get();
+
         return Inertia::render('Settings/Billing/Checkout', [
             'subscription' => $subscription,
             'plan' => $plan,
             'isRenewal' => $req->boolean('is_renewal'),
+            'manualPaymentMethods' => $manualPaymentMethods,
+            'isMidtransEnabled' => \App\Models\FeatureFlag::isMidtransEnabled(),
         ]);
+
     }
 }

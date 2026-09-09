@@ -451,6 +451,43 @@
                     "response": []
                 }
             ]
+        },
+        {
+            "name": "Billing & Payment",
+            "item": [
+                {
+                    "name": "Midtrans Notification Webhook",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"transaction_time\": \"2026-08-10 15:00:00\",\n    \"transaction_status\": \"settlement\",\n    \"transaction_id\": \"54091234-5678\",\n    \"status_message\": \"midtrans payment notification\",\n    \"status_code\": \"200\",\n    \"signature_key\": \"9c4e0a...\",\n    \"payment_type\": \"bank_transfer\",\n    \"order_id\": \"INV-12345\",\n    \"merchant_id\": \"G123456\",\n    \"gross_amount\": \"150000.00\",\n    \"fraud_status\": \"accept\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{apiBaseUrl}}/midtrans/notification",
+                            "host": [
+                                "{{apiBaseUrl}}"
+                            ],
+                            "path": [
+                                "midtrans",
+                                "notification"
+                            ]
+                        },
+                        "description": "Endpoint webhook (HTTP callback) untuk menerima notifikasi status pembayaran dari Midtrans (server-to-server)."
+                    },
+                    "response": []
+                }
+            ]
         }
     ]
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Production;
 
+use App\Enums\PlanEnum;
 use App\Models\SubscriptionPlan;
 use Illuminate\Database\Seeder;
 
@@ -12,62 +13,19 @@ class SubscriptionPlanSeeder extends Seeder
      */
     public function run(): void
     {
-        $features = [
-            ['title' => 'Fitur Penjualan Lengkap', 'detail' => 'fitur lengkap dan lain lain'],
-            ['title' => 'Laporan Penjualan', 'detail' => 'laporan penjualan lengkap'],
-            ['title' => 'Manajemen Stok', 'detail' => 'manajemen stok mudah'],
-            ['title' => 'Multi Outlet', 'detail' => 'kelola banyak outlet'],
-            ['title' => 'Multi User', 'detail' => 'banyak user dalam 1 outlet'],
-            ['title' => 'Support 24/7', 'detail' => 'bantuan kapan saja'],
-        ];
-
-        $plans = [
-            [
-                'code' => 'micro',
-                'name' => 'Paket Mikro',
-                'price_per_outlet' => 59000,
-                'max_outlet' => 3,
-                'yearly_discount_percent' => 20,
-                'features' => $features,
-                'is_active' => true,
-            ],
-            [
-                'code' => 'basic',
-                'name' => 'Paket Basic',
-                'price_per_outlet' => 129000,
-                'max_outlet' => 10,
-                'yearly_discount_percent' => 20,
-                'features' => $features,
-                'is_active' => true,
-            ],
-            [
-                'code' => 'pro',
-                'name' => 'Paket Pro',
-                'price_per_outlet' => 299000,
-                'max_outlet' => 99,
-                'yearly_discount_percent' => 20,
-                'features' => $features,
-                'is_active' => true,
-            ],
-            [
-                'code' => 'ultimate',
-                'name' => 'Paket Ultimate',
-                'price_per_outlet' => 499000,
-                'max_outlet' => null,
-                'yearly_discount_percent' => 25,
-                'features' => array_merge($features, [
-                    ['title' => 'Dedicated Account Manager', 'detail' => 'layanan prioritas khusus enterprise'],
-                ]),
-                'is_active' => true,
-            ],
-        ];
-
-        foreach ($plans as $plan) {
+        foreach (PlanEnum::cases() as $plan) {
             SubscriptionPlan::updateOrCreate(
                 [
-                    'code' => $plan['code'],
+                    'code' => $plan->value,
                 ],
-                $plan
+                [
+                    'name' => $plan->name(),
+                    'price_per_outlet' => $plan->pricePerOutlet(),
+                    'max_outlet' => $plan->maxOutlet(),
+                    'yearly_discount_percent' => $plan->yearlyDiscountPercent(),
+                    'features' => $plan->uiFeatures(),
+                    'is_active' => true,
+                ]
             );
         }
     }

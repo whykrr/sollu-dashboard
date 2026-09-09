@@ -39,9 +39,16 @@ Route::name('cockpit.')->group(function () {
         Route::put('/subscription-plans/{id}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
         Route::post('/subscription-plans/{id}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle-status');
 
+        Route::get('/payment-methods', [\App\Http\Controllers\Cockpit\SubscriptionManualPaymentMethodController::class, 'index'])->name('payment-methods.index');
+        Route::post('/payment-methods', [\App\Http\Controllers\Cockpit\SubscriptionManualPaymentMethodController::class, 'store'])->name('payment-methods.store');
+        Route::put('/payment-methods/{id}', [\App\Http\Controllers\Cockpit\SubscriptionManualPaymentMethodController::class, 'update'])->name('payment-methods.update');
+        Route::post('/payment-methods/{id}/toggle-status', [\App\Http\Controllers\Cockpit\SubscriptionManualPaymentMethodController::class, 'toggleStatus'])->name('payment-methods.toggle-status');
+        Route::delete('/payment-methods/{id}', [\App\Http\Controllers\Cockpit\SubscriptionManualPaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
+
         Route::get('/uoms', [UomController::class, 'index'])->name('uoms.index');
 
         Route::get('/config', [ConfigController::class, 'index'])->name('config.index');
+        Route::patch('/config/feature-flag', [ConfigController::class, 'updateFlag'])->name('config.feature-flag.update');
 
         Route::get('/audit', [AuditController::class, 'index'])->name('audit.index');
     });

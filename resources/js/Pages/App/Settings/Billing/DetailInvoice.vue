@@ -203,7 +203,7 @@
                 <div v-else-if="invoice.status === 'open'" class="space-y-4">
                     <!-- METODE ONLINE (MIDTRANS) -->
                     <div
-                        v-if="!payment || payment.payment_method === 'midtrans'"
+                        v-if="(!payment && isMidtransEnabled) || payment?.payment_method === 'midtrans'"
                         class="bg-blue-50 border border-blue-150 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fadeIn"
                     >
                         <div class="flex items-start gap-3">
@@ -239,17 +239,19 @@
 
                     <!-- METODE MANUAL (TRANSFER BANK) -->
                     <div
-                        v-else-if="
-                            payment && payment.payment_method === 'manual'
-                        "
-                        class="space-y-4"
+                        v-else-if="(!payment && !isMidtransEnabled) || payment?.payment_method === 'manual'"
+                        class="space-y-6"
                     >
-                        <!-- Instruksi Transfer -->
+                        <!-- Langkah 1: Transfer -->
                         <div
-                            class="bg-slate-50 border border-slate-200 rounded-xl p-5"
+                            class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative"
                         >
+                            <div class="absolute -top-3 -left-3 w-8 h-8 bg-main text-white rounded-full flex items-center justify-center font-bold shadow-md">
+                                1
+                            </div>
+                            
                             <div
-                                class="flex flex-col md:flex-row justify-between items-start gap-4 border-b border-slate-200 pb-4 mb-4"
+                                class="flex flex-col md:flex-row justify-between items-start gap-4 border-b border-slate-200 pb-4 mb-4 pl-3"
                             >
                                 <div class="flex items-start gap-3">
                                     <div
@@ -262,18 +264,17 @@
                                     </div>
                                     <div>
                                         <h4
-                                            class="font-bold text-gray-800 text-sm"
+                                            class="font-bold text-gray-800 text-base"
                                         >
-                                            Instruksi Transfer Bank Manual
+                                            Transfer Pembayaran
                                         </h4>
-                                        <p class="text-xs text-gray-500 mt-1">
-                                            Silakan transfer tepat sejumlah
-                                            total tagihan ke salah satu rekening
-                                            bank resmi berikut:
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Lakukan transfer bank sejumlah total tagihan ke salah satu rekening resmi kami.
                                         </p>
                                     </div>
                                 </div>
                                 <button
+                                    v-if="isMidtransEnabled"
                                     class="text-xs font-bold text-main hover:underline shrink-0 bg-transparent border-0 p-0"
                                     @click="changePaymentMethod('midtrans')"
                                 >
@@ -281,69 +282,79 @@
                                 </button>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Bank BCA -->
-                                <div
-                                    class="border border-slate-200 bg-white rounded-lg p-4"
-                                >
-                                    <span
-                                        class="text-xs font-bold text-blue-600 tracking-wider"
-                                        >BANK BCA</span
-                                    >
-                                    <span
-                                        class="block text-lg font-bold text-gray-900 mt-1"
-                                        >123-456-7890</span
-                                    >
-                                    <span
-                                        class="block text-xs text-gray-400 mt-0.5"
-                                        >a/n PT Solusi Dari Anak Bangsa</span
-                                    >
+                            <div class="bg-white border border-slate-200 rounded-lg p-4 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <div class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">
+                                        Total Pembayaran
+                                    </div>
+                                    <div class="text-2xl font-bold text-gray-900">
+                                        {{ formatIDR(invoice.total_amount) }}
+                                    </div>
                                 </div>
-
-                                <!-- Bank Mandiri -->
-                                <div
-                                    class="border border-slate-200 bg-white rounded-lg p-4"
+                                <button 
+                                    class="btn btn-outline-main btn-sm py-1.5"
+                                    @click="copyToClipboard(invoice.total_amount, 'Nominal tagihan')"
                                 >
-                                    <span
-                                        class="text-xs font-bold text-blue-800 tracking-wider"
-                                        >BANK MANDIRI</span
-                                    >
-                                    <span
-                                        class="block text-lg font-bold text-gray-900 mt-1"
-                                        >987-654-3210</span
-                                    >
-                                    <span
-                                        class="block text-xs text-gray-400 mt-0.5"
-                                        >a/n PT Solusi Dari Anak Bangsa</span
-                                    >
-                                </div>
+                                    <FontAwesomeIcon :icon="faCopy" class="mr-1.5" />
+                                    Salin Nominal
+                                </button>
                             </div>
 
-                            <div
-                                class="mt-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-3 text-xs flex items-start gap-2"
-                            >
-                                <FontAwesomeIcon
-                                    :icon="faCircleInfo"
-                                    class="text-amber-600 mt-0.5 shrink-0"
-                                />
-                                <div>
-                                    Transfer tepat sebesar
-                                    <strong class="text-amber-955">{{
-                                        formatIDR(invoice.total_amount)
-                                    }}</strong
-                                    >. Harap simpan bukti transfer untuk
-                                    diunggah pada form di bawah.
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div
+                                    v-for="method in manualPaymentMethods"
+                                    :key="method.id"
+                                    class="border border-slate-200 bg-white rounded-lg p-4 transition-all hover:border-main/30 flex flex-col justify-between"
+                                >
+                                    <div>
+                                        <span
+                                            class="text-xs font-bold text-blue-600 tracking-wider uppercase"
+                                        >
+                                            {{ method.bank_name }}
+                                        </span>
+                                        <span
+                                            class="block text-xl font-bold text-gray-900 mt-1"
+                                        >
+                                            {{ method.account_number }}
+                                        </span>
+                                        <span
+                                            class="block text-sm text-gray-500 mt-0.5"
+                                        >
+                                            a/n {{ method.account_name }}
+                                        </span>
+                                    </div>
+                                    <div class="mt-4 border-t border-slate-100 pt-3">
+                                        <button 
+                                            class="text-xs font-semibold text-main hover:text-main-dark flex items-center gap-1.5 transition-colors"
+                                            @click="copyToClipboard(method.account_number, `Nomor rekening ${method.bank_name}`)"
+                                        >
+                                            <FontAwesomeIcon :icon="faCopy" />
+                                            Salin No. Rekening
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    v-if="!manualPaymentMethods || manualPaymentMethods.length === 0"
+                                    class="col-span-full border border-slate-200 bg-slate-50 rounded-lg p-4 text-center text-sm text-gray-500"
+                                >
+                                    Belum ada metode pembayaran manual yang tersedia. Silakan hubungi admin.
                                 </div>
                             </div>
                         </div>
 
                         <!-- Upload Bukti / Status Verifikasi -->
                         <div
-                            class="border border-slate-200 rounded-xl p-5 bg-white"
+                            class="border border-slate-200 rounded-xl p-5 bg-white relative mt-2"
                         >
-                            <h4 class="font-bold text-gray-800 text-sm mb-4">
-                                Bukti Pembayaran
+                            <div class="absolute -top-3 -left-3 w-8 h-8 bg-main text-white rounded-full flex items-center justify-center font-bold shadow-md">
+                                2
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-base mb-1 pl-3">
+                                Unggah Bukti Transfer
                             </h4>
+                            <p class="text-sm text-gray-500 mb-4 pl-3">
+                                Wajib unggah bukti (struk/screenshot) agar tagihan dapat diproses.
+                            </p>
 
                             <!-- Awaiting validation (Pending) -->
                             <div
@@ -455,6 +466,7 @@
                                         class="flex flex-col sm:flex-row sm:items-center gap-4 border border-dashed border-rose-200 rounded-lg p-4 bg-rose-50/10"
                                     >
                                         <input
+                                            id="payment_proof_input_rejected"
                                             type="file"
                                             accept="image/*"
                                             class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-main/5 file:text-main hover:file:bg-main/10"
@@ -495,23 +507,15 @@
 
                             <!-- No validation uploaded yet -->
                             <div v-else class="space-y-4">
-                                <p
-                                    class="text-xs text-gray-650 leading-relaxed"
-                                >
-                                    Jika Anda sudah melakukan transfer, silakan
-                                    unggah foto bukti transfer (struk ATM,
-                                    m-banking screenshot, dll) di bawah untuk
-                                    memproses verifikasi.
-                                </p>
-
                                 <form
                                     class="space-y-3"
                                     @submit.prevent="uploadProof"
                                 >
                                     <div
-                                        class="flex flex-col sm:flex-row sm:items-center gap-4 border border-dashed border-gray-300 rounded-lg p-4 bg-gray-50/50"
+                                        class="flex flex-col sm:flex-row sm:items-center gap-4 border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50/50 hover:bg-gray-50 transition-colors"
                                     >
                                         <input
+                                            id="payment_proof_input"
                                             type="file"
                                             accept="image/*"
                                             class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-main/5 file:text-main hover:file:bg-main/10"
@@ -584,13 +588,26 @@
                         v-if="
                             invoice.status === 'open' &&
                             (!payment || payment.status === 'pending') &&
-                            (!payment || payment.payment_method === 'midtrans')
+                            ((!payment && isMidtransEnabled) || payment?.payment_method === 'midtrans')
                         "
                         class="btn btn-main"
                         @click="createPayment"
                     >
                         Bayar Sekarang
                         <FontAwesomeIcon :icon="faArrowRight" class="ml-2" />
+                    </button>
+                    <button
+                        v-if="
+                            invoice.status === 'open' &&
+                            (!payment || payment.status === 'pending') &&
+                            (!isMidtransEnabled || payment?.payment_method === 'manual') &&
+                            (!manualValidation || manualValidation.validation_status === 'rejected')
+                        "
+                        class="btn btn-main"
+                        @click="focusUploadInput"
+                    >
+                        Sudah Transfer? Unggah Bukti
+                        <FontAwesomeIcon :icon="faUpload" class="ml-2" />
                     </button>
                 </div>
             </div>
@@ -602,6 +619,7 @@ import { onMounted, ref, computed } from 'vue';
 import { formatIDR } from '@/Composable/currency-format';
 import { useModalStore } from '@/store/notification';
 import { usePopUpStore } from '@/store/popup';
+import { useToastStore } from '@/store/toast';
 import {
     formatDateID,
     formatDateTimeID,
@@ -615,23 +633,44 @@ import {
     faUpload,
     faSpinner,
     faClock,
-    faCircleInfo,
     faExclamationTriangle,
     faCreditCard,
+    faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     invoice: Object,
     midtransClientKey: String,
     payment: Object,
     manualValidation: Object,
+    manualPaymentMethods: Array,
+    isMidtransEnabled: Boolean,
 });
 
 const modalStore = useModalStore();
 const popUpStore = usePopUpStore();
+const toastStore = useToastStore();
 const isMounted = ref(false);
+
+const copyToClipboard = (text, label) => {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+            toastStore.success(`${label} berhasil disalin!`);
+        }).catch(() => {
+            toastStore.error(`Gagal menyalin ${label.toLowerCase()}.`);
+        });
+    }
+};
+
+const focusUploadInput = () => {
+    const el = document.getElementById('payment_proof_input') || document.getElementById('payment_proof_input_rejected');
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => el.click(), 300);
+    }
+};
 
 const associatedOutletName = computed(() => {
     const item = props.invoice.items.find(
@@ -725,7 +764,7 @@ const createPayment = () => {
         props.payment.json_respond.token
     ) {
         window.snap.pay(props.payment.json_respond.token, {
-            onSuccess: function (result) {
+            onSuccess: function () {
                 router.get(
                     route('settings.billing.invoices.finish', {
                         invoice_number: props.invoice.invoice_number,

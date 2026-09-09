@@ -28,7 +28,7 @@
         </Link>
         <Link
             v-else
-            :href="route('settings.billing.index')"
+            :href="route('settings.billing.checkout', { plan_id: subscription?.plan?.id, is_renewal: 1 })"
             class="btn btn-outline-info btn-sm justify-center w-full mt-1"
         >
             Perpanjang Langganan

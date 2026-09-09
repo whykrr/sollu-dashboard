@@ -118,6 +118,11 @@ description: >-
 - `App\Constants\ResourceMessage::PURGE_SUCCESS` (`'Data berhasil di hapus!'`)
 - `App\Constants\AuthorizationMessage::CANT_ACCESS_PAGE`
 - `App\Constants\AuthorizationMessage::CANT_ACCESS_DATA`
+- `App\Constants\ErrorMessage::DATABASE_ERROR` (`'Terjadi kesalahan database. Coba lagi nanti.'`)
+- `App\Constants\ErrorMessage::DATA_NOT_FOUND` (`'Data tidak ditemukan.'`)
+- `App\Constants\ErrorMessage::PAGE_NOT_FOUND` (`'Halaman tidak ditemukan.'`)
+- `App\Constants\ErrorMessage::TOO_MANY_REQUESTS` (`'Terlalu banyak permintaan. Coba lagi nanti.'`)
+- `App\Constants\ErrorMessage::SERVER_ERROR` (`'Terjadi kesalahan pada server. Coba lagi nanti.'`)
 - `App\Constants\FlashDataVariable::SUCCESS->value` (`'success'`)
 - `App\Constants\FlashDataVariable::WARNING->value` (`'warning'`)
 - `App\Constants\FlashDataVariable::FAILED->value` (`'failed'`)

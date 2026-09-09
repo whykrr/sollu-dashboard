@@ -1,4 +1,4 @@
-import { faBox, faBoxes, faCartShopping, faChartLine, faChartPie, faHashtag, faPercent, faReceipt, faUsers, faUserTie, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faBox, faBoxes, faChartLine, faChartPie, faPercent, faReceipt, faUsers, faUserTie } from '@fortawesome/free-solid-svg-icons'
 
 export const mainSidebars = [
     {

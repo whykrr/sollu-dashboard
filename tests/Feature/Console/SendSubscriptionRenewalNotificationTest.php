@@ -22,7 +22,7 @@ class SendSubscriptionRenewalNotificationTest extends TestCase
 
         $plan = SubscriptionPlan::factory()->create();
         $business = Business::factory()->create();
-        
+
         $owner = User::factory()->create();
         $owner->business_id = $business->id;
         $owner->save();

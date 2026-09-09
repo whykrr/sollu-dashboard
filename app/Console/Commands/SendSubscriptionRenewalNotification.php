@@ -30,7 +30,7 @@ class SendSubscriptionRenewalNotification extends Command
     public function handle()
     {
         $this->info('Starting subscription renewal notification process...');
-        
+
         $intervals = [14, 7, 3, 1];
         $count = 0;
 
@@ -43,7 +43,7 @@ class SendSubscriptionRenewalNotification extends Command
                 ->get();
 
             foreach ($subscriptions as $subscription) {
-                if (!$subscription->business || !$subscription->plan) {
+                if (! $subscription->business || ! $subscription->plan) {
                     continue;
                 }
 
@@ -60,7 +60,7 @@ class SendSubscriptionRenewalNotification extends Command
                         $this->info("Notification sent for business: {$subscription->business->name} (Days left: {$days})");
                         $count++;
                     } catch (\Exception $e) {
-                        Log::error('Failed to send renewal notification: ' . $e->getMessage());
+                        Log::error('Failed to send renewal notification: '.$e->getMessage());
                     }
                 }
             }

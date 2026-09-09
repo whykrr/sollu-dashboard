@@ -22,7 +22,7 @@ class CompleteInvoiceService
 
             // Mark invoice as paid
             $invoice->update([
-                'status'  => 'paid',
+                'status' => 'paid',
                 'paid_at' => $now,
             ]);
 
@@ -30,7 +30,7 @@ class CompleteInvoiceService
 
             // Check if this invoice is an outlet addition
             $isOutletAddition = false;
-            $isPlanRenewal    = false;
+            $isPlanRenewal = false;
             if ($invoice->items()->where('item_type', 'outlet_addition')->exists()) {
                 $isOutletAddition = true;
             }
@@ -43,7 +43,7 @@ class CompleteInvoiceService
             $subscription = $business->subscriptions()->latest()->first();
 
             if ($isPlanRenewal) {
-                $renewalItem    = $invoice->items()->where('item_type', 'plan_renewal')->first();
+                $renewalItem = $invoice->items()->where('item_type', 'plan_renewal')->first();
                 $subscriptionId = $renewalItem->metadata['subscription_id'] ?? null;
                 if ($subscriptionId) {
                     $targetSub = $business->subscriptions()->find($subscriptionId);
@@ -51,13 +51,13 @@ class CompleteInvoiceService
                         // Perpanjang expired_at sesuai billing_cycle (365 atau 30 hari dari expired_at yang ada)
                         // Jika sudah lewat expired_at, mulai dari waktu sekarang
                         $daysToAdd = $targetSub->billing_cycle === 'yearly' ? 365 : 30;
-                        $baseDate  = $targetSub->expired_at && $targetSub->expired_at->isFuture()
+                        $baseDate = $targetSub->expired_at && $targetSub->expired_at->isFuture()
                             ? $targetSub->expired_at
                             : $now;
 
                         $targetSub->update([
                             'expired_at' => $baseDate->copy()->addDays($daysToAdd),
-                            'status'     => 'active',
+                            'status' => 'active',
                         ]);
 
                         $owner = $business->users()->first();
@@ -75,6 +75,15 @@ class CompleteInvoiceService
                     }
                 }
             } elseif ($subscription && $subscription->status !== 'active' && ! $isOutletAddition) {
+                // Cancel any previous active subscriptions before activating the new one
+                $business->subscriptions()
+                    ->where('id', '!=', $subscription->id)
+                    ->where('status', 'active')
+                    ->update([
+                        'status' => 'canceled',
+                        'canceled_at' => $now,
+                    ]);
+
                 $subscription->update([
                     'status' => 'active',
                 ]);

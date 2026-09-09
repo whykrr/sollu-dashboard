@@ -2,7 +2,6 @@
 
 namespace App\Services\App\Outlet;
 
-use App\Helpers\SummaryUser;
 use App\Models\Outlet;
 use App\Models\OutletAuditLog;
 use App\Models\User;
@@ -50,7 +49,6 @@ class CreateOutletService
                 'action' => 'created',
                 'metadata' => ['data' => $data],
             ]);
-
 
             // Generate prorated invoice if business is subscribed to an active plan
             $invoice = null;

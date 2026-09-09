@@ -51,6 +51,7 @@ class HandleAppInertiaRequests extends Middleware
                     'error' => $request->session()->get('error'),
                     'info' => $request->session()->get('info'),
                     'otp_data' => $request->session()->get('otp_data'),
+                    'feature_locked' => $request->session()->get('feature_locked'),
                 ],
             ],
 

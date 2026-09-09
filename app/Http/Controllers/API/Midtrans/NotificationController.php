@@ -28,7 +28,7 @@ class NotificationController extends Controller
             $serverKey
         );
 
-        if ($signature !== $request->signature_key) {
+        if (! hash_equals($signature, $request->signature_key)) {
             return response()->json(['message' => 'Invalid signature'], 403);
         }
 
@@ -36,6 +36,10 @@ class NotificationController extends Controller
 
         if (! $payment) {
             return response()->json(['message' => 'Payment record not found'], 404);
+        }
+
+        if ($payment->status === 'success') {
+            return response()->json(['message' => 'Payment already processed'], 200);
         }
 
         $payment->payment_method = $request->payment_type ?? 'midtrans';
@@ -47,22 +51,22 @@ class NotificationController extends Controller
         try {
             $invoice = $payment->invoice;
 
-            if ($transactionStatus === 'capture' || $transactionStatus === 'settlement') {
+            if (
+                $transactionStatus === \App\Enums\SubscriptionPayment\Status::Settlement->value ||
+                ($transactionStatus === \App\Enums\SubscriptionPayment\Status::Capture->value && $request->fraud_status === 'accept')
+            ) {
                 $payment->status = 'success';
                 $payment->paid_at = Carbon::now();
 
                 $completeService = app(\App\Services\App\Invoice\CompleteInvoiceService::class);
                 $completeService->execute($invoice);
-            } elseif (in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure'])) {
+            } elseif (in_array($transactionStatus, [
+                \App\Enums\SubscriptionPayment\Status::Deny->value,
+                \App\Enums\SubscriptionPayment\Status::Cancel->value,
+                \App\Enums\SubscriptionPayment\Status::Expire->value,
+                \App\Enums\SubscriptionPayment\Status::Failure->value,
+            ])) {
                 $payment->status = 'failed';
-
-                $business = $invoice->business;
-                $subscription = $business->subscriptions()->latest()->first();
-                if ($subscription) {
-                    $subscription->update([
-                        'status' => 'inactive',
-                    ]);
-                }
             } else {
                 $payment->status = 'pending';
             }

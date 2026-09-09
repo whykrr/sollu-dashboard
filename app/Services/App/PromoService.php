@@ -13,13 +13,17 @@ class PromoService
 {
     public function __construct(
         protected ActivityLogService $activityLogService
-    ) {}
+    ) {
+    }
 
-    public function create(array $data, ?object $causer = null): Promo
+    /**
+     * @return Promo
+     */
+    public function create(array $data, ?object $causer = null)
     {
         return DB::transaction(function () use ($data, $causer) {
             $promo = Promo::create(array_merge($data, [
-                'status' => PromoStatus::Draft->value,
+                'status'     => PromoStatus::Draft->value,
                 'created_by' => $causer?->id ?? auth()->id(),
             ]));
 
@@ -31,7 +35,11 @@ class PromoService
         });
     }
 
-    public function update(Promo $promo, array $data, ?object $causer = null): Promo
+
+    /**
+     * @return Promo
+     */
+    public function update(Promo $promo, array $data, ?object $causer = null)
     {
         if ($promo->status !== PromoStatus::Draft) {
             throw new InvalidArgumentException('Hanya promo berstatus Draf yang dapat diubah.');
@@ -67,7 +75,7 @@ class PromoService
         }
 
         $promo->update([
-            'status' => PromoStatus::Active->value,
+            'status'       => PromoStatus::Active->value,
             'published_by' => $causer?->id ?? auth()->id(),
             'published_at' => now(),
         ]);

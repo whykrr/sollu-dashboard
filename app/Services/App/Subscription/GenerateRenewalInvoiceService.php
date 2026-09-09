@@ -11,9 +11,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class GenerateRenewalInvoiceService
 {
-    public function __construct(protected BillingEngine $billingEngine)
-    {
-    }
+    public function __construct(protected BillingEngine $billingEngine) {}
 
     public function execute(Business $business, SubscriptionPlan $plan, string $billingCycle): Invoice
     {

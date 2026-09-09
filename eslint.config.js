@@ -32,7 +32,10 @@ export default [
             quotes: ['warn', 'single'],
             semi: ['warn', 'never'],
             'object-curly-spacing': ['error', 'always'],
-            'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
+            'no-unused-vars': ['warn', {
+                vars: 'all', args: 'after-used', ignoreRestSiblings: true, varsIgnorePattern: '^_',
+                argsIgnorePattern: '^_',
+            }],
             'comma-dangle': ['warn', 'always-multiline'],
             'vue/multi-word-component-names': 'off',
             'vue/max-attributes-per-line': 'off',

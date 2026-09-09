@@ -37,7 +37,9 @@
                         </h4>
                         <p class="text-amber-800 text-xs mt-0.5">
                             Invoice
-                            <strong>#{{ pendingInvoice.invoice_number }}</strong>
+                            <strong
+                                >#{{ pendingInvoice.invoice_number }}</strong
+                            >
                             sebesar
                             <strong>{{
                                 formatIDR(pendingInvoice.total_amount)
@@ -45,11 +47,14 @@
                             jatuh tempo pada
                             <strong>{{
                                 formatDateID(pendingInvoice.due_date)
-                            }}</strong>.
+                            }}</strong
+                            >.
                         </p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                <div
+                    class="flex items-center gap-2 self-end sm:self-auto shrink-0"
+                >
                     <button
                         class="btn btn-warning btn-sm font-semibold"
                         @click="getDetail(pendingInvoice.invoice_number)"
@@ -85,20 +90,26 @@
                                 <span
                                     class="badge text-xs"
                                     :class="
-                                        gapDaysFromNow(auth.business?.trial_end_at) > 0
+                                        gapDaysFromNow(
+                                            auth.business?.trial_end_at,
+                                        ) > 0
                                             ? 'badge-info'
                                             : 'badge-danger'
                                     "
                                 >
                                     {{
-                                        gapDaysFromNow(auth.business?.trial_end_at) > 0
+                                        gapDaysFromNow(
+                                            auth.business?.trial_end_at,
+                                        ) > 0
                                             ? 'Aktif'
                                             : 'Berakhir'
                                     }}
                                 </span>
                             </div>
                             <p class="text-xs text-gray-500 mt-0.5">
-                                Tingkatkan ke paket berbayar untuk menikmati akses penuh dan kelola multi-outlet tanpa batasan.
+                                Tingkatkan ke paket berbayar untuk menikmati
+                                akses penuh dan kelola multi-outlet tanpa
+                                batasan.
                             </p>
                         </div>
                     </div>
@@ -124,23 +135,37 @@
                             />
                         </div>
                         <div>
-                            <span class="block text-xs font-medium text-gray-500">
+                            <span
+                                class="block text-xs font-medium text-gray-500"
+                            >
                                 Masa Berlaku Uji Coba
                             </span>
-                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
+                            <span
+                                class="block text-sm font-bold text-gray-800 mt-0.5"
+                            >
                                 {{
                                     auth.business?.trial_end_at
-                                        ? formatDateID(auth.business.trial_end_at)
+                                        ? formatDateID(
+                                              auth.business.trial_end_at,
+                                          )
                                         : '-'
                                 }}
                                 <span
                                     v-if="
                                         auth.business?.trial_end_at &&
-                                        gapDaysFromNow(auth.business.trial_end_at) > 0
+                                        gapDaysFromNow(
+                                            auth.business.trial_end_at,
+                                        ) > 0
                                     "
                                     class="text-xs font-normal text-amber-600 ml-1"
                                 >
-                                    (tersisa {{ gapDaysFromNow(auth.business.trial_end_at) }} hari)
+                                    (tersisa
+                                    {{
+                                        gapDaysFromNow(
+                                            auth.business.trial_end_at,
+                                        )
+                                    }}
+                                    hari)
                                 </span>
                                 <span
                                     v-else-if="auth.business?.trial_end_at"
@@ -160,11 +185,16 @@
                             <FontAwesomeIcon :icon="faShop" class="w-4 h-4" />
                         </div>
                         <div>
-                            <span class="block text-xs font-medium text-gray-500">
+                            <span
+                                class="block text-xs font-medium text-gray-500"
+                            >
                                 Penggunaan Outlet
                             </span>
-                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
-                                {{ auth.outlets ? auth.outlets.length : 0 }} / {{ maxOutlets ?? 1 }} Outlet Digunakan
+                            <span
+                                class="block text-sm font-bold text-gray-800 mt-0.5"
+                            >
+                                {{ auth.outlets ? auth.outlets.length : 0 }} /
+                                {{ maxOutlets ?? 1 }} Outlet Digunakan
                             </span>
                         </div>
                     </div>
@@ -254,11 +284,17 @@
                                     gapDaysFromNow(subscription.expired_at)
                                 }}
                                 hari</strong
-                            >). Segera perpanjang agar operasional outlet tidak terganggu.
+                            >). Segera perpanjang agar operasional outlet tidak
+                            terganggu.
                         </p>
                         <div class="mt-2">
                             <Link
-                                :href="route('settings.billing.plans')"
+                                :href="
+                                    route('settings.billing.checkout', {
+                                        plan_id: subscription?.plan?.id,
+                                        is_renewal: 1,
+                                    })
+                                "
                                 class="inline-flex items-center gap-1 text-xs font-bold text-amber-955 hover:underline"
                             >
                                 Perpanjang Sekarang
@@ -283,10 +319,14 @@
                             />
                         </div>
                         <div>
-                            <span class="block text-xs font-medium text-gray-500">
+                            <span
+                                class="block text-xs font-medium text-gray-500"
+                            >
                                 Masa Berlaku
                             </span>
-                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
+                            <span
+                                class="block text-sm font-bold text-gray-800 mt-0.5"
+                            >
                                 {{
                                     subscription.expired_at
                                         ? formatDateID(subscription.expired_at)
@@ -296,7 +336,11 @@
                                     v-if="subscription.expired_at"
                                     class="text-xs font-normal text-gray-500 ml-1"
                                 >
-                                    (tersisa {{ gapDaysFromNow(subscription.expired_at) }} hari)
+                                    (tersisa
+                                    {{
+                                        gapDaysFromNow(subscription.expired_at)
+                                    }}
+                                    hari)
                                 </span>
                             </span>
                         </div>
@@ -310,11 +354,21 @@
                             <FontAwesomeIcon :icon="faShop" class="w-4 h-4" />
                         </div>
                         <div>
-                            <span class="block text-xs font-medium text-gray-500">
+                            <span
+                                class="block text-xs font-medium text-gray-500"
+                            >
                                 Penggunaan Outlet
                             </span>
-                            <span class="block text-sm font-bold text-gray-800 mt-0.5">
-                                {{ auth.outlets ? auth.outlets.length : 0 }} / {{ maxOutlets ?? subscription.plan?.max_outlet ?? 1 }} Outlet Digunakan
+                            <span
+                                class="block text-sm font-bold text-gray-800 mt-0.5"
+                            >
+                                {{ auth.outlets ? auth.outlets.length : 0 }} /
+                                {{
+                                    maxOutlets ??
+                                    subscription.plan?.max_outlet ??
+                                    1
+                                }}
+                                Outlet Digunakan
                             </span>
                         </div>
                     </div>
@@ -362,13 +416,19 @@
                             Dibatalkan
                         </label>
                         <label
-                            v-else-if="row.payment_manual_validation?.validation_status === 'pending'"
+                            v-else-if="
+                                row.payment_manual_validation
+                                    ?.validation_status === 'pending'
+                            "
                             class="badge pill text-xs badge-warning"
                         >
                             Pending Review
                         </label>
                         <label
-                            v-else-if="row.payment_manual_validation?.validation_status === 'rejected'"
+                            v-else-if="
+                                row.payment_manual_validation
+                                    ?.validation_status === 'rejected'
+                            "
                             class="badge pill text-xs badge-danger"
                         >
                             Ditolak
@@ -388,14 +448,14 @@
                     </template>
                     <template #actions="{ row }">
                         <button
-                            class="btn btn-highlight-main btn-sm"
+                            class="btn btn-flat btn-sm"
                             @click="getDetail(row.invoice_number)"
                         >
-                            Detail
                             <FontAwesomeIcon
-                                :icon="faArrowRight"
+                                :icon="faEye"
                                 class="text-[10px]"
                             />
+                            Detail
                         </button>
                     </template>
                 </Table>
@@ -416,30 +476,30 @@
 </template>
 
 <script setup>
-import Pagination from '@/Components/Tables/Pagination.vue';
-import Table from '@/Components/Tables/Table.vue';
-import MainPage from '@/Components/UI/MainPage.vue';
-import DetailInvoice from './DetailInvoice.vue';
-import { usePopUpStore } from '@/store/popup';
-import { router } from '@inertiajs/vue3';
-import {
-    formatDateID,
-    gapDaysFromNow,
-} from '@/Composable/date';
+import { computed, onMounted, watch } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faArrowRight,
     faBolt,
     faCalendarDays,
     faCircleExclamation,
     faCreditCard,
+    faEye,
     faGem,
     faShop,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 
+import MainPage from '@/Components/UI/MainPage.vue';
+import Table from '@/Components/Tables/Table.vue';
+import Pagination from '@/Components/Tables/Pagination.vue';
+
+import { usePopUpStore } from '@/store/popup';
+import { formatDateID, gapDaysFromNow } from '@/Composable/date';
 import { formatIDR } from '@/Composable/currency-format';
+
+import DetailInvoice from './DetailInvoice.vue';
 
 defineProps({
     subscription: Object,
@@ -448,6 +508,10 @@ defineProps({
     invoices: Object,
 });
 
+const page = usePage();
+const auth = computed(() => page.props.auth);
+const popUpStore = usePopUpStore();
+
 const tableSetting = [
     { field: 'invoice_number', label: 'No Invoice', slot: 'invoice_number' },
     { field: 'created_at', label: 'Tanggal', slot: 'created_at' },
@@ -455,42 +519,62 @@ const tableSetting = [
     { field: 'status', label: 'Status', slot: 'status' },
 ];
 
-const popUpStore = usePopUpStore();
-
 const getDetail = (invoice_number) => {
-    router.visit(route('settings.billing.invoices.show', invoice_number), {
-        only: ['invoice', 'midtransClientKey', 'payment', 'manualValidation'],
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: (page) => {
+    axios
+        .get(route('settings.billing.invoices.show', invoice_number), {
+            headers: { Accept: 'application/json' },
+        })
+        .then((response) => {
+            const data = response.data;
             popUpStore.open({
                 title: 'Detail Invoice',
                 size: 'xl',
                 component: DetailInvoice,
                 props: {
-                    invoice: page.props.invoice,
-                    midtransClientKey: page.props.midtransClientKey,
-                    payment: page.props.payment,
-                    manualValidation: page.props.manualValidation,
+                    invoice: data.invoice,
+                    midtransClientKey: data.midtransClientKey,
+                    payment: data.payment,
+                    manualValidation: data.manualValidation,
+                    manualPaymentMethods: data.manualPaymentMethods,
+                    isMidtransEnabled: data.isMidtransEnabled,
                 },
             });
-        },
-    });
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 };
 
-const page = usePage();
-const auth = computed(() => page.props.auth);
-
-import { onMounted } from 'vue';
+watch(
+    () => page.url,
+    (url) => {
+        if (url.includes('open_invoice=')) {
+            const urlParams = new URLSearchParams(url.split('?')[1]);
+            const openInvoice = urlParams.get('open_invoice');
+            if (openInvoice) {
+                getDetail(openInvoice);
+                const newUrl =
+                    window.location.protocol +
+                    '//' +
+                    window.location.host +
+                    window.location.pathname;
+                window.history.replaceState({ path: newUrl }, '', newUrl);
+            }
+        }
+    },
+);
 
 onMounted(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const openInvoice = urlParams.get('open_invoice');
     if (openInvoice) {
         getDetail(openInvoice);
-        // Membersihkan URL setelah popup dibuka
-        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        window.history.replaceState({path: newUrl}, '', newUrl);
+        const newUrl =
+            window.location.protocol +
+            '//' +
+            window.location.host +
+            window.location.pathname;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
     }
 });
 </script>

@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Product\Product;
-use App\Models\Product\ProductVariation;
+use App\Models\Master\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +18,6 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read Collection|BusinessType $type
  * @property-read Collection|Outlet[] $outlets
  * @property-read Collection|User[] $users
- * @property-read Collection|ProductVariation[] $product_variations
  * @property-read Collection|Product[] $products
  *
  * @mixin \Eloquent
@@ -114,14 +112,6 @@ class Business extends Model
     }
 
     /**
-     * Get all of the product_variations for the Merchant
-     */
-    public function product_variations(): HasMany
-    {
-        return $this->hasMany(ProductVariation::class);
-    }
-
-    /**
      * Get all of the products for the Merchant
      */
     public function products(): HasMany
@@ -143,6 +133,42 @@ class Business extends Model
         }
 
         return $activeSubscription->plan->max_outlet ?? 1;
+    }
+
+    /**
+     * Get the active plan features for this business.
+     */
+    public function activePlanFeatures(): array
+    {
+        $activeSubscription = $this->subscriptions()
+            ->where('status', 'active')
+            ->first();
+
+        if ($activeSubscription && $activeSubscription->plan) {
+            $planEnum = \App\Enums\PlanEnum::tryFrom($activeSubscription->plan->code);
+
+            if ($planEnum) {
+                return $planEnum->systemFeatures();
+            }
+        }
+
+        // Check if currently on valid Trial
+        $isTrial = $this->trial_end_at ? \Carbon\Carbon::parse($this->trial_end_at)->isFuture() : false;
+
+        if ($isTrial) {
+            return \App\Enums\PlanEnum::trialFeatures();
+        }
+
+        // Fallback to Free Plan features
+        return \App\Enums\PlanEnum::freeFeatures();
+    }
+
+    /**
+     * Check if the business has a specific feature.
+     */
+    public function hasFeature(\App\Enums\FeatureEnum $feature): bool
+    {
+        return in_array($feature, $this->activePlanFeatures(), true);
     }
 
     /**

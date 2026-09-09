@@ -312,6 +312,45 @@ components:
                                     type: string
                                     example: 'healthy'
 
+        MidtransNotificationRequest:
+            type: object
+            description: Payload notifikasi dari Midtrans (contoh field utama)
+            properties:
+                transaction_time:
+                    type: string
+                    example: '2026-08-10 15:00:00'
+                transaction_status:
+                    type: string
+                    example: 'settlement'
+                transaction_id:
+                    type: string
+                    example: '5409...-...'
+                status_message:
+                    type: string
+                    example: 'midtrans payment notification'
+                status_code:
+                    type: string
+                    example: '200'
+                signature_key:
+                    type: string
+                    example: '9c...e0'
+                payment_type:
+                    type: string
+                    example: 'bank_transfer'
+                order_id:
+                    type: string
+                    example: 'INV-12345'
+                merchant_id:
+                    type: string
+                    example: 'G...1'
+                gross_amount:
+                    type: string
+                    example: '150000.00'
+                fraud_status:
+                    type: string
+                    example: 'accept'
+
+
 paths:
     /health:
         get:
@@ -498,3 +537,24 @@ paths:
             responses:
                 '200':
                     description: Log kas berhasil dibuat
+
+    /midtrans/notification:
+        post:
+            summary: Midtrans Webhook Notification
+            description: Endpoint untuk menerima HTTP callback (webhook) dari server Midtrans ketika status pembayaran berubah (misal success, failed, expire).
+            servers:
+                - url: http://app.sollu.test/api
+                  description: Base API Server
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/MidtransNotificationRequest'
+            responses:
+                '200':
+                    description: Webhook berhasil diproses (termasuk kasus payment already processed)
+                '403':
+                    description: Signature key tidak valid (Kemungkinan percobaan spoofing)
+                '404':
+                    description: Payment record (Order ID) tidak ditemukan di database

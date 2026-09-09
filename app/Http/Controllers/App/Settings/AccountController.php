@@ -4,7 +4,6 @@ namespace App\Http\Controllers\App\Settings;
 
 use App\Constants\FlashDataVariable;
 use App\Constants\ResourceMessage;
-use App\Helpers\SummaryUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\User\AccountChangePasswordRequest;
 use App\Http\Requests\App\User\AccountUpdateRequest;
@@ -83,7 +82,6 @@ class AccountController extends Controller
         $user->photo = $path;
         $user->save();
 
-
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,
             ResourceMessage::UPDATE_SUCCESS
@@ -100,7 +98,6 @@ class AccountController extends Controller
 
         $user->photo = null;
         $user->save();
-
 
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,

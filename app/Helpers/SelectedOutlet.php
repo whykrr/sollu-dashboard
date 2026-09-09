@@ -36,6 +36,7 @@ class SelectedOutlet
         if ($this->user && $this->user->outlets()->count() === 1) {
             $outlet = $this->user->business->outlets()->first();
             session()->put($sessionKey, $outlet);
+
             return $outlet;
         }
 
@@ -64,6 +65,6 @@ class SelectedOutlet
 
     private function getSessionKey()
     {
-        return 'selected_outlet_' . ($this->user ? $this->user->id : 'guest');
+        return 'selected_outlet_'.($this->user ? $this->user->id : 'guest');
     }
 }

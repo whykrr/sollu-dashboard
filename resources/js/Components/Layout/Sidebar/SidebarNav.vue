@@ -35,7 +35,7 @@ const normalizeActiveRoute = (name) => {
 
 const isActive = (menu) => {
     const current = normalizeRoute(activeMenu.value);
-    
+
     if (!current) return false;
 
     // Prioritize explicit activeRoute property

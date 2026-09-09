@@ -36,19 +36,10 @@ import PopUpContainer from '@/Components/UI/PopUpContainer.vue';
 
 import i18n from '@/i18n';
 import { useModalStore } from '@/store/notification';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import Header from '@/Components/Layout/Header/Header.vue';
-import {
-    faCheck,
-    faCircleExclamation,
-    faClose,
-    faExclamation,
-} from '@fortawesome/free-solid-svg-icons';
-import { useCurrentUrlStore } from '@/store/currentUrlStore';
 import { useAppStore } from '@/store/app';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import PopUpPage from '@/Components/UI/PopUpPage.vue';
 
 // Event listener for Inertia start/finish
 router.on('start', (event) => {
@@ -62,19 +53,34 @@ router.on('finish', () => (loading.value = false));
 
 const loading = ref(false);
 const modalStore = useModalStore();
-const flashSuccess = computed(() => usePage().props.app.flash.success);
-const flashFailed = computed(
-    () => usePage().props.app.flash.failed || usePage().props.app.flash.error,
-);
+const page = usePage();
+
 const appStore = useAppStore();
 
-const clearMessage = () => {
-    usePage().props.app.flash.success = null;
-};
-const clearMessageFailed = () => {
-    usePage().props.app.flash.failed = null;
-    usePage().props.app.flash.error = null;
-};
+import { watch } from 'vue';
+import FeatureLockedModal from '@/Components/Modals/FeatureLockedModal.vue';
+
+const flashFeatureLocked = computed(
+    () => page.props.app?.flash?.feature_locked,
+);
+
+watch(
+    flashFeatureLocked,
+    (lockedData) => {
+        if (lockedData && lockedData.feature) {
+            modalStore.open({
+                component: FeatureLockedModal,
+                props: {
+                    feature: lockedData.feature,
+                },
+                showFooter: false,
+                title: 'Fitur Terkunci',
+                size: 'max-w-md',
+            });
+        }
+    },
+    { immediate: true, deep: true },
+);
 
 i18n.global.locale.value = usePage().props.locale;
 </script>

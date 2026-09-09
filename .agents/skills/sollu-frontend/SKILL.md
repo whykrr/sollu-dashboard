@@ -18,10 +18,14 @@ Standard pengembangan antarmuka (UI) Sollu App berbasis Vue 3 (Composition API `
 
 ## 1. 🚨 Anti-Hallucination Core Rules
 
-1. **NO RAW HTML FORMS:** Selalu gunakan komponen `@/Components/Form/` (`TextField`, `TextareaField`, `DropdownField`, `NumberField`, `Switch`, `CheckboxField`, `RadioField`, `SelectionGroupField`, `AsyncSelectField`, `AsyncOutletDropdown`).
-2. **NO HARDCODED PAGE LAYOUTS:** Selalu gunakan `<MainPage>` (`#header`, default slot, `#footer`).
-3. **PRECISE PROPS:** Komponen form menggunakan `v-model`, `label`, `placeholder`, dan `feedback` (pesan error validasi). Dilarang mengikat `is-invalid` secara manual.
-4. **NO TAILWIND CLUTTER:** Ekstrak kelompok class berulang (5+ class) ke `@utility` di `resources/css/app.css`.
+1. **NO RAW HTML FORMS & MANDATORY REUSABLE COMPONENTS:** Selalu gunakan komponen `@/Components/Form/` (`TextField`, `TextareaField`, `DropdownField`, `NumberField`, `Switch`, `CheckboxField`, `RadioField`, `SelectionGroupField`, `AsyncSelectField`, `AsyncOutletDropdown`) untuk setiap elemen formulir. DILARANG KERAS menggunakan tag `<input>`, `<select>`, atau `<textarea>` mentah!
+2. **PROJECT-SPECIFIC TAILWIND STYLES:** Jika terpaksa membuat tombol kustom atau elemen form yang belum ada komponen reusablenya, WAJIB menggunakan utility class yang sudah didefinisikan di `app.css` proyek ini. Contoh: 
+   - Untuk tombol gunakan class `btn`, `btn-main`, `btn-outline-main`, `btn-danger`.
+   - Untuk input raw (hanya jika sangat terpaksa seperti `<input type="file">`) gunakan class `form`.
+   - Untuk form grouping gunakan class `form-group`.
+3. **NO HARDCODED PAGE LAYOUTS:** Selalu gunakan `<MainPage>` (`#header`, default slot, `#footer`).
+4. **PRECISE PROPS:** Komponen form menggunakan `v-model`, `label`, `placeholder`, dan `feedback` (pesan error validasi). Dilarang mengikat `is-invalid` secara manual.
+5. **NO TAILWIND CLUTTER:** Ekstrak kelompok class berulang (5+ class) ke `@utility` di `resources/css/app.css`.
 5. **MANDATORY POPUPPAGE FOR SUB-PAGES & FORMS:** Seluruh alur kerja *Create*, *Edit*, *Detail*, dan *Sub-page* WAJIB menggunakan `<PopUpPage>` (side-panel drawer) atau `usePopUpStore()`. DILARANG menggunakan *full page redirect* (`router.get()`) untuk formulir sub-halaman.
 6. **FORM SPACING LIMIT (MAX SCALE 2):** Jarak antar-input formulir (vertikal maupun horizontal) DILARANG melebihi scale 2 Tailwind (`space-y-2`, `space-x-2`, `gap-2`, `gap-y-2`, `gap-x-2`).
 7. **ASYNC FETCH FOR SECONDARY & COMPLEX DETAILS:** Data detail kompleks (isi PopUpPage) dan data sekunder (opsi dropdown relasi) WAJIB diambil secara *async* via API internal (`axios`/`fetch`). Dilarang memuat relasi berat di props `index()` Inertia.

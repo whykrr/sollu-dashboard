@@ -11,6 +11,7 @@ class UserCacheObserver
     {
         if ($model instanceof \App\Models\User) {
             SummaryUser::cacheDelete($model->id);
+
             return;
         }
 

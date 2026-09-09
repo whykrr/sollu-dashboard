@@ -2,7 +2,6 @@
 
 namespace App\Services\App\Outlet;
 
-use App\Helpers\SummaryUser;
 use App\Models\Outlet;
 use App\Models\OutletAuditLog;
 use App\Models\User;
@@ -56,7 +55,6 @@ class ManageOutletStatusService
                     ]);
             }
         }
-
 
         $action = $isActive ? 'enabled' : 'disabled';
         OutletAuditLog::create([

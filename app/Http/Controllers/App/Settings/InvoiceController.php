@@ -24,7 +24,9 @@ class InvoiceController extends Controller
             $payment = null;
         }
 
-        if (! $payment && $invoice->status === 'open') {
+        $isMidtransEnabled = \App\Models\FeatureFlag::isMidtransEnabled();
+
+        if (! $payment && $invoice->status === 'open' && $isMidtransEnabled) {
             $midtrans_request = [
                 'transaction_details' => [
                     'order_id' => "{$invoice->invoice_number}-".Str::upper(Str::random(4)),
@@ -80,12 +82,22 @@ class InvoiceController extends Controller
 
         $manualValidation = PaymentManualValidation::where('invoice_id', $invoice->id)->first();
 
-        return inertia('Settings/Billing/DetailInvoice', [
-            'invoice' => $invoice,
-            'payment' => $payment,
-            'midtransClientKey' => config('midtrans.client_key'),
-            'manualValidation' => $manualValidation,
-        ]);
+        $manualPaymentMethods = \App\Models\Master\SubscriptionManualPaymentMethod::where('is_active', true)
+            ->orderBy('bank_name')
+            ->get();
+
+        if ($req->expectsJson()) {
+            return response()->json([
+                'invoice' => $invoice,
+                'payment' => $payment,
+                'midtransClientKey' => config('midtrans.client_key'),
+                'manualValidation' => $manualValidation,
+                'manualPaymentMethods' => $manualPaymentMethods,
+                'isMidtransEnabled' => $isMidtransEnabled,
+            ]);
+        }
+
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice->invoice_number]);
     }
 
     public function changeMethod(Request $request, $invoice_number)
@@ -93,6 +105,13 @@ class InvoiceController extends Controller
         $request->validate([
             'payment_method' => 'required|in:midtrans,manual',
         ]);
+
+        if ($request->payment_method === 'midtrans') {
+            $isMidtransEnabled = \App\Models\FeatureFlag::isMidtransEnabled();
+            if (! $isMidtransEnabled) {
+                return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis saat ini sedang dinonaktifkan.');
+            }
+        }
 
         $business = $request->user()->business;
         $invoice = Invoice::where('invoice_number', $invoice_number)->where('business_id', $business->id)->firstOrFail();
@@ -109,7 +128,7 @@ class InvoiceController extends Controller
             ]);
         }
 
-        return redirect()->route('settings.billing.invoices.show', $invoice_number)
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice_number])
             ->with(FlashDataVariable::SUCCESS->value, 'Metode pembayaran berhasil diubah.');
     }
 
@@ -148,7 +167,7 @@ class InvoiceController extends Controller
             ]);
         }
 
-        return redirect()->route('settings.billing.invoices.show', $invoice_number)
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice_number])
             ->with(FlashDataVariable::SUCCESS->value, 'Bukti transfer berhasil diunggah. Tim kami akan segera melakukan verifikasi.');
     }
 
@@ -179,14 +198,22 @@ class InvoiceController extends Controller
             }
         }
 
-        // Only cancel the main subscription if this is NOT a prorated outlet addition invoice
-        if (! $isOutletAddition) {
-            $subscription = $business->subscriptions()->latest()->first();
-            if ($subscription) {
-                $subscription->update([
-                    'status' => 'canceled',
-                    'canceled_at' => \Carbon\Carbon::now(),
-                ]);
+        // Determine what type of subscription invoice this is
+        $recurringPlanItem = $invoice->items()->where('item_type', 'recurring_plan')->first();
+        $isPlanRenewal = $invoice->items()->where('item_type', 'plan_renewal')->exists();
+
+        // Only cancel the subscription if it's a NEW subscription (recurring_plan) and NOT a renewal
+        if ($recurringPlanItem && ! $isOutletAddition && ! $isPlanRenewal) {
+            $subscriptionId = $recurringPlanItem->metadata['subscription_id'] ?? null;
+            if ($subscriptionId) {
+                $subscription = $business->subscriptions()->find($subscriptionId);
+                // Ensure we only cancel if it's inactive (meaning it hasn't been paid/activated yet)
+                if ($subscription && $subscription->status === 'inactive') {
+                    $subscription->update([
+                        'status' => 'canceled',
+                        'canceled_at' => \Carbon\Carbon::now(),
+                    ]);
+                }
             }
         }
 
@@ -205,7 +232,7 @@ class InvoiceController extends Controller
             'status' => 'failed',
         ]);
 
-        return redirect()->route('settings.billing.invoices.show', $invoice_number)->with(
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice_number])->with(
             FlashDataVariable::WARNING->value,
             'Request pembayaran gagal/kadaluarsa, silahkan ulangi.'
         );
@@ -219,7 +246,7 @@ class InvoiceController extends Controller
         $completeService = app(\App\Services\App\Invoice\CompleteInvoiceService::class);
         $completeService->execute($invoice);
 
-        return redirect()->route('settings.billing.invoices.show', $invoice_number)->with(
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice_number])->with(
             FlashDataVariable::SUCCESS->value,
             'Tagihan berhasil dibayarkan.'
         );

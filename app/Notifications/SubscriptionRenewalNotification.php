@@ -36,7 +36,7 @@ class SubscriptionRenewalNotification extends Notification
             'type' => 'subscription_renewal',
             'title' => 'Pengingat Perpanjangan Langganan',
             'message' => 'Langganan paket '.$this->plan->name.' Anda akan berakhir pada '.$this->expiredAt.'. Segera lakukan perpanjangan agar layanan tidak terhenti.',
-            'action_url' => route('settings.billing.checkout', ['plan_id' => $this->plan->id]) . '?is_renewal=1',
+            'action_url' => route('settings.billing.checkout', ['plan_id' => $this->plan->id]).'?is_renewal=1',
             'business_id' => $this->business->id,
             'plan_id' => $this->plan->id,
         ];

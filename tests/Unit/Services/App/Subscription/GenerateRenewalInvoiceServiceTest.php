@@ -8,25 +8,25 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Services\App\BillingEngine;
 use App\Services\App\Subscription\GenerateRenewalInvoiceService;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Mockery\MockInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Tests\TestCase;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
 
 class GenerateRenewalInvoiceServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     private GenerateRenewalInvoiceService $service;
+
     private MockInterface $billingEngineMock;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->billingEngineMock = Mockery::mock(BillingEngine::class);
         $this->service = new GenerateRenewalInvoiceService($this->billingEngineMock);
     }
@@ -36,7 +36,7 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $businessMock = Mockery::mock(Business::class)->makePartial();
         $planMock = Mockery::mock(SubscriptionPlan::class)->makePartial();
         $planMock->shouldReceive('getAttribute')->with('id')->andReturn('plan-1');
-        
+
         $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
         $subscriptionMock->shouldReceive('getAttribute')->with('id')->andReturn('sub-1');
         $subscriptionMock->shouldReceive('getAttribute')->with('plan_id')->andReturn('plan-1');
@@ -46,7 +46,7 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $hasManyMock = Mockery::mock(HasMany::class);
         $hasManyMock->shouldReceive('where')->with('status', 'active')->andReturn($hasManyMock);
         $hasManyMock->shouldReceive('first')->andReturn($subscriptionMock);
-        
+
         $businessMock->shouldReceive('subscriptions')->andReturn($hasManyMock);
 
         $invoiceMock = Mockery::mock(Invoice::class)->makePartial();
@@ -65,11 +65,11 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
     {
         $businessMock = Mockery::mock(Business::class)->makePartial();
         $planMock = Mockery::mock(SubscriptionPlan::class)->makePartial();
-        
+
         $hasManyMock = Mockery::mock(HasMany::class);
         $hasManyMock->shouldReceive('where')->with('status', 'active')->andReturn($hasManyMock);
         $hasManyMock->shouldReceive('first')->andReturn(null);
-        
+
         $businessMock->shouldReceive('subscriptions')->andReturn($hasManyMock);
 
         $this->expectException(BadRequestHttpException::class);
@@ -83,7 +83,7 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $businessMock = Mockery::mock(Business::class)->makePartial();
         $planMock = Mockery::mock(SubscriptionPlan::class)->makePartial();
         $planMock->shouldReceive('getAttribute')->with('id')->andReturn('plan-1');
-        
+
         $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
         $subscriptionMock->shouldReceive('getAttribute')->with('id')->andReturn('sub-1');
         $subscriptionMock->shouldReceive('getAttribute')->with('plan_id')->andReturn('plan-2');
@@ -92,7 +92,7 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $hasManyMock = Mockery::mock(HasMany::class);
         $hasManyMock->shouldReceive('where')->with('status', 'active')->andReturn($hasManyMock);
         $hasManyMock->shouldReceive('first')->andReturn($subscriptionMock);
-        
+
         $businessMock->shouldReceive('subscriptions')->andReturn($hasManyMock);
 
         $this->expectException(BadRequestHttpException::class);

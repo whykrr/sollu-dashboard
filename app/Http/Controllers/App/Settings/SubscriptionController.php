@@ -29,6 +29,10 @@ class SubscriptionController extends Controller
             'payment_method' => 'required|in:midtrans,manual',
         ]);
 
+        if ($request->payment_method === 'midtrans' && ! \App\Models\FeatureFlag::isMidtransEnabled()) {
+            return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis (Midtrans) saat ini sedang dinonaktifkan.');
+        }
+
         $business = $request->user()->business;
         $plan = SubscriptionPlan::findOrFail($request->plan_id);
 
@@ -56,7 +60,7 @@ class SubscriptionController extends Controller
                 ]);
             }
 
-            return redirect()->route('settings.billing.invoices.show', $invoice->invoice_number)
+            return redirect()->route('settings.billing.index', ['open_invoice' => $invoice->invoice_number])
                 ->with(
                     FlashDataVariable::SUCCESS->value,
                     'Berhasil berlangganan. Silakan selesaikan pembayaran tagihan awal.'
@@ -64,6 +68,14 @@ class SubscriptionController extends Controller
         }
 
         // Auto-activate since there are no active outlets
+        $business->subscriptions()
+            ->where('id', '!=', $subscription->id)
+            ->where('status', 'active')
+            ->update([
+                'status' => 'canceled',
+                'canceled_at' => \Carbon\Carbon::now(),
+            ]);
+
         $subscription->update([
             'status' => 'active',
         ]);
@@ -81,6 +93,10 @@ class SubscriptionController extends Controller
             'billing_cycle' => 'required|in:monthly,yearly',
             'payment_method' => 'required|in:midtrans,manual',
         ]);
+
+        if ($request->payment_method === 'midtrans' && ! \App\Models\FeatureFlag::isMidtransEnabled()) {
+            return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis (Midtrans) saat ini sedang dinonaktifkan.');
+        }
 
         $business = $request->user()->business;
         $plan = SubscriptionPlan::findOrFail($request->plan_id);
@@ -107,7 +123,7 @@ class SubscriptionController extends Controller
             ]);
         }
 
-        return redirect()->route('settings.billing.invoices.show', $invoice->invoice_number)
+        return redirect()->route('settings.billing.index', ['open_invoice' => $invoice->invoice_number])
             ->with(
                 FlashDataVariable::SUCCESS->value,
                 'Paket berhasil diubah. Silakan selesaikan pembayaran.'
@@ -136,6 +152,10 @@ class SubscriptionController extends Controller
             'billing_cycle' => 'required|in:monthly,yearly',
             'payment_method' => 'required|in:midtrans,manual',
         ]);
+
+        if ($request->payment_method === 'midtrans' && ! \App\Models\FeatureFlag::isMidtransEnabled()) {
+            return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis (Midtrans) saat ini sedang dinonaktifkan.');
+        }
 
         $business = $request->user()->business;
         $plan = SubscriptionPlan::findOrFail($request->plan_id);
@@ -166,7 +186,6 @@ class SubscriptionController extends Controller
                 'payment_reference' => "{$invoice->invoice_number}-MANUAL-".\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(4)),
             ]);
         }
-
 
         return redirect()->route('settings.billing.index', ['open_invoice' => $invoice->invoice_number])
             ->with(

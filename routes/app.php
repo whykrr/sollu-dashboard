@@ -143,3 +143,6 @@ Route::prefix('api')->middleware(['api', \App\Http\Middleware\AttachApiDeprecati
         });
     });
 });
+Route::get('/test-flash', function () {
+    return redirect()->route('overview')->with('feature_locked', 'promo_management');
+});

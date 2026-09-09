@@ -44,7 +44,9 @@ class SummaryUser
                     ])->toArray(),
                     'permissions' => $user->getAllPermissions()->pluck('name')->toArray(),
                     'business' => $user->business ? $user->business->only('id', 'name', 'type', 'trial_end_at') : null,
-                    'subscription' => $user->business->subscriptions()->with('plan')->latest()->first()?->toArray(),
+                    'subscription' => $user->business->subscriptions()->with('plan')->where('status', 'active')->first()?->toArray()
+                        ?? $user->business->subscriptions()->with('plan')->latest()->first()?->toArray(),
+                    'features' => $user->business ? $user->business->activePlanFeatures() : [],
                     'outlets' => $user->outlets()->where('is_active', '=', true)
                         ->get()
                         ->map(fn ($outlet) => $outlet->only('id', 'name')),

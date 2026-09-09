@@ -71,6 +71,18 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <div class="font-medium text-neutral-800">
+                                Pembayaran Otomatis (Midtrans)
+                            </div>
+                            <div class="text-xs text-neutral-500">
+                                Aktifkan/nonaktifkan metode pembayaran otomatis (via Midtrans) secara global
+                            </div>
+                        </div>
+                        <Switch id="midtrans_enabled" :model-value="midtransEnabled ? 1 : 0" @update:model-value="toggleMidtrans" />
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-medium text-neutral-800">
                                 AI Analytics Dashboard
                             </div>
                             <div class="text-xs text-neutral-500">
@@ -127,5 +139,21 @@ import MainPage from '@/Components/UI/MainPage.vue';
 import Switch from '@/Components/Form/Switch.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faSave, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
+
+const props = defineProps({
+    midtransEnabled: {
+        type: Boolean,
+        default: false,
+    },
+});
+
+const toggleMidtrans = (val) => {
+    router.patch(route('cockpit.config.feature-flag.update'), {
+        feature_name: 'midtrans_payment_enabled',
+        enabled: val ? 1 : 0
+    }, {
+        preserveScroll: true
+    });
+};
 </script>

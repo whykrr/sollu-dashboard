@@ -23,9 +23,9 @@ class SubscriptionRenewalMail extends Mailable
 
     public function envelope(): Envelope
     {
-        $subject = $this->daysRemaining > 0 
+        $subject = $this->daysRemaining > 0
             ? "Pengingat Perpanjangan Langganan ({$this->daysRemaining} hari lagi) - Sollu App"
-            : "Langganan Anda Telah Berakhir - Sollu App";
+            : 'Langganan Anda Telah Berakhir - Sollu App';
 
         return new Envelope(
             subject: $subject,
@@ -37,7 +37,7 @@ class SubscriptionRenewalMail extends Mailable
         return new Content(
             markdown: 'emails.subscriptions.renewal',
             with: [
-                'renewUrl' => route('settings.billing.checkout', ['plan_id' => $this->plan->id]) . '?is_renewal=1',
+                'renewUrl' => route('settings.billing.checkout', ['plan_id' => $this->plan->id]).'?is_renewal=1',
             ]
         );
     }

@@ -69,15 +69,26 @@ class CompleteInvoiceServiceTest extends TestCase
 
         // Mock invoice->items()->where()->exists()
         $itemsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
-        $invoiceMock->shouldReceive('items')->once()->andReturn($itemsQueryMock);
-        $itemsQueryMock->shouldReceive('where')->once()->with('item_type', 'outlet_addition')->andReturnSelf();
-        $itemsQueryMock->shouldReceive('exists')->once()->andReturn(false);
+        $invoiceMock->shouldReceive('items')->andReturn($itemsQueryMock);
+
+        $outletAdditionQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $outletAdditionQuery->shouldReceive('exists')->andReturn(false);
+        $itemsQueryMock->shouldReceive('where')->with('item_type', 'outlet_addition')->andReturn($outletAdditionQuery);
+
+        $planRenewalQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $planRenewalQuery->shouldReceive('exists')->andReturn(false);
+        $itemsQueryMock->shouldReceive('where')->with('item_type', 'plan_renewal')->andReturn($planRenewalQuery);
 
         // Mock business->subscriptions()->latest()->first()
         $subsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
-        $businessMock->shouldReceive('subscriptions')->once()->andReturn($subsQueryMock);
-        $subsQueryMock->shouldReceive('latest')->once()->andReturnSelf();
-        $subsQueryMock->shouldReceive('first')->once()->andReturn($subscriptionMock);
+        $businessMock->shouldReceive('subscriptions')->andReturn($subsQueryMock);
+        $subsQueryMock->shouldReceive('latest')->andReturnSelf();
+        $subsQueryMock->shouldReceive('first')->andReturn($subscriptionMock);
+
+        // Mock business->subscriptions()->where()->where()->update()
+        $subsQueryMock->shouldReceive('where')->with('id', '!=', 1)->andReturnSelf();
+        $subsQueryMock->shouldReceive('where')->with('status', 'active')->andReturnSelf();
+        $subsQueryMock->shouldReceive('update')->andReturn(1);
 
         // Mock subscription update
         $subscriptionMock->shouldReceive('update')
@@ -129,13 +140,19 @@ class CompleteInvoiceServiceTest extends TestCase
         // outlet_addition exists is true
         $itemsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
         $invoiceMock->shouldReceive('items')->andReturn($itemsQueryMock);
-        $itemsQueryMock->shouldReceive('where')->with('item_type', 'outlet_addition')->andReturnSelf();
-        $itemsQueryMock->shouldReceive('exists')->andReturn(true);
+
+        $outletAdditionQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $outletAdditionQuery->shouldReceive('exists')->andReturn(true);
+        $itemsQueryMock->shouldReceive('where')->with('item_type', 'outlet_addition')->andReturn($outletAdditionQuery);
+
+        $planRenewalQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        $planRenewalQuery->shouldReceive('exists')->andReturn(false);
+        $itemsQueryMock->shouldReceive('where')->with('item_type', 'plan_renewal')->andReturn($planRenewalQuery);
 
         // For the outlet addition logic
         $outletItemMock = Mockery::mock();
         $outletItemMock->metadata = ['outlet_id' => 99];
-        $itemsQueryMock->shouldReceive('first')->andReturn($outletItemMock);
+        $outletAdditionQuery->shouldReceive('first')->andReturn($outletItemMock);
 
         // Just let it find the outlet (or not) natively since we can't easily mock the static method here
         // without complex runInSeparateProcess setup that conflicts with prior tests.
@@ -170,13 +187,13 @@ class CompleteInvoiceServiceTest extends TestCase
 
         $invoiceMock = Mockery::mock(Invoice::class)->makePartial();
         $businessMock = Mockery::mock(Business::class)->makePartial();
-        
+
         $planMock = Mockery::mock(SubscriptionPlan::class)->makePartial();
         $planMock->shouldReceive('getAttribute')->with('name')->andReturn('Pro Plan');
 
         $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
         $subscriptionMock->shouldReceive('getAttribute')->with('billing_cycle')->andReturn('yearly');
-        
+
         $expiredDate = Carbon::now()->addDays(5);
         $subscriptionMock->shouldReceive('getAttribute')->with('expired_at')->andReturn($expiredDate);
         $subscriptionMock->shouldReceive('getAttribute')->with('plan')->andReturn($planMock);
@@ -199,33 +216,33 @@ class CompleteInvoiceServiceTest extends TestCase
 
         $itemsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
         $invoiceMock->shouldReceive('items')->andReturn($itemsQueryMock);
-        
+
         // where('item_type', 'outlet_addition')->exists() -> false
         $outletAdditionQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
         $outletAdditionQuery->shouldReceive('exists')->andReturn(false);
         $itemsQueryMock->shouldReceive('where')->with('item_type', 'outlet_addition')->andReturn($outletAdditionQuery);
-        
+
         // where('item_type', 'plan_renewal')->exists() -> true
         // where('item_type', 'plan_renewal')->first() -> $renewalItemMock
         $renewalItemMock = Mockery::mock();
         $renewalItemMock->metadata = ['subscription_id' => 99];
-        
+
         $planRenewalQuery = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
         $planRenewalQuery->shouldReceive('exists')->andReturn(true);
         $planRenewalQuery->shouldReceive('first')->andReturn($renewalItemMock);
         $itemsQueryMock->shouldReceive('where')->with('item_type', 'plan_renewal')->andReturn($planRenewalQuery);
-        
+
         $subsQueryMock = Mockery::mock(\Illuminate\Database\Eloquent\Relations\HasMany::class);
         $businessMock->shouldReceive('subscriptions')->andReturn($subsQueryMock);
         $subsQueryMock->shouldReceive('latest')->andReturnSelf();
         $subsQueryMock->shouldReceive('first')->andReturn($subscriptionMock);
-        
+
         $subsQueryMock->shouldReceive('find')->with(99)->andReturn($subscriptionMock);
 
         $subscriptionMock->shouldReceive('update')
             ->once()
-            ->withArgs(function($args) use ($expiredDate) {
-                return $args['status'] === 'active' && 
+            ->withArgs(function ($args) use ($expiredDate) {
+                return $args['status'] === 'active' &&
                        $args['expired_at']->equalTo($expiredDate->copy()->addDays(365));
             })
             ->andReturnTrue();

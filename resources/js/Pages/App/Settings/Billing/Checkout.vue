@@ -1,13 +1,13 @@
 <template>
     <MainPage>
-        <div class="max-w-3xl mx-auto">
+        <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">
                 Selesaikan Pembayaran
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <!-- Main Content -->
-                <div class="md:col-span-2 space-y-4">
+                <div class="md:col-span-3 space-y-4">
                     <!-- Plan Info -->
                     <div class="bg-white border rounded-xl p-5">
                         <div class="flex justify-between items-start">
@@ -139,6 +139,7 @@
                         <div class="space-y-3">
                             <!-- Midtrans -->
                             <div
+                                v-if="isMidtransEnabled"
                                 class="border-2 rounded-lg p-4 cursor-pointer transition-all relative flex items-start gap-4 animate-fadeIn"
                                 :class="
                                     paymentMethod === 'midtrans'
@@ -214,6 +215,26 @@
                                         Verifikasi dilakukan secara manual oleh
                                         admin kami dalam waktu 1-24 jam.
                                     </p>
+
+                                    <!-- Daftar Bank Dinamis (Muncul ketika dipilih) -->
+                                    <div
+                                        v-if="paymentMethod === 'manual' && manualPaymentMethods.length > 0"
+                                        class="mt-3 grid grid-cols-1 gap-2 pt-3 border-t border-slate-200"
+                                    >
+                                        <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                                            Rekening Tersedia:
+                                        </div>
+                                        <div
+                                            v-for="bank in manualPaymentMethods"
+                                            :key="bank.id"
+                                            class="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-slate-100 p-2.5 rounded-lg"
+                                        >
+                                            <div class="flex flex-col">
+                                                <span class="text-xs font-bold text-gray-800">{{ bank.bank_name }}</span>
+                                                <span class="text-xs text-gray-500 mt-0.5">{{ bank.account_number }} (a/n {{ bank.account_name }})</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div
                                     v-if="paymentMethod === 'manual'"
@@ -227,7 +248,7 @@
                 </div>
 
                 <!-- Order Summary -->
-                <div class="md:col-span-1">
+                <div class="md:col-span-2">
                     <div class="bg-white border rounded-xl p-5 sticky top-6">
                         <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">
                             Ringkasan Pembayaran
@@ -253,8 +274,14 @@
                                         >{{ activeOutlets }} Outlet</span
                                     >
                                 </div>
-                                <div v-if="activeOutletsList.length > 0" class="mt-2 text-xs text-gray-500 pl-2 border-l-2 border-gray-200">
-                                    <div v-for="outlet in activeOutletsList" :key="outlet.id">
+                                <div
+                                    v-if="activeOutletsList.length > 0"
+                                    class="mt-2 text-xs text-gray-500 pl-2 border-l-2 border-gray-200"
+                                >
+                                    <div
+                                        v-for="outlet in activeOutletsList"
+                                        :key="outlet.id"
+                                    >
                                         - {{ outlet.name }}
                                     </div>
                                 </div>
@@ -303,9 +330,13 @@
                                 :href="
                                     isRenewal
                                         ? route('settings.subscriptions.renew')
-                                        : (subscription
-                                            ? route('settings.subscriptions.change-plan')
-                                            : route('settings.subscriptions.subscribe'))
+                                        : subscription
+                                          ? route(
+                                                'settings.subscriptions.change-plan',
+                                            )
+                                          : route(
+                                                'settings.subscriptions.subscribe',
+                                            )
                                 "
                                 method="post"
                                 as="button"
@@ -350,6 +381,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    manualPaymentMethods: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const page = usePage();
@@ -359,7 +394,7 @@ const auth = computed(() => page.props.auth);
 const billingCycle = ref(
     props.subscription ? props.subscription.billing_cycle : 'monthly',
 );
-const paymentMethod = ref('midtrans');
+const paymentMethod = ref(props.isMidtransEnabled ? 'midtrans' : 'manual');
 
 const activeOutletsList = computed(() => {
     return auth.value.outlets
@@ -368,9 +403,11 @@ const activeOutletsList = computed(() => {
 });
 
 const activeOutlets = computed(() => {
-    return activeOutletsList.value.length > 0 
-        ? activeOutletsList.value.length 
-        : (auth.value.outlets ? auth.value.outlets.length : 0);
+    return activeOutletsList.value.length > 0
+        ? activeOutletsList.value.length
+        : auth.value.outlets
+          ? auth.value.outlets.length
+          : 0;
 });
 
 // Calculations

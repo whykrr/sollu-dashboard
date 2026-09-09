@@ -281,7 +281,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
