@@ -71,5 +71,11 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\SubscriptionPlan::observe(\App\Observers\UserCacheObserver::class);
         \Spatie\Permission\Models\Role::observe(\App\Observers\UserCacheObserver::class);
         \Spatie\Permission\Models\Permission::observe(\App\Observers\UserCacheObserver::class);
+
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Authenticated::class, function ($event) {
+            if (isset($event->user->business_id)) {
+                setPermissionsTeamId($event->user->business_id);
+            }
+        });
     }
 }

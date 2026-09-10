@@ -112,11 +112,11 @@ export const getSettingSidebars = (enums = { FeatureEnum: {} }) => [
     },
     {
         type: 'item',
-        url: '#',
+        url: route('settings.roles.index'),
         icon: faUserShield,
-        label: 'Hak Akses',
+        label: 'Peran & Hak Akses',
         feature: enums.FeatureEnum.ROLE_PERMISSIONS,
-        permissions: [],
+        permissions: ['role.view'],
         activeRoute: 'settings.roles',
     },
     {

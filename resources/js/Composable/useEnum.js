@@ -48,9 +48,19 @@ export function useEnum() {
         return getMeta(enumName, value).color || ''
     }
 
+    /**
+     * Mengambil array opsi grup kategori dari suatu enum (jika didukung).
+     * @param {string} enumName
+     * @returns {Array<any>}
+     */
+    const getGrouped = (enumName) => {
+        return enums.value[enumName]?._grouped || []
+    }
+
     return {
         enums,
         getOptions,
+        getGrouped,
         getMeta,
         getLabel,
         getColor,

@@ -26,7 +26,10 @@ class StoreUserRequest extends BaseInertiaFormRequest
             'name' => 'required|max:200',
             'email' => 'required|email',
             'phone' => 'nullable|numeric',
-            'role' => 'required',
+            'role' => [
+                'required',
+                \Illuminate\Validation\Rule::exists('roles', 'name')->where('business_id', Auth::user()->business_id),
+            ],
             'outlets' => 'required|array',
             'outlets.*' => 'distinct|exists:outlets,id',
             'pin' => 'required|numeric|digits:6',
@@ -51,7 +54,7 @@ class StoreUserRequest extends BaseInertiaFormRequest
                 }
             })->first();
 
-            if ($find !== null && $find->merchant_id !== Auth::user()->merchant_id) {
+            if ($find !== null && $find->business_id !== Auth::user()->business_id) {
                 if ($find->email === $req['email']) {
                     $validator->errors()->add('email', 'Sudah terdaftar di merchant lain!');
                 } elseif (! empty($req['phone']) && $find->phone === $req['phone']) {

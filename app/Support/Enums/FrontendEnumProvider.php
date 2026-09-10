@@ -9,6 +9,7 @@ use App\Enums\FeatureEnum;
 use App\Enums\InventoryMovementType;
 use App\Enums\InvoiceStatus;
 use App\Enums\PaymentMethodType;
+use App\Enums\PermissionEnum;
 use App\Enums\PlanEnum;
 use App\Enums\PromoStatus;
 use App\Enums\PromoTarget;
@@ -42,6 +43,7 @@ class FrontendEnumProvider
         FeatureEnum::class,
         InventoryMovementType::class,
         PaymentMethodType::class,
+        PermissionEnum::class,
         PlanEnum::class,
         PromoStatus::class,
         PromoTarget::class,
@@ -120,6 +122,10 @@ class FrontendEnumProvider
 
         $data['_meta'] = $meta;
         $data['_options'] = $options;
+
+        if (method_exists($enumClass, 'grouped')) {
+            $data['_grouped'] = $enumClass::grouped();
+        }
 
         return $data;
     }

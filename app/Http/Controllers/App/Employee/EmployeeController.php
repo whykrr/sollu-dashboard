@@ -38,10 +38,10 @@ class EmployeeController extends Controller
         return inertia('Employee/Index', [
             'users' => $users,
             'params' => $req->validated(),
-            'roles' => ModelsRole::get()->map(function ($row) {
+            'roles' => ModelsRole::where('business_id', $req->user()->business_id)->get()->map(function ($row) {
                 return [
                     'value' => $row->name,
-                    'label' => RoleEnum::tryFrom($row->name)?->label() ?? $row->name,
+                    'label' => $row->label ?? (RoleEnum::tryFrom($row->name)?->label() ?? $row->name),
                 ];
             }),
             'user' => $user,

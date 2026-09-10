@@ -39,7 +39,10 @@ class UpdateUserRequest extends FormRequest
         ];
 
         if (! $this->user->is_root_user) {
-            $rules['role'] = 'required';
+            $rules['role'] = [
+                'required',
+                \Illuminate\Validation\Rule::exists('roles', 'name')->where('business_id', Auth::user()->business_id),
+            ];
             $rules['outlets'] = 'required|array';
             $rules['outlets.*'] = 'distinct|exists:outlets,id';
         }
@@ -66,7 +69,7 @@ class UpdateUserRequest extends FormRequest
                 }
             })->where('id', '!=', $user->id)->first();
 
-            if ($find !== null && $find->merchant_id !== Auth::user()->merchant_id) {
+            if ($find !== null && $find->business_id !== Auth::user()->business_id) {
                 if ($find->email === $req['email']) {
                     $validator->errors()->add('email', 'Sudah terdaftar di merchant lain!');
                 } elseif (! empty($req['phone']) && $find->phone === $req['phone']) {

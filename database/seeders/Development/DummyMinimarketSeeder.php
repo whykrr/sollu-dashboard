@@ -68,6 +68,7 @@ class DummyMinimarketSeeder extends Seeder
                 'is_root_user' => true,
             ]
         );
+        app(\App\Services\App\Role\RoleProvisioningService::class)->provision($business);
         $user->assignRole('owner');
         $user->outlets()->sync($business->outlets()->pluck('id')->toArray());
     }

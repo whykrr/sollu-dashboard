@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use App\Enums\PermissionEnum;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
 /**
  * @mixin IdeHelperPermission
  */
-class Permission extends Model
+class Permission extends SpatiePermission
 {
     protected $appends = [
         'label',

@@ -1,25 +1,37 @@
 <template>
-    <div class="flex flex-wrap gap-1">
-        <div
-            v-for="(opt, idx) in options"
-            :key="idx"
-            class="form-check"
-            :class="$attrs.class"
-        >
-            <input
-                :id="$attrs.name + idx"
-                type="checkbox"
-                class="form-check-input"
-                :value="opt.value"
-                :checked="modelValue.includes(opt.value)"
-                @change="toggleValue(opt.value)"
-            />
-            <label :for="$attrs.name + idx" class="form-check-label">{{
-                opt.label
-            }}</label>
+    <div class="space-y-1">
+        <label v-if="label" class="label">{{ label }}</label>
+        <div :class="containerClass">
+            <div
+                v-for="(opt, idx) in options"
+                :key="opt.value ?? idx"
+                class="form-check"
+                :class="[
+                    itemClass,
+                    $attrs.class,
+                    { 'opacity-50 cursor-not-allowed': disabled || opt.disabled },
+                ]"
+            >
+                <input
+                    :id="getInputId(opt, idx)"
+                    type="checkbox"
+                    class="form-check-input"
+                    :value="opt.value"
+                    :checked="isChecked(opt.value)"
+                    :disabled="disabled || opt.disabled"
+                    @change="toggleValue(opt.value)"
+                />
+                <label :for="getInputId(opt, idx)" class="form-check-label">{{
+                    opt.label
+                }}</label>
+            </div>
+        </div>
+        <div v-if="feedback" class="text-danger text-xs select-none">
+            {{ feedback }}
         </div>
     </div>
 </template>
+
 <script setup>
 defineOptions({
     inheritAttrs: false,
@@ -28,20 +40,58 @@ defineOptions({
 const props = defineProps({
     label: String,
     feedback: String,
-    options: Array,
-    modelValue: Array,
+    options: {
+        type: Array,
+        default: () => [],
+    },
+    modelValue: {
+        type: Array,
+        default: () => [],
+    },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
+    name: {
+        type: String,
+        default: '',
+    },
+    containerClass: {
+        type: [String, Object, Array],
+        default: 'flex flex-wrap gap-1',
+    },
+    itemClass: {
+        type: [String, Object, Array],
+        default: '',
+    },
 });
+
 const emit = defineEmits(['update:modelValue']);
+
+function getInputId(opt, idx) {
+    const prefix = props.name || 'chk_';
+    const safeVal = String(opt.value ?? idx).replace(/[^a-zA-Z0-9_-]/g, '_');
+    return `${prefix}${idx}_${safeVal}`;
+}
+
+function isChecked(value) {
+    if (!props.modelValue || !Array.isArray(props.modelValue)) {
+        return false;
+    }
+    return props.modelValue.includes(value);
+}
+
 function toggleValue(value) {
-    const newValue = [...props.modelValue];
-    const index = newValue.indexOf(value);
+    const current = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
+    const index = current.indexOf(value);
 
     if (index === -1) {
-        newValue.push(value);
+        current.push(value);
     } else {
-        newValue.splice(index, 1);
+        current.splice(index, 1);
     }
 
-    emit('update:modelValue', newValue);
+    emit('update:modelValue', current);
 }
 </script>
+

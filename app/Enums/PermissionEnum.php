@@ -352,6 +352,143 @@ enum PermissionEnum: string
         };
     }
 
+    public function group(): string
+    {
+        return match ($this) {
+            self::TRANSACTION_ALL,
+            self::TRANSACTION_VIEW,
+            self::TRANSACTION_CREATE,
+            self::TRANSACTION_UPDATE,
+            self::TRANSACTION_CANCEL,
+            self::TRANSACTION_REFUND,
+            self::TRANSACTION_DISCOUNT,
+            self::TRANSACTION_HOLD,
+            self::TRANSACTION_VOID,
+            self::TRANSACTION_REPRINT,
+            self::TRANSACTION_OPEN_SHIFT,
+            self::TRANSACTION_CLOSE_SHIFT,
+            self::TRANSACTION_ISSUE_INVOICE,
+            self::TRANSACTION_RECORD_PAYMENT,
+            self::TRANSACTION_EDIT_DUE_DATE => 'pos_and_transactions',
+
+            self::PRODUCT_ALL,
+            self::PRODUCT_VIEW,
+            self::PRODUCT_CREATE,
+            self::PRODUCT_UPDATE,
+            self::PRODUCT_DELETE,
+            self::PRODUCT_IMPORT,
+            self::PRODUCT_EXPORT,
+            self::PRODUCT_VARIANT,
+            self::PRODUCT_MODIFIER,
+            self::PRODUCT_RECIPE,
+            self::CATEGORY_ALL,
+            self::CATEGORY_VIEW,
+            self::CATEGORY_CREATE,
+            self::CATEGORY_UPDATE,
+            self::CATEGORY_DELETE => 'products_and_menu',
+
+            self::INVENTORY_ALL,
+            self::INVENTORY_VIEW,
+            self::INVENTORY_ADJUST,
+            self::INVENTORY_ADJUSTMENT_READ,
+            self::INVENTORY_ADJUSTMENT_CREATE,
+            self::INVENTORY_ADJUSTMENT_APPROVE,
+            self::INVENTORY_ADJUSTMENT_VOID,
+            self::INVENTORY_ADJUSTMENT_EXPORT,
+            self::INVENTORY_ADJUSTMENT_FREEZE,
+            self::INVENTORY_TRANSFER_READ,
+            self::INVENTORY_TRANSFER_CREATE,
+            self::INVENTORY_TRANSFER_UPDATE,
+            self::INVENTORY_TRANSFER_APPROVE,
+            self::INVENTORY_TRANSFER_SHIP,
+            self::INVENTORY_TRANSFER_RECEIVE,
+            self::INVENTORY_STOCK_OPNAME,
+            self::INVENTORY_MOVEMENT,
+            self::INVENTORY_PURCHASE,
+            self::INVENTORY_WASTE,
+            self::INVENTORY_RECEIVE,
+            self::SUPPLIER_ALL,
+            self::SUPPLIER_VIEW,
+            self::SUPPLIER_CREATE,
+            self::SUPPLIER_UPDATE,
+            self::SUPPLIER_DELETE,
+            self::PURCHASE_ORDER_ALL,
+            self::PURCHASE_ORDER_VIEW,
+            self::PURCHASE_ORDER_CREATE,
+            self::PURCHASE_ORDER_UPDATE,
+            self::PURCHASE_ORDER_APPROVE,
+            self::PURCHASE_ORDER_CANCEL,
+            self::PURCHASE_ORDER_RECEIVE => 'inventory_and_supply',
+
+            self::PROMO_ALL,
+            self::PROMO_VIEW,
+            self::PROMO_CREATE,
+            self::PROMO_UPDATE,
+            self::PROMO_DELETE,
+            self::PROMO_PUBLISH,
+            self::CUSTOMER_ALL,
+            self::CUSTOMER_VIEW,
+            self::CUSTOMER_CREATE,
+            self::CUSTOMER_UPDATE,
+            self::CUSTOMER_DELETE,
+            self::CUSTOMER_LOYALTY => 'promotions_and_crm',
+
+            self::REPORT_ALL,
+            self::REPORT_SALES,
+            self::REPORT_INVENTORY,
+            self::REPORT_CASHFLOW,
+            self::REPORT_SHIFT,
+            self::REPORT_PRODUCT,
+            self::REPORT_CUSTOMER,
+            self::REPORT_EXPORT => 'reports_and_analytics',
+
+            self::BUSINESS_ALL,
+            self::BUSINESS_VIEW,
+            self::BUSINESS_UPDATE,
+            self::BUSINESS_BILLING,
+            self::BUSINESS_SUBSCRIPTION,
+            self::BUSINESS_SETTING,
+            self::OUTLET_ALL,
+            self::OUTLET_VIEW,
+            self::OUTLET_CREATE,
+            self::OUTLET_UPDATE,
+            self::OUTLET_DELETE,
+            self::OUTLET_SWITCH,
+            self::SETTING_ALL,
+            self::SETTING_TAX,
+            self::SETTING_RECEIPT,
+            self::SETTING_PAYMENT,
+            self::SETTING_DEVICE,
+            self::SETTING_PRINTER => 'settings_and_business',
+
+            self::USER_ALL,
+            self::USER_VIEW,
+            self::USER_CREATE,
+            self::USER_UPDATE,
+            self::USER_DELETE,
+            self::USER_INVITE,
+            self::ROLE_ALL,
+            self::ROLE_VIEW,
+            self::ROLE_CREATE,
+            self::ROLE_UPDATE,
+            self::ROLE_DELETE => 'employees_and_roles',
+        };
+    }
+
+    public function groupLabel(): string
+    {
+        return match ($this->group()) {
+            'pos_and_transactions' => 'Penjualan & Kasir',
+            'products_and_menu' => 'Produk & Menu',
+            'inventory_and_supply' => 'Inventori & Rantai Pasok',
+            'promotions_and_crm' => 'Promosi & Pelanggan',
+            'reports_and_analytics' => 'Laporan & Analitik',
+            'settings_and_business' => 'Pengaturan & Bisnis',
+            'employees_and_roles' => 'Pegawai & Hak Akses',
+            default => 'Lainnya',
+        };
+    }
+
     public static function values(): array
     {
         return array_column(self::cases(), 'value');
@@ -364,5 +501,53 @@ enum PermissionEnum: string
                 $permission->value => $permission->label(),
             ])
             ->toArray();
+    }
+
+    /**
+     * Daftar izin terkelompok berdasarkan grup kategori.
+     *
+     * @return array<string, array{key: string, label: string, permissions: array<int, array{value: string, label: string}>}>
+     */
+    public static function grouped(): array
+    {
+        $order = [
+            'pos_and_transactions',
+            'products_and_menu',
+            'inventory_and_supply',
+            'promotions_and_crm',
+            'reports_and_analytics',
+            'settings_and_business',
+            'employees_and_roles',
+        ];
+
+        $groups = [];
+
+        foreach ($order as $groupKey) {
+            $groups[$groupKey] = [
+                'key' => $groupKey,
+                'label' => '',
+                'permissions' => [],
+            ];
+        }
+
+        foreach (self::cases() as $case) {
+            $groupKey = $case->group();
+            if (! isset($groups[$groupKey])) {
+                $groups[$groupKey] = [
+                    'key' => $groupKey,
+                    'label' => $case->groupLabel(),
+                    'permissions' => [],
+                ];
+            } else {
+                $groups[$groupKey]['label'] = $case->groupLabel();
+            }
+
+            $groups[$groupKey]['permissions'][] = [
+                'value' => $case->value,
+                'label' => $case->label(),
+            ];
+        }
+
+        return array_values(array_filter($groups, fn ($g) => ! empty($g['permissions'])));
     }
 }

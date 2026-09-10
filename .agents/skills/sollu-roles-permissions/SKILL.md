@@ -17,14 +17,26 @@ description: >-
 Aturan pengelolaan Hak Akses (Role-Based Access Control / RBAC) menggunakan package `spatie/laravel-permission` pada Sollu App.
 
 
-## 1. Permission Registration Workflow
+## 1. Multi-Tenant Role Isolation (Tenant-Scoped)
+
+Berbeda dengan permission yang bersifat global (`PermissionEnum`), **Role** (Peran) pada Sollu App dipisahkan (isolated) per Bisnis (`business_id`). Hal ini dikonfigurasi menggunakan mode `teams => true` pada `spatie/laravel-permission` di mana `team_foreign_key` adalah `business_id`.
+
+- Setiap bisnis akan dibuatkan **3 Default Roles** bawaan secara otomatis: `owner`, `manager`, `cashier`.
+- Saat mengassign role atau mengecek izin, sistem otomatis mengevaluasi dalam lingkup `business_id` user yang sedang login berkat `setPermissionsTeamId($user->business_id)` di `AppServiceProvider.php` listener `Authenticated`.
+- **DILARANG** melakukan seeding Role secara global di `RolePermissionSeeder.php`. Pembuatan role untuk sebuah bisnis dilakukan melalui `App\Services\App\Role\RoleProvisioningService`.
+
+## 2. Permission Registration Workflow
 
 Setiap kali fitur baru memerlukan otorisasi atau hak akses baru:
 1. **Daftarkan Key Permission** di Enum `app/Enums/PermissionEnum.php` (Gunakan dot-notation, e.g. `SETTINGS_OUTLET_INDEX = 'settings.outlets.index'`).
-2. **Assign ke Role** di `database/seeders/Production/RolePermissionSeeder.php` (dan `RoleEnum.php` jika melibatkan role baru).
-3. **Jalankan Artisan Seeder:**
+2. **Assign ke Default Role** (owner/manager/cashier) di `RoleProvisioningService.php` (bukan di seeder!).
+3. **Jalankan Artisan Seeder** hanya untuk memperbarui global permission:
    ```bash
    php artisan db:seed --class="Database\Seeders\Production\RolePermissionSeeder"
+   ```
+4. Jika ada perubahan struktur role default di production, instruksikan pengguna untuk menjalankan Normalisasi:
+   ```bash
+   php artisan sollu:normalize-rbac
    ```
 
 ## 2. Backend Authorization Rules

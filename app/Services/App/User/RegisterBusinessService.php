@@ -52,7 +52,11 @@ class RegisterBusinessService
                 'is_root_user' => true,
             ]);
 
+            // Provision roles for this business
+            app(\App\Services\App\Role\RoleProvisioningService::class)->provision($business);
+
             // Assign owner role & attach to main outlet
+            setPermissionsTeamId($business->id);
             $user->assignRole(RoleEnum::OWNER->value);
             $user->outlets()->attach($outlet->id);
 

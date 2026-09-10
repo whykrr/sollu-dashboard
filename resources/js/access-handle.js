@@ -187,6 +187,22 @@ export default {
             },
         })
 
+        Object.defineProperty(app.config.globalProperties, '$can', {
+            get() {
+                const permissions = this.$page?.props?.auth?.permissions || []
+                return (permission) => {
+                    if (!permission) return false
+                    if (typeof permission === 'string') {
+                        return checkPermission(permissions, permission)
+                    }
+                    if (Array.isArray(permission)) {
+                        return permission.some((p) => checkPermission(permissions, p))
+                    }
+                    return false
+                }
+            },
+        })
+
         app.component('FeatureLock', FeatureLock)
         app.component('FeatureLockOverlay', FeatureLockOverlay)
 
