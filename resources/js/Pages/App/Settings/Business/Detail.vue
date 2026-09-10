@@ -4,13 +4,20 @@
             <MainPageHeader title="Informasi Usaha" />
         </template>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pb-12">
             <!-- Left Column: Business Form -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
+            <div class="lg:col-span-7 flex flex-col gap-4">
                 <!-- Card 1: Identitas Usaha -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
-                    <h3 class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
-                        <FontAwesomeIcon :icon="faBriefcase" class="text-main" />
+                <div
+                    class="bg-white rounded-xl border border-slate-200 shadow-xs p-5"
+                >
+                    <h3
+                        class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2"
+                    >
+                        <FontAwesomeIcon
+                            :icon="faBriefcase"
+                            class="text-main"
+                        />
                         <span>Identitas & Informasi Usaha</span>
                     </h3>
 
@@ -24,7 +31,8 @@
                                 :feedback="business.errors.name"
                             />
                             <p class="text-xs text-slate-400 mt-0.5">
-                                Nama usaha akan tampil pada struk belanja, invoice, dan laporan.
+                                Nama usaha akan tampil pada struk belanja,
+                                invoice, dan laporan.
                             </p>
                         </div>
 
@@ -37,7 +45,8 @@
                                 :feedback="business.errors.email"
                             />
                             <p class="text-xs text-slate-400 mt-0.5">
-                                Digunakan untuk notifikasi sistem, invoice, dan informasi tagihan.
+                                Digunakan untuk notifikasi sistem, invoice, dan
+                                informasi tagihan.
                             </p>
                         </div>
 
@@ -67,29 +76,40 @@
                                 :feedback="business.errors.address"
                             />
                             <p class="text-xs text-slate-400 mt-0.5">
-                                Alamat dapat digunakan untuk kebutuhan struk belanja dan profil usaha.
+                                Alamat dapat digunakan untuk kebutuhan struk
+                                belanja dan profil usaha.
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sticky Bottom Action Bar -->
-                <div class="flex justify-end sticky bottom-4 z-10 bg-white/90 backdrop-blur-xs p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div
+                    class="flex justify-end sticky bottom-4 z-10 bg-white/90 backdrop-blur-xs p-4 rounded-xl border border-slate-200 shadow-sm"
+                >
                     <button
                         class="btn btn-main px-6 py-2.5 rounded-lg shadow-sm font-medium flex items-center gap-2"
                         :disabled="business.processing"
                         @click="saveDetail"
                     >
                         <FontAwesomeIcon :icon="faSave" />
-                        <span>{{ business.processing ? 'Menyimpan...' : 'Simpan Informasi Usaha' }}</span>
+                        <span>{{
+                            business.processing
+                                ? 'Menyimpan...'
+                                : 'Simpan Informasi Usaha'
+                        }}</span>
                     </button>
                 </div>
             </div>
 
             <!-- Right Column: Logo Card -->
             <div class="lg:col-span-5">
-                <div class="sticky top-20 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col gap-4">
-                    <h3 class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-2 flex items-center gap-2">
+                <div
+                    class="sticky top-0 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col gap-4"
+                >
+                    <h3
+                        class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-2 flex items-center gap-2"
+                    >
                         <FontAwesomeIcon :icon="faImage" class="text-main" />
                         <span>Logo Usaha</span>
                     </h3>
@@ -101,8 +121,12 @@
                         />
                     </div>
 
-                    <div class="mt-2 p-3 rounded-lg bg-blue-50/70 border border-blue-100 text-[11px] text-blue-800 leading-relaxed">
-                        <strong>Petunjuk:</strong> Logo usaha akan otomatis diterapkan pada kop struk transaksi kasir thermal, faktur tagihan pelanggan, dan laporan cetak.
+                    <div
+                        class="mt-2 p-3 rounded-lg bg-blue-50/70 border border-blue-100 text-[11px] text-blue-800 leading-relaxed"
+                    >
+                        <strong>Petunjuk:</strong> Logo usaha akan otomatis
+                        diterapkan pada kop struk transaksi kasir thermal,
+                        faktur tagihan pelanggan, dan laporan cetak.
                     </div>
                 </div>
             </div>

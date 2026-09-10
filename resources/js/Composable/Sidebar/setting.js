@@ -17,7 +17,7 @@ export const getSettingSidebars = (enums = { FeatureEnum: {} }) => [
     {
         type: 'section',
         label: 'Pengaturan Umum',
-        separator: true,
+        separator: false,
     },
     {
         type: 'item',

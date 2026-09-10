@@ -11,7 +11,7 @@
             </MainPageHeader>
         </template>
 
-        <div class="max-w-4xl flex flex-col gap-6 pb-12">
+        <div class="max-w-4xl flex flex-col gap-4 pb-8">
             <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
                     <div>

@@ -25,7 +25,7 @@ Route::prefix('settings')
                 Route::get('/', [BusinessInfoController::class, 'index'])->name('detail');
                 Route::put('/', [BusinessInfoController::class, 'save'])->name('detail.save');
                 Route::post('/logo', [BusinessInfoController::class, 'saveLogo'])->name('detail.save.logo');
-                
+
                 Route::get('/features', [\App\Http\Controllers\App\Settings\FeatureSettingController::class, 'index'])->name('features');
                 Route::put('/features', [\App\Http\Controllers\App\Settings\FeatureSettingController::class, 'save'])->name('features.save');
             });
@@ -41,6 +41,7 @@ Route::prefix('settings')
                 Route::delete('/{outlet}', [OutletController::class, 'disabled'])->name('disabled');
                 Route::delete('/{outlet}/destroy', [OutletController::class, 'destroy'])->name('destroy');
                 Route::put('/{outlet}/restore', [OutletController::class, 'restore'])->name('restore');
+                Route::put('/{outlet}/set-main', [OutletController::class, 'setMain'])->name('set-main');
 
                 Route::prefix('{outlet}')->group(function () {
                     Route::put('settings', [\App\Http\Controllers\App\Settings\OutletSettingController::class, 'update'])->name('settings.update');

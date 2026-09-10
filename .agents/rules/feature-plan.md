@@ -44,19 +44,33 @@ Directive global ini terdaftar di `access-handle.js` dan tersedia di seluruh tem
 
 <!-- 3. Multiple Features (AND: Tampil HANYA jika SEMUA fitur aktif) -->
 <div v-feature.all="[$enums.FeatureEnum.INVENTORY_MANAGEMENT, $enums.FeatureEnum.RECIPE_MANAGEMENT]">...</div>
+```
 
-<!-- 4. Lock / Modal Modifier (SaaS Upsell Overlay) -->
-<!-- Elemen tetap tampil dengan efek redup (opacity-65 pointer-events-none), dan secara otomatis disematkan tombol overlay di samping kanan: -->
-<!-- - Tombol bertuliskan "Langganan" jika bisnis berada pada status Trial/Free -->
-<!-- - Tombol bertuliskan "Tingkatkan Paket" jika bisnis sudah memiliki subscription aktif -->
-<!-- - Klik pada tombol overlay / elemen langsung membuka FeatureLockedModal -->
-<div v-feature.lock="$enums.FeatureEnum.RECIPE_MANAGEMENT" class="card">
+### 2.2. Komponen Deklaratif `<FeatureLock>` & `<FeatureLockOverlay>` (Direkomendasikan untuk Lock Upsell)
+
+Untuk mengunci elemen/kartu/tabel dengan tampilan overlay upsell, **WAJIB MENGGUNAKAN KOMPONEN `<FeatureLock>`** (terdaftar secara global via `access-handle.js`). Jangan menggunakan manipulasi DOM manual agar terhindar dari *forced layout thrashing*:
+
+```html
+<!-- 1. Wrapper Komponen (Sangat Direkomendasikan) -->
+<!-- Konten di dalam slot otomatis redup (opacity-65 pointer-events-none) dan di-cover overlay jika fitur terkunci -->
+<FeatureLock :feature="$enums.FeatureEnum.RECIPE_MANAGEMENT">
+    <div class="card">
+        <h3>Kelola Resep</h3>
+        <p>Deskripsi resep...</p>
+    </div>
+</FeatureLock>
+
+<!-- 2. Komponen Overlay Mandiri di dalam Container Relative -->
+<div class="relative card">
     <h3>Kelola Resep</h3>
-    <p>Deskripsi resep...</p>
+    <FeatureLockOverlay :feature="$enums.FeatureEnum.RECIPE_MANAGEMENT" badge-position="top-right" />
 </div>
 ```
 
-### 2.2. Composable `usePlanFeature` ([resources/js/Composable/usePlanFeature.js](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/resources/js/Composable/usePlanFeature.js)) & Composable `useEnum`
+> [!NOTE]
+> Direktif legacy `v-feature.lock` tetap dipertahankan dengan optimasi tanpa layout thrashing, namun standar utama untuk tampilan terkunci adalah komponen `<FeatureLock>`.
+
+### 2.3. Composable `usePlanFeature` ([resources/js/Composable/usePlanFeature.js](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/resources/js/Composable/usePlanFeature.js)) & Composable `useEnum`
 
 Gunakan `usePlanFeature` bersama `useEnum` saat logika membutuhkan pengecekan di dalam `<script setup>` (FeatureEnum di-share secara otomatis via Inertia Shared Props):
 
@@ -81,7 +95,7 @@ const onOpenRecipePage = () => {
 }
 ```
 
-### 2.3. Menu Navigasi Sidebar ([NavigationNode.vue](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/resources/js/Components/Layout/Sidebar/NavigationNode.vue))
+### 2.4. Menu Navigasi Sidebar ([NavigationNode.vue](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/resources/js/Components/Layout/Sidebar/NavigationNode.vue))
 
 Konfigurasi item navigasi di `resources/js/Composable/Sidebar/*.js` mendukung pembatasan ganda:
 ```js

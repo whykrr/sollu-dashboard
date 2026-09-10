@@ -92,10 +92,9 @@
                 <TableMostSoldProduct :data="mostSoldProducts" />
             </div>
             <div class="lg:col-span-1 flex flex-col gap-2">
-                <TableProductLowStock
-                    v-feature.lock="$enums.FeatureEnum.INVENTORY_MANAGEMENT"
-                    :data="lowStockProduct"
-                />
+                <FeatureLock :feature="$enums.FeatureEnum.INVENTORY_MANAGEMENT">
+                    <TableProductLowStock :data="lowStockProduct" />
+                </FeatureLock>
                 <TableProductNotSold :data="productNotSold" />
             </div>
         </div>

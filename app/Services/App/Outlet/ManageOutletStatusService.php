@@ -93,4 +93,30 @@ class ManageOutletStatusService
             return $outlet;
         });
     }
+
+    public function setMainOutlet(Outlet $outlet, User $user): Outlet
+    {
+        if (! $outlet->is_active) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'error' => ['Hanya outlet yang aktif yang dapat dijadikan sebagai outlet utama.'],
+            ]);
+        }
+
+        return DB::transaction(function () use ($outlet, $user) {
+            Outlet::where('business_id', $outlet->business_id)
+                ->where('is_main_outlet', true)
+                ->update(['is_main_outlet' => false]);
+
+            $outlet->is_main_outlet = true;
+            $outlet->save();
+
+            OutletAuditLog::create([
+                'outlet_id' => $outlet->id,
+                'user_id' => $user->id,
+                'action' => 'set_as_main',
+            ]);
+
+            return $outlet;
+        });
+    }
 }

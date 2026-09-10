@@ -1,19 +1,11 @@
 <template>
     <MainPage>
         <template #header>
-            <div
-                class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-100"
-            >
-                <div>
-                    <h1 class="text-xl font-bold text-gray-955">
-                        Detail Langganan
-                    </h1>
-                    <p class="text-sm text-gray-500 mt-1">
-                        Kelola paket langganan bisnis Anda dan lihat riwayat
-                        pembayaran invoice.
-                    </p>
-                </div>
-            </div>
+            <MainPageHeader
+                title="Detail Langganan"
+                description="Kelola paket langganan bisnis Anda dan lihat riwayat pembayaran
+                invoice."
+            />
         </template>
 
         <div class="flex flex-col gap-4">
@@ -410,7 +402,10 @@
                             Lunas
                         </label>
                         <label
-                            v-else-if="row.status === $enums.InvoiceStatus.Cancelled || row.status === $enums.InvoiceStatus.Void"
+                            v-else-if="
+                                row.status === $enums.InvoiceStatus.Cancelled ||
+                                row.status === $enums.InvoiceStatus.Void
+                            "
                             class="badge pill text-xs badge-danger"
                         >
                             Dibatalkan
@@ -500,6 +495,7 @@ import { formatDateID, gapDaysFromNow } from '@/Composable/date';
 import { formatIDR } from '@/Composable/currency-format';
 
 import DetailInvoice from './DetailInvoice.vue';
+import MainPageHeader from '@/Components/UI/MainPage/MainPageHeader.vue';
 
 defineProps({
     subscription: Object,

@@ -5,7 +5,7 @@
                 {{ label }}
             </div>
         </div>
-        <div v-else class="py-0.5">
+        <div v-else class="py-0.5 text-xs">
             {{ label }}
         </div>
     </div>

@@ -47,25 +47,30 @@
                 </div>
 
                 <!-- Lacak Inventori (Stok) -->
-                <label
-                    v-feature.lock="$enums.FeatureEnum.INVENTORY_MANAGEMENT"
-                    class="flex items-center justify-between border border-slate-200 p-3 rounded-xl cursor-pointer hover:bg-slate-50 transition w-full"
+                <FeatureLock
+                    :feature="$enums.FeatureEnum.INVENTORY_MANAGEMENT"
+                    as="div"
+                    class="w-full"
                 >
-                    <div>
-                        <div class="font-bold text-sm text-slate-800">
-                            Lacak Inventori (Stok)
+                    <label
+                        class="flex items-center justify-between border border-slate-200 p-3 rounded-xl cursor-pointer hover:bg-slate-50 transition w-full"
+                    >
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">
+                                Lacak Inventori (Stok)
+                            </div>
+                            <div class="text-xs text-slate-500">
+                                Lacak stok masuk, keluar, dan batas minimum stok
+                                untuk produk ini.
+                            </div>
                         </div>
-                        <div class="text-xs text-slate-500">
-                            Lacak stok masuk, keluar, dan batas minimum stok
-                            untuk produk ini.
-                        </div>
-                    </div>
-                    <input
-                        v-model="form.track_inventory"
-                        type="checkbox"
-                        class="rounded h-5 w-5 text-primary cursor-pointer"
-                    />
-                </label>
+                        <input
+                            v-model="form.track_inventory"
+                            type="checkbox"
+                            class="rounded h-5 w-5 text-primary cursor-pointer"
+                        />
+                    </label>
+                </FeatureLock>
 
                 <!-- Pilihan Satuan UOM & Min Stok jika Lacak Stok Aktif -->
                 <div
@@ -91,26 +96,31 @@
                 </div>
 
                 <!-- Memiliki Varian Produk -->
-                <label
-                    v-feature.lock="$enums.FeatureEnum.PRODUCT_VARIANTS"
-                    class="flex items-center justify-between border border-slate-200 p-3 rounded-xl cursor-pointer hover:bg-slate-50 transition w-full"
+                <FeatureLock
+                    :feature="$enums.FeatureEnum.PRODUCT_VARIANTS"
+                    as="div"
+                    class="w-full"
                 >
-                    <div>
-                        <div class="font-bold text-sm text-slate-800">
-                            Memiliki Varian Produk
+                    <label
+                        class="flex items-center justify-between border border-slate-200 p-3 rounded-xl cursor-pointer hover:bg-slate-50 transition w-full"
+                    >
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">
+                                Memiliki Varian Produk
+                            </div>
+                            <div class="text-xs text-slate-500">
+                                Aktifkan jika produk memiliki opsi variasi (seperti
+                                Ukuran, Rasa, atau Warna).
+                            </div>
                         </div>
-                        <div class="text-xs text-slate-500">
-                            Aktifkan jika produk memiliki opsi variasi (seperti
-                            Ukuran, Rasa, atau Warna).
-                        </div>
-                    </div>
-                    <input
-                        :checked="form.has_variant"
-                        type="checkbox"
-                        class="rounded h-5 w-5 text-primary cursor-pointer"
-                        @change="handleVariantChange"
-                    />
-                </label>
+                        <input
+                            :checked="form.has_variant"
+                            type="checkbox"
+                            class="rounded h-5 w-5 text-primary cursor-pointer"
+                            @change="handleVariantChange"
+                        />
+                    </label>
+                </FeatureLock>
 
                 <!-- Tampilkan di Kasir / POS -->
                 <label

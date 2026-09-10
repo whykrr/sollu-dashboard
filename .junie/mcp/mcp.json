@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/opt/homebrew/Cellar/php@8.3/8.3.33/bin/php",
+            "args": [
+                "/Users/whykrr/Documents/Projects/Laravel/sollu-app/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

@@ -84,19 +84,33 @@ Terdaftar di `resources/js/access-handle.js`. Gunakan untuk pembatasan langsung 
     ...
 </div>
 
-<!-- 3. Multiple Features (AND): Tampil jika SEMUA fitur aktif -->
+<!-- 3. Multiple Features (AND: Tampil jika SEMUA fitur aktif) -->
 <div v-feature.all="[$enums.FeatureEnum.INVENTORY_MANAGEMENT, $enums.FeatureEnum.RECIPE_MANAGEMENT]">
     ...
 </div>
+```
 
-<!-- 4. Lock Modifier (SaaS Upsell Overlay): Elemen tetap tampil dengan efek redup (opacity-65 pointer-events-none), disematkan tombol overlay responsif di samping kanan ("Langganan" atau "Tingkatkan Paket"), dan intersep klik memunculkan FeatureLockedModal -->
-<div v-feature.lock="$enums.FeatureEnum.RECIPE_MANAGEMENT" class="card">
+### 3.2. Komponen Deklaratif `<FeatureLock>` & `<FeatureLockOverlay>` (Sangat Direkomendasikan)
+
+Untuk mengunci elemen/kartu/tabel dengan lock overlay upsell, **WAJIB MENGGUNAKAN KOMPONEN `<FeatureLock>`** daripada manipulasi DOM direktif demi mencegah *forced layout thrashing*:
+
+```html
+<!-- Wrapper Komponen: Otomatis redup & lock overlay jika tidak berhak -->
+<FeatureLock :feature="$enums.FeatureEnum.RECIPE_MANAGEMENT">
+    <div class="card">
+        <div class="card-header">Kelola Resep</div>
+        <div class="card-body">Konten resep...</div>
+    </div>
+</FeatureLock>
+
+<!-- Standalone Overlay Komponen di dalam Container Relative -->
+<div class="relative card">
     <div class="card-header">Kelola Resep</div>
-    <div class="card-body">Konten resep...</div>
+    <FeatureLockOverlay :feature="$enums.FeatureEnum.RECIPE_MANAGEMENT" badge-position="top-right" />
 </div>
 ```
 
-### 3.2. Composable `usePlanFeature` & `useEnum`
+### 3.3. Composable `usePlanFeature` & `useEnum`
 
 Gunakan `@/Composable/usePlanFeature` bersama `@/Composable/useEnum` saat validasi diperlukan di dalam fungsi JavaScript atau `<script setup>` (FeatureEnum disediakan oleh Inertia Shared Props):
 

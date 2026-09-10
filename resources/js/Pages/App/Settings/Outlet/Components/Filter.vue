@@ -8,11 +8,10 @@
 </template>
 
 <script setup>
-import FilterSearch from '@/Components/UI/Filter/FilterSearch.vue';
-import FilterTrashData from '@/Components/UI/Filter/FilterTrashData.vue';
-import { router, usePage } from '@inertiajs/vue3';
+import { reactive, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
-import { computed, reactive, watch } from 'vue';
+import FilterSearch from '@/Components/UI/Filter/FilterSearch.vue';
 
 const props = defineProps({
     filters: Object,
@@ -20,13 +19,7 @@ const props = defineProps({
 
 const filterForm = reactive({
     search: props.filters?.search ?? '',
-    status: props.filters?.status ?? '',
 });
-
-const optionsStatus = [
-    { value: '1', label: 'Aktif' },
-    { value: '0', label: 'Tidak Aktif' },
-];
 
 watch(
     filterForm,
@@ -34,7 +27,7 @@ watch(
         () =>
             router.get(
                 route('settings.outlets.index'),
-                { ...route().params, ...filterForm, page: 1 },
+                { ...route().params, search: filterForm.search || undefined, page: 1 },
                 {
                     preserveState: true,
                     preserveScroll: true,
@@ -44,3 +37,4 @@ watch(
     ),
 );
 </script>
+

@@ -186,4 +186,66 @@ class ManageOutletStatusServiceTest extends TestCase
             'action' => 'restored',
         ]);
     }
+
+    public function test_it_successfully_sets_an_outlet_as_main_outlet()
+    {
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $user = User::first();
+        $business = $user->business;
+
+        // Current main outlet
+        $mainOutlet = Outlet::create([
+            'business_id' => $business->id,
+            'name' => 'Main Outlet Old',
+            'is_active' => true,
+            'is_main_outlet' => true,
+        ]);
+
+        // Branch outlet to become main
+        $branchOutlet = Outlet::create([
+            'business_id' => $business->id,
+            'name' => 'Branch Outlet New',
+            'is_active' => true,
+            'is_main_outlet' => false,
+        ]);
+
+        $this->actingAs($user);
+
+        $result = $this->service->setMainOutlet($branchOutlet, $user);
+
+        $this->assertTrue($result->is_main_outlet);
+        $this->assertDatabaseHas('outlets', [
+            'id' => $branchOutlet->id,
+            'is_main_outlet' => true,
+        ]);
+        $this->assertDatabaseHas('outlets', [
+            'id' => $mainOutlet->id,
+            'is_main_outlet' => false,
+        ]);
+        $this->assertDatabaseHas('outlet_audit_logs', [
+            'outlet_id' => $branchOutlet->id,
+            'user_id' => $user->id,
+            'action' => 'set_as_main',
+        ]);
+    }
+
+    public function test_it_fails_to_set_inactive_outlet_as_main_outlet()
+    {
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
+
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $user = User::first();
+        $business = $user->business;
+
+        $inactiveOutlet = Outlet::create([
+            'business_id' => $business->id,
+            'name' => 'Inactive Branch',
+            'is_active' => false,
+            'is_main_outlet' => false,
+        ]);
+
+        $this->actingAs($user);
+
+        $this->service->setMainOutlet($inactiveOutlet, $user);
+    }
 }

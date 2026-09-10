@@ -38,6 +38,9 @@ const handleCan = (el, binding) => {
 
 const LOCK_CLASSES = ['cursor-not-allowed', 'select-none']
 
+import FeatureLock from '@/Components/UI/FeatureLock.vue'
+import FeatureLockOverlay from '@/Components/UI/FeatureLockOverlay.vue'
+
 const openFeatureModal = (featureName) => {
     const modalStore = useModalStore()
     modalStore.open({
@@ -52,8 +55,16 @@ const openFeatureModal = (featureName) => {
 }
 
 const renderLockOverlay = (el, featureName, isSubscribed) => {
-    const computedPosition = window.getComputedStyle(el).position
-    if (computedPosition === 'static') {
+    // Check idempotency: avoid touching DOM on every re-render if already configured
+    if (
+        el._featureOverlay &&
+        el._lockedFeature === featureName &&
+        el._isSubscribed === isSubscribed
+    ) {
+        return
+    }
+
+    if (!el.classList.contains('relative') && !el.classList.contains('absolute') && !el.classList.contains('fixed')) {
         el.classList.add('relative')
         el._addedRelative = true
     }
@@ -61,18 +72,16 @@ const renderLockOverlay = (el, featureName, isSubscribed) => {
     LOCK_CLASSES.forEach((cls) => el.classList.add(cls))
     el.setAttribute('aria-disabled', 'true')
 
-    let overlay = el.querySelector(':scope > .sollu-feature-lock-overlay')
     const labelText = isSubscribed ? 'Tingkatkan Paket' : 'Langganan'
-    const isTall = el.clientHeight > 100
-    const alignmentClasses = isTall ? 'items-start pt-3 pr-3' : 'items-center pr-2.5'
+    let overlay = el._featureOverlay || el.querySelector(':scope > .sollu-feature-lock-overlay')
 
     if (!overlay) {
         overlay = document.createElement('div')
-        overlay.className = `sollu-feature-lock-overlay absolute inset-0 z-20 pointer-events-auto rounded-[inherit] bg-white/60 backdrop-blur-[0.5px] flex ${alignmentClasses} justify-end cursor-pointer`
+        overlay.className = 'sollu-feature-lock-overlay absolute inset-0 z-20 pointer-events-auto rounded-[inherit] bg-white/60 backdrop-blur-[0.5px] flex items-start justify-end p-3 cursor-pointer select-none'
 
         const button = document.createElement('button')
         button.type = 'button'
-        button.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md bg-gradient-to-r from-main to-secondary hover:from-main-dark hover:to-secondary-dark text-white transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap opacity-100'
+        button.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md bg-gradient-to-r from-main to-secondary hover:from-main-dark hover:to-secondary-dark text-white transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap opacity-100 shrink-0'
         button.innerHTML = `
             <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 448 512" aria-hidden="true">
                 <path d="M144 144v48h160v-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64v192c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/>
@@ -80,30 +89,28 @@ const renderLockOverlay = (el, featureName, isSubscribed) => {
             <span class="sollu-lock-label">${labelText}</span>
         `
 
-        button.addEventListener('click', (e) => {
+        const handleOverlayClick = (e) => {
             e.preventDefault()
             e.stopPropagation()
             e.stopImmediatePropagation()
             openFeatureModal(featureName)
-        })
+        }
 
-        overlay.addEventListener('click', (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            e.stopImmediatePropagation()
-            openFeatureModal(featureName)
-        })
+        button.addEventListener('click', handleOverlayClick)
+        overlay.addEventListener('click', handleOverlayClick)
 
         overlay.appendChild(button)
         el.appendChild(overlay)
         el._featureOverlay = overlay
     } else {
-        overlay.className = `sollu-feature-lock-overlay absolute inset-0 z-20 pointer-events-auto rounded-[inherit] bg-white/60 backdrop-blur-[0.5px] flex ${alignmentClasses} justify-end cursor-pointer`
         const labelEl = overlay.querySelector('.sollu-lock-label')
-        if (labelEl) {
+        if (labelEl && labelEl.textContent !== labelText) {
             labelEl.textContent = labelText
         }
     }
+
+    el._lockedFeature = featureName
+    el._isSubscribed = isSubscribed
 }
 
 const removeLockOverlay = (el) => {
@@ -125,10 +132,8 @@ const removeLockOverlay = (el) => {
         orphanOverlay.remove()
     }
 
-    if (el._featureClickHandler) {
-        el.removeEventListener('click', el._featureClickHandler, true)
-        delete el._featureClickHandler
-    }
+    delete el._lockedFeature
+    delete el._isSubscribed
 }
 
 const handleFeature = (el, binding) => {
@@ -172,6 +177,8 @@ const cleanupFeature = (el) => {
     removeLockOverlay(el)
 }
 
+export { FeatureLock, FeatureLockOverlay }
+
 export default {
     install(app) {
         Object.defineProperty(app.config.globalProperties, '$enums', {
@@ -179,6 +186,9 @@ export default {
                 return this.$page?.props?.enums || {}
             },
         })
+
+        app.component('FeatureLock', FeatureLock)
+        app.component('FeatureLockOverlay', FeatureLockOverlay)
 
         app.directive('can', {
             mounted: handleCan,

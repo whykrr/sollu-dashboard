@@ -21,37 +21,48 @@ class OutletController extends Controller
         protected UpdateOutletService $updateOutletService,
         protected ManageOutletStatusService $manageStatusService,
         protected BillingEngine $billingEngine
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index(Request $req, ?Outlet $outlet = null)
     {
+        $sort      = $req->filled('sort') ? $req->get('sort') : 'created_at';
+        $direction = $req->filled('direction') ? $req->get('direction') : 'asc';
+
         $outlets = fn () => Outlet::currentBusiness()
-            ->sortable($req->get('sort', 'created_at'), $req->get('direction', 'asc'))
+            ->when($req->get('search'), function ($q, $search) {
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%")
+                        ->orWhere('address', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                });
+            })
+            ->sortable($sort, $direction)
             ->paginate($req->get('perpage', 20))
             ->appends($req->query());
 
-        $business = $req->user()->business;
-        $maxOutlets = $business->maxOutletsAllowed();
+        $business            = $req->user()->business;
+        $maxOutlets          = $business->maxOutletsAllowed();
         $currentOutletsCount = $business->outlets()->count();
-        $subscription = $business->subscriptions()->with('plan')->where('status', 'active')->first();
-        $isTrial = $business->trial_end_at ? \Carbon\Carbon::parse($business->trial_end_at)->isFuture() : false;
+        $subscription        = $business->subscriptions()->with('plan')->where('status', 'active')->first();
+        $isTrial             = $business->trial_end_at ? \Carbon\Carbon::parse($business->trial_end_at)->isFuture() : false;
 
         $proratedAmount = $subscription ? $this->billingEngine->calculateProratedCost($subscription) : 0;
 
         return inertia('Settings/Outlet/Index', [
             'outlets' => $outlets,
-            'params' => $req->all(),
-            'outlet' => fn () => $outlet,
-            'limit' => [
-                'max' => $maxOutlets,
-                'current' => $currentOutletsCount,
-                'reached' => $currentOutletsCount >= $maxOutlets,
+            'params'  => array_merge(['sort' => $sort, 'direction' => $direction], $req->all()),
+            'outlet'  => fn () => $outlet,
+            'limit'   => [
+                'max'      => $maxOutlets,
+                'current'  => $currentOutletsCount,
+                'reached'  => $currentOutletsCount >= $maxOutlets,
                 'is_trial' => $isTrial,
             ],
-            'subscription' => $subscription,
+            'subscription'   => $subscription,
             'proratedAmount' => $proratedAmount,
         ]);
     }
@@ -131,6 +142,21 @@ class OutletController extends Controller
         return redirect()->back()->with(
             FlashDataVariable::SUCCESS->value,
             ResourceMessage::UPDATE_SUCCESS
+        );
+    }
+
+    public function setMain(Request $request, Outlet $outlet)
+    {
+        $business = $request->user()->business;
+        if ($outlet->business_id !== $business?->id) {
+            abort(403);
+        }
+
+        $this->manageStatusService->setMainOutlet($outlet, $request->user());
+
+        return redirect()->back()->with(
+            FlashDataVariable::SUCCESS->value,
+            'Outlet utama berhasil diubah.'
         );
     }
 }

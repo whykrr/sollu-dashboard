@@ -4,12 +4,16 @@
             <MainPageHeader title="Pusat Akun" />
         </template>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pb-12">
             <!-- Left Column: Forms -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
+            <div class="lg:col-span-7 flex flex-col gap-4">
                 <!-- Card 1: Profil Akun -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
-                    <h3 class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                <div
+                    class="bg-white rounded-xl border border-slate-200 shadow-xs p-5"
+                >
+                    <h3
+                        class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2"
+                    >
                         <FontAwesomeIcon :icon="faUser" class="text-main" />
                         <span>Profil Akun</span>
                     </h3>
@@ -32,9 +36,18 @@
                                 :feedback="formProfile.errors.email"
                                 disabled
                             />
-                            <p class="text-xs text-slate-400 mt-1 flex items-start gap-1.5 leading-relaxed">
-                                <FontAwesomeIcon :icon="faInfoCircle" class="text-slate-400 mt-0.5" />
-                                <span>Email utama digunakan untuk autentikasi sistem dan tidak dapat diubah langsung.</span>
+                            <p
+                                class="text-xs text-slate-400 mt-1 flex items-start gap-1.5 leading-relaxed"
+                            >
+                                <FontAwesomeIcon
+                                    :icon="faInfoCircle"
+                                    class="text-slate-400 mt-0.5"
+                                />
+                                <span
+                                    >Email utama digunakan untuk autentikasi
+                                    sistem dan tidak dapat diubah
+                                    langsung.</span
+                                >
                             </p>
                         </div>
 
@@ -47,21 +60,31 @@
                         />
                     </div>
 
-                    <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+                    <div
+                        class="flex justify-end pt-4 border-t border-slate-100 mt-4"
+                    >
                         <button
                             class="btn btn-main px-5 py-2.5 rounded-lg shadow-sm font-medium flex items-center gap-2"
                             :disabled="formProfile.processing"
                             @click="saveDetail"
                         >
                             <FontAwesomeIcon :icon="faSave" />
-                            <span>{{ formProfile.processing ? 'Menyimpan...' : 'Simpan Profil' }}</span>
+                            <span>{{
+                                formProfile.processing
+                                    ? 'Menyimpan...'
+                                    : 'Simpan Profil'
+                            }}</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Card 2: Ganti Password -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
-                    <h3 class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                <div
+                    class="bg-white rounded-xl border border-slate-200 shadow-xs p-5"
+                >
+                    <h3
+                        class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2"
+                    >
                         <FontAwesomeIcon :icon="faLock" class="text-main" />
                         <span>Ubah Kata Sandi</span>
                     </h3>
@@ -72,7 +95,9 @@
                             v-model="formChangePassword.current_password"
                             label="Kata Sandi Lama"
                             placeholder="Masukkan kata sandi lama Anda"
-                            :feedback="formChangePassword.errors.current_password"
+                            :feedback="
+                                formChangePassword.errors.current_password
+                            "
                         />
 
                         <PasswordField
@@ -85,21 +110,32 @@
 
                         <PasswordField
                             id="new_password_confirmation"
-                            v-model="formChangePassword.new_password_confirmation"
+                            v-model="
+                                formChangePassword.new_password_confirmation
+                            "
                             label="Konfirmasi Kata Sandi Baru"
                             placeholder="Ulangi kata sandi baru Anda"
-                            :feedback="formChangePassword.errors.new_password_confirmation"
+                            :feedback="
+                                formChangePassword.errors
+                                    .new_password_confirmation
+                            "
                         />
                     </div>
 
-                    <div class="flex justify-end pt-4 border-t border-slate-100 mt-5">
+                    <div
+                        class="flex justify-end pt-4 border-t border-slate-100 mt-5"
+                    >
                         <button
                             class="btn btn-main px-5 py-2.5 rounded-lg shadow-sm font-medium flex items-center gap-2"
                             :disabled="formChangePassword.processing"
                             @click="changePassword"
                         >
                             <FontAwesomeIcon :icon="faSave" />
-                            <span>{{ formChangePassword.processing ? 'Menyimpan...' : 'Simpan Kata Sandi' }}</span>
+                            <span>{{
+                                formChangePassword.processing
+                                    ? 'Menyimpan...'
+                                    : 'Simpan Kata Sandi'
+                            }}</span>
                         </button>
                     </div>
                 </div>
@@ -107,8 +143,12 @@
 
             <!-- Right Column: Profile Photo Card -->
             <div class="lg:col-span-5">
-                <div class="sticky top-20 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col gap-4">
-                    <h3 class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-2 flex items-center gap-2">
+                <div
+                    class="sticky top-0 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col gap-4"
+                >
+                    <h3
+                        class="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-2 flex items-center gap-2"
+                    >
                         <FontAwesomeIcon :icon="faImage" class="text-main" />
                         <span>Foto Profil</span>
                     </h3>
@@ -120,8 +160,12 @@
                         />
                     </div>
 
-                    <div class="mt-2 p-3 rounded-lg bg-blue-50/70 border border-blue-100 text-[11px] text-blue-800 leading-relaxed">
-                        <strong>Petunjuk:</strong> Gunakan foto rasio 1:1 (persegi) berformat PNG, JPG, atau WEBP dengan ukuran maksimal 2MB untuk hasil tampilan profil terbaik.
+                    <div
+                        class="mt-2 p-3 rounded-lg bg-blue-50/70 border border-blue-100 text-[11px] text-blue-800 leading-relaxed"
+                    >
+                        <strong>Petunjuk:</strong> Gunakan foto rasio 1:1
+                        (persegi) berformat PNG, JPG, atau WEBP dengan ukuran
+                        maksimal 2MB untuk hasil tampilan profil terbaik.
                     </div>
                 </div>
             </div>

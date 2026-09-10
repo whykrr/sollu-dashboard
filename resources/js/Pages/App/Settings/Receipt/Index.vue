@@ -11,9 +11,9 @@
             </MainPageHeader>
         </template>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pb-8">
             <!-- Left Column: Settings Form -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
+            <div class="lg:col-span-7 flex flex-col gap-4">
                 <!-- Card 1: Format Kertas & Perilaku Cetak -->
                 <div
                     class="bg-white rounded-xl border border-slate-200 shadow-xs p-5"
@@ -358,8 +358,14 @@
                                 class="flex justify-center mb-2"
                             >
                                 <img
-                                    v-if="business?.logo_url || selectedOutlet?.logo_url"
-                                    :src="business?.logo_url || selectedOutlet?.logo_url"
+                                    v-if="
+                                        business?.logo_url ||
+                                        selectedOutlet?.logo_url
+                                    "
+                                    :src="
+                                        business?.logo_url ||
+                                        selectedOutlet?.logo_url
+                                    "
                                     class="h-16 object-contain"
                                     alt="Logo Usaha"
                                 />
@@ -411,8 +417,6 @@
                             >
                                 {{ form.header_notes }}
                             </div>
-
-
                         </div>
 
                         <!-- Meta Info -->
@@ -444,9 +448,7 @@
                             class="border-b border-dashed border-slate-300 pb-2 mb-2 text-[11px]"
                         >
                             <!-- Item 1 -->
-                            <div class="font-medium">
-                                Kopi Susu Aren
-                            </div>
+                            <div class="font-medium">Kopi Susu Aren</div>
                             <div class="flex justify-between">
                                 <span>2 x Rp 25.000</span>
                                 <span>Rp 50.000</span>
@@ -463,7 +465,9 @@
                             >
                                 * Sedikit es
                             </div>
-                            <div class="flex justify-between text-[10px] text-slate-500">
+                            <div
+                                class="flex justify-between text-[10px] text-slate-500"
+                            >
                                 <span>Diskon Item</span>
                                 <span>-Rp 0</span>
                             </div>
