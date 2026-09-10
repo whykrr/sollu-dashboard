@@ -69,7 +69,7 @@
                                     Jml Pesan
                                 </th>
                                 <th
-                                    v-if="purchase.status === 'received'"
+                                    v-if="purchase.status === $enums.PurchaseOrderStatus.Received"
                                     class="p-3 border-b font-semibold text-center"
                                 >
                                     Jml Terima
@@ -104,7 +104,7 @@
                                     {{ formatQuantity(item.qty_ordered) }}
                                 </td>
                                 <td
-                                    v-if="purchase.status === 'received'"
+                                    v-if="purchase.status === $enums.PurchaseOrderStatus.Received"
                                     class="p-3 text-center font-medium text-green-600"
                                 >
                                     {{ formatQuantity(item.qty_received) }}
@@ -137,7 +137,7 @@
                             <tr class="bg-gray-50 font-bold">
                                 <td
                                     :colspan="
-                                        purchase.status === 'received' ? 4 : 3
+                                        purchase.status === $enums.PurchaseOrderStatus.Received ? 4 : 3
                                     "
                                     class="p-3 text-right"
                                 >

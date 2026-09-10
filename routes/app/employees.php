@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\App\EmployeeController;
+use App\Enums\FeatureEnum;
+use App\Http\Controllers\App\Employee\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employees')
     ->name('employees.')
+    ->middleware('plan.feature:'.FeatureEnum::EMPLOYEE_MANAGEMENT->value)
     ->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
         Route::get('/{user}', [EmployeeController::class, 'index'])->name('show');

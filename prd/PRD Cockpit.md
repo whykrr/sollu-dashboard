@@ -528,11 +528,11 @@ erDiagram
         timestamp reviewed_at
     }
 
-    feature_flags {
+    system_settings {
         uuid id PK
-        uuid business_id FK
-        varchar feature_name
-        boolean enabled
+        varchar key
+        text value
+        varchar group
     }
 
     platform_metrics {
@@ -555,7 +555,6 @@ erDiagram
     cockpit_users ||--o{ payment_manual_validations : reviews
 
     businesses ||--o{ merchant_status_logs : status_history
-    businesses ||--o{ feature_flags : feature_control
 
     payments ||--o{ payment_manual_validations : validated_by
 

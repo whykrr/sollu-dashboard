@@ -231,7 +231,7 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <template v-if="transferData.status === 'pending'">
+                    <template v-if="transferData.status === $enums.StockTransferStatus.Pending">
                         <button
                             v-if="canApprove && !showRejectForm"
                             type="button"
@@ -251,7 +251,7 @@
                         </button>
                     </template>
 
-                    <template v-else-if="transferData.status === 'approved'">
+                    <template v-else-if="transferData.status === $enums.StockTransferStatus.Approved">
                         <button
                             v-if="canShip"
                             type="button"
@@ -263,7 +263,7 @@
                         </button>
                     </template>
 
-                    <template v-else-if="transferData.status === 'in_transit'">
+                    <template v-else-if="transferData.status === $enums.StockTransferStatus.InTransit">
                         <button
                             v-if="canReceive"
                             type="button"

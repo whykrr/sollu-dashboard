@@ -3,6 +3,7 @@
 namespace Tests\Feature\Console;
 
 use App\Models\Business;
+use App\Models\BusinessType;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
@@ -21,17 +22,25 @@ class SendSubscriptionRenewalNotificationTest extends TestCase
         Notification::fake();
 
         $plan = SubscriptionPlan::factory()->create();
-        $business = Business::factory()->create();
+        $type = BusinessType::create(['name' => 'F&B', 'code' => 'fnb_iso']);
+        $business = Business::create([
+            'name' => 'Merchant Test',
+            'owner_name' => 'Test Owner',
+            'email' => 'merchant@test.com',
+            'phone' => '081234567891',
+            'business_type_id' => $type->id,
+            'trial_end_at' => now()->addDays(14),
+        ]);
 
-        $owner = User::factory()->create();
-        $owner->business_id = $business->id;
-        $owner->save();
+        $owner = User::factory()->create(['business_id' => $business->id]);
 
         // Expiring in 7 days
-        $subscription = Subscription::factory()->create([
+        $subscription = Subscription::create([
             'business_id' => $business->id,
             'plan_id' => $plan->id,
-            'status' => 'active',
+            'status' => \App\Enums\SubscriptionStatus::Active,
+            'billing_cycle' => 'monthly',
+            'started_at' => Carbon::now()->subDays(23),
             'expired_at' => Carbon::now()->addDays(7)->startOfDay(),
         ]);
 

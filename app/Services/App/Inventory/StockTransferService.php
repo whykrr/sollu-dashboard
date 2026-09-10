@@ -8,7 +8,7 @@ use App\Models\Inventory\InventoryBalance;
 use App\Models\Inventory\InventoryMovement;
 use App\Models\Inventory\StockTransfer;
 use App\Models\User;
-use App\Services\Shared\ActivityLogService;
+use App\Services\App\Master\ActivityLogService;
 use Illuminate\Support\Facades\DB;
 
 class StockTransferService

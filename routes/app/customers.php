@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\App\CustomerController;
+use App\Enums\FeatureEnum;
+use App\Http\Controllers\App\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('customers')->name('customers.')->group(function () {
+Route::prefix('customers')->name('customers.')->middleware('plan.feature:'.FeatureEnum::CUSTOMER_MANAGEMENT->value)->group(function () {
     Route::get('/', [CustomerController::class, 'index'])->name('index');
     Route::post('/', [CustomerController::class, 'store'])->name('store');
     Route::put('/{customer}', [CustomerController::class, 'update'])->name('update');

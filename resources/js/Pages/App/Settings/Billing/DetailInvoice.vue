@@ -31,17 +31,17 @@
                 </div>
                 <div class="mt-1">
                     <label
-                        v-if="invoice.status === 'open'"
+                        v-if="invoice.status === $enums.InvoiceStatus.Open"
                         class="badge text-lg badge-warning"
                         >Belum Dibayar</label
                     >
                     <label
-                        v-else-if="invoice.status === 'paid'"
+                        v-else-if="invoice.status === $enums.InvoiceStatus.Paid"
                         class="badge text-lg badge-success"
                         >Terbayar</label
                     >
                     <label
-                        v-else-if="invoice.status === 'void'"
+                        v-else-if="invoice.status === $enums.InvoiceStatus.Cancelled || invoice.status === $enums.InvoiceStatus.Void"
                         class="badge text-lg badge-danger"
                         >Dibatalkan</label
                     >
@@ -167,7 +167,7 @@
             <div class="flex flex-col gap-4 mt-4 border-t pt-4">
                 <!-- Pembayaran Sudah Selesai -->
                 <div
-                    v-if="invoice.status === 'paid'"
+                    v-if="invoice.status === $enums.InvoiceStatus.Paid"
                     class="bg-emerald-50 border border-emerald-150 text-emerald-950 rounded-xl p-5 flex items-start gap-4"
                 >
                     <div
@@ -200,7 +200,7 @@
                 </div>
 
                 <!-- Pembayaran Belum Selesai (Open) -->
-                <div v-else-if="invoice.status === 'open'" class="space-y-4">
+                <div v-else-if="invoice.status === $enums.InvoiceStatus.Open" class="space-y-4">
                     <!-- METODE ONLINE (MIDTRANS) -->
                     <div
                         v-if="(!payment && isMidtransEnabled) || payment?.payment_method === 'midtrans'"
@@ -562,7 +562,7 @@
             <div class="flex justify-between gap-4 w-full">
                 <div>
                     <button
-                        v-if="invoice.status === 'open'"
+                        v-if="invoice.status === $enums.InvoiceStatus.Open"
                         class="btn btn-outline-danger"
                         @click="confirmCancelInvoice"
                     >
@@ -586,7 +586,7 @@
 
                     <button
                         v-if="
-                            invoice.status === 'open' &&
+                            invoice.status === $enums.InvoiceStatus.Open &&
                             (!payment || payment.status === 'pending') &&
                             ((!payment && isMidtransEnabled) || payment?.payment_method === 'midtrans')
                         "
@@ -598,7 +598,7 @@
                     </button>
                     <button
                         v-if="
-                            invoice.status === 'open' &&
+                            invoice.status === $enums.InvoiceStatus.Open &&
                             (!payment || payment.status === 'pending') &&
                             (!isMidtransEnabled || payment?.payment_method === 'manual') &&
                             (!manualValidation || manualValidation.validation_status === 'rejected')

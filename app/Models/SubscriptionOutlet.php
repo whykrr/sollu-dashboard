@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SubscriptionStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,7 @@ class SubscriptionOutlet extends Model
     {
         return [
             'activated_at' => 'datetime',
+            'status' => SubscriptionStatus::class,
             'deactivated_at' => 'datetime',
         ];
     }

@@ -48,6 +48,7 @@
 
                 <!-- Lacak Inventori (Stok) -->
                 <label
+                    v-feature.lock="$enums.FeatureEnum.INVENTORY_MANAGEMENT"
                     class="flex items-center justify-between border border-slate-200 p-3 rounded-xl cursor-pointer hover:bg-slate-50 transition w-full"
                 >
                     <div>
@@ -91,6 +92,7 @@
 
                 <!-- Memiliki Varian Produk -->
                 <label
+                    v-feature.lock="$enums.FeatureEnum.PRODUCT_VARIANTS"
                     class="flex items-center justify-between border border-slate-200 p-3 rounded-xl cursor-pointer hover:bg-slate-50 transition w-full"
                 >
                     <div>

@@ -5,7 +5,7 @@ namespace Tests\Unit\Services\App;
 use App\Models\Outlet;
 use App\Models\User;
 use App\Notifications\NewEmployee;
-use App\Services\App\EmployeeService;
+use App\Services\App\Employee\EmployeeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;

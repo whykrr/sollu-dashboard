@@ -14,9 +14,10 @@
 <script setup>
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import { mainSidebars } from '@/Composable/Sidebar/main';
-import { settingSidebars } from '@/Composable/Sidebar/setting';
+import { useSidebar } from '@/Composable/Sidebar/useSidebar';
 import NavigationNode from './NavigationNode.vue';
+
+const { sidebars } = useSidebar();
 
 const activeMenu = computed(() => {
     // Mengakses usePage().url mendaftarkan dependency ini pada Vue's reactivity system.
@@ -57,9 +58,4 @@ const isActive = (menu) => {
 
     return current.startsWith('' + normalizeRoute(menu.route));
 };
-
-const sidebars = computed(() => {
-    const url = usePage().url;
-    return url.startsWith('/settings') ? settingSidebars : mainSidebars;
-});
 </script>

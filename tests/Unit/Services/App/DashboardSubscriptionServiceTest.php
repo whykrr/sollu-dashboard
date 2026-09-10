@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\App;
 
-use App\Services\App\DashboardSubscriptionService;
+use App\Services\App\Reports\DashboardSubscriptionService;
 use Tests\TestCase;
 
 class DashboardSubscriptionServiceTest extends TestCase

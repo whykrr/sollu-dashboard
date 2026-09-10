@@ -4,7 +4,7 @@ namespace App\Http\Controllers\App\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sales\Transaction;
-use App\Services\Shared\Transaction\TransactionService;
+use App\Services\App\Transaction\TransactionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

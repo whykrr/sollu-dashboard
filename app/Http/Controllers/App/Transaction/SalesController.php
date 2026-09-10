@@ -10,7 +10,7 @@ use App\Http\Requests\App\Transaction\Sales\StoreSalesTransactionRequest;
 use App\Http\Resources\Transaction\TransactionResource;
 use App\Jobs\Transaction\ExportTransactionJob;
 use App\Models\Sales\Transaction;
-use App\Services\Shared\Transaction\TransactionService;
+use App\Services\App\Transaction\TransactionService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

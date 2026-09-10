@@ -144,23 +144,52 @@ class Business extends Model
             ->where('status', 'active')
             ->first();
 
+        $planFeatures = [];
         if ($activeSubscription && $activeSubscription->plan) {
             $planEnum = \App\Enums\PlanEnum::tryFrom($activeSubscription->plan->code);
+            if ($planEnum) {
+                $planFeatures = $planEnum->systemFeatures();
+            }
+        } else {
+            $isTrial = $this->trial_end_at ? \Carbon\Carbon::parse($this->trial_end_at)->isFuture() : false;
+            $planFeatures = $isTrial ? \App\Enums\PlanEnum::trialFeatures() : \App\Enums\PlanEnum::freeFeatures();
+        }
 
+        // Get user personalized features if exists
+        $userFeatures = $this->settings['active_features'] ?? null;
+        
+        if (is_null($userFeatures)) {
+            // Fallback to BusinessType defaults
+            $userFeatures = $this->type?->features ?? array_map(fn($f) => $f->value, $planFeatures);
+        }
+
+        // Map strings to FeatureEnum and intersect with plan features
+        $activeFeatures = [];
+        foreach ($userFeatures as $featureString) {
+            $featureEnum = \App\Enums\FeatureEnum::tryFrom($featureString);
+            if ($featureEnum && in_array($featureEnum, $planFeatures, true)) {
+                $activeFeatures[] = $featureEnum;
+            }
+        }
+
+        return $activeFeatures;
+    }
+
+    public function getAvailablePlanFeatures(): array
+    {
+        $activeSubscription = $this->subscriptions()
+            ->where('status', 'active')
+            ->first();
+
+        if ($activeSubscription && $activeSubscription->plan) {
+            $planEnum = \App\Enums\PlanEnum::tryFrom($activeSubscription->plan->code);
             if ($planEnum) {
                 return $planEnum->systemFeatures();
             }
         }
 
-        // Check if currently on valid Trial
         $isTrial = $this->trial_end_at ? \Carbon\Carbon::parse($this->trial_end_at)->isFuture() : false;
-
-        if ($isTrial) {
-            return \App\Enums\PlanEnum::trialFeatures();
-        }
-
-        // Fallback to Free Plan features
-        return \App\Enums\PlanEnum::freeFeatures();
+        return $isTrial ? \App\Enums\PlanEnum::trialFeatures() : \App\Enums\PlanEnum::freeFeatures();
     }
 
     /**

@@ -29,10 +29,10 @@
                     })
                 }}
             </template>
-            <template #from_outlet.name="{ item }">
+            <template #from_outlet_name="{ item }">
                 {{ item.from_outlet?.name || '-' }}
             </template>
-            <template #to_outlet.name="{ item }">
+            <template #to_outlet_name="{ item }">
                 {{ item.to_outlet?.name || '-' }}
             </template>
             <template #status="{ item }">
@@ -114,13 +114,13 @@ const headers = [
     {
         label: 'Dari Outlet',
         field: 'from_outlet.name',
-        slot: 'from_outlet.name',
+        slot: 'from_outlet_name',
         sortable: false,
     },
     {
         label: 'Ke Outlet',
         field: 'to_outlet.name',
-        slot: 'to_outlet.name',
+        slot: 'to_outlet_name',
         sortable: false,
     },
     { label: 'Jumlah Item', field: 'items_count', sortable: false },

@@ -26,7 +26,7 @@
             <template #category="{ row }">
                 {{ row.category }}
             </template>
-            <template #actions="{ row }">
+            <template #actions>
                 <button
                     class="btn btn-neutral-100 text-main btn-sm"
                     title="Edit"

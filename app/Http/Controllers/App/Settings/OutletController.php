@@ -8,10 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Outlet\CreateOutletRequest;
 use App\Http\Requests\App\Outlet\UpdateOutletRequest;
 use App\Models\Outlet;
-use App\Services\App\BillingEngine;
 use App\Services\App\Outlet\CreateOutletService;
 use App\Services\App\Outlet\ManageOutletStatusService;
 use App\Services\App\Outlet\UpdateOutletService;
+use App\Services\App\Subscription\BillingEngine;
 use Illuminate\Http\Request;
 
 class OutletController extends Controller

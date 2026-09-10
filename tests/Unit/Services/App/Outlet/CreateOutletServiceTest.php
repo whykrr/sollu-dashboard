@@ -4,9 +4,9 @@ namespace Tests\Unit\Services\App\Outlet;
 
 use App\Models\Outlet;
 use App\Models\User;
-use App\Services\App\BillingEngine;
 use App\Services\App\Outlet\CreateOutletService;
 use App\Services\App\Outlet\OutletProvisioningService;
+use App\Services\App\Subscription\BillingEngine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;

@@ -10,6 +10,7 @@ description: >-
 # Sollu Core Architecture & Tech Stack
 
 ## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-modular`**: Modular Monolith architecture, bounded contexts, and cross-module decoupling standards ([.agents/rules/modular-architecture.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/modular-architecture.md)).
 - **`sollu-backend`**: Controller, Service, Model, and FormRequest standards.
 - **`sollu-frontend`**: Vue 3, Inertia 1.2, Tailwind CSS v4, and PopUpPage standards.
 - **`sollu-roles-permissions`**: Spatie RBAC, PermissionEnum, and authorization rules.

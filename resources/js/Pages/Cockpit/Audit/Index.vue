@@ -48,7 +48,7 @@
             <template #action="{ row }">
                 <span class="text-neutral-600">{{ row.action }}</span>
             </template>
-            <template #actions="{ row }">
+            <template #actions>
                 <button
                     class="btn btn-neutral-100 text-main btn-sm"
                     title="View Metadata"

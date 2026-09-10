@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\App\Inventory;
 
 use App\Enums\PermissionEnum;
+use App\Enums\PurchaseOrderStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Inventory\Purchase\ReceivePurchaseOrderRequest;
 use App\Http\Requests\App\Inventory\Purchase\StorePurchaseOrderRequest;
@@ -120,7 +121,7 @@ class StockPurchasesController extends Controller
 
         $po = PurchaseOrder::currentBusiness()->findOrFail($id);
 
-        if ($po->status !== PurchaseOrder::STATUS_DRAFT) {
+        if ($po->status !== PurchaseOrderStatus::Draft) {
             return redirect()->back()->with('error', 'Hanya PO berstatus Draft yang dapat dihapus.');
         }
 

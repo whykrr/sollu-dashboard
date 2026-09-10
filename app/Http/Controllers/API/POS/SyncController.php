@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\POS;
 
 use App\Http\Controllers\Controller;
-use App\Services\Shared\Transaction\MasterDataSyncService as TransactionMasterDataSyncService;
+use App\Services\App\Transaction\MasterDataSyncService as TransactionMasterDataSyncService;
 use Illuminate\Http\Request;
 
 class SyncController extends Controller

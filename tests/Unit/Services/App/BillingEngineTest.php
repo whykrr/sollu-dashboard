@@ -2,12 +2,13 @@
 
 namespace Tests\Unit\Services\App;
 
+use App\Enums\SubscriptionInvoice\Status;
 use App\Models\Business;
 use App\Models\Invoice;
 use App\Models\Outlet;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
-use App\Services\App\BillingEngine;
+use App\Services\App\Subscription\BillingEngine;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -62,7 +63,7 @@ class BillingEngineTest extends TestCase
         $this->assertInstanceOf(Invoice::class, $invoice);
         $this->assertEquals($business->id, $invoice->business_id);
         $this->assertEquals($expected, $invoice->total_amount);
-        $this->assertEquals('open', $invoice->status);
+        $this->assertEquals(Status::Open, $invoice->status);
     }
 
     public function test_it_generates_recurring_invoice()

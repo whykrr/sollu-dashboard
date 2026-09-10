@@ -91,7 +91,7 @@
                                     Jenis Usaha
                                 </div>
                                 <div class="font-medium text-neutral-800">
-                                    {{ businessInfo.businessType }}
+                                    {{ businessInfo.business_type }}
                                 </div>
                             </div>
                             <div
@@ -101,7 +101,7 @@
                                     Langganan
                                 </div>
                                 <div class="font-medium text-neutral-800">
-                                    {{ businessInfo.subscription.plan.name }}
+                                    {{ businessInfo.plan_name }}
                                 </div>
                             </div>
                             <div
@@ -112,14 +112,11 @@
                                 </div>
                                 <div class="font-medium text-neutral-800">
                                     <template
-                                        v-if="
-                                            businessInfo.subscription.expired_at
-                                        "
+                                        v-if="businessInfo.expired_at"
                                     >
                                         {{
                                             formatDateID(
-                                                businessInfo.subscription
-                                                    .expired_at,
+                                                businessInfo.expired_at,
                                             )
                                         }}
                                     </template>
@@ -172,6 +169,7 @@
 </template>
 <script setup>
 import { formatDateID } from '@/Composable/date';
+import { useDropdown } from '@/Composable/useDropdown';
 import {
     faClose,
     faCog,
@@ -179,11 +177,9 @@ import {
     faShop,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { Link, router, usePage } from '@inertiajs/vue3';
-import { method } from 'lodash';
-import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
-
-import { useDropdown } from '@/Composable/useDropdown';
+import { Link, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
+import { computed, ref, watch } from 'vue';
 
 const businessInfo = ref(null);
 const page = usePage();
@@ -201,7 +197,7 @@ const togglePanel = () => {
 };
 
 const initials = computed(() => {
-    const name = page.props.auth.business.name || '';
+    const name = page.props.auth?.business?.name || '';
     return name
         .split(' ')
         .map((word) => word[0])
@@ -224,18 +220,21 @@ const businessLinks = [
     },
 ];
 
+const fetchBusinessInfo = async () => {
+    try {
+        const response = await axios.get(route('api.internal.business-info'));
+        businessInfo.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch business info:', error);
+    }
+};
+
 watch(
     () => showPanel.value,
     (val) => {
         if (val) {
-            router.reload({
-                only: ['businessInfo'],
-                preserveState: true,
-                preserveScroll: true,
-                onSuccess: (page) => {
-                    businessInfo.value = page.props.businessInfo;
-                },
-            });
+            businessInfo.value = null;
+            fetchBusinessInfo();
         }
     },
 );

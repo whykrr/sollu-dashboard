@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\App\Settings;
 
 use App\Constants\FlashDataVariable;
+use App\Enums\SubscriptionInvoice\Status;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\PaymentManualValidation;
-use App\Services\Shared\MidtransService;
+use App\Models\SystemSetting;
+use App\Services\App\Subscription\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -24,9 +26,9 @@ class InvoiceController extends Controller
             $payment = null;
         }
 
-        $isMidtransEnabled = \App\Models\FeatureFlag::isMidtransEnabled();
+        $isMidtransEnabled = SystemSetting::isMidtransEnabled();
 
-        if (! $payment && $invoice->status === 'open' && $isMidtransEnabled) {
+        if (! $payment && ($invoice->status === Status::Open || $invoice->status === 'open') && $isMidtransEnabled) {
             $midtrans_request = [
                 'transaction_details' => [
                     'order_id' => "{$invoice->invoice_number}-".Str::upper(Str::random(4)),
@@ -107,7 +109,7 @@ class InvoiceController extends Controller
         ]);
 
         if ($request->payment_method === 'midtrans') {
-            $isMidtransEnabled = \App\Models\FeatureFlag::isMidtransEnabled();
+            $isMidtransEnabled = SystemSetting::isMidtransEnabled();
             if (! $isMidtransEnabled) {
                 return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis saat ini sedang dinonaktifkan.');
             }
@@ -179,7 +181,7 @@ class InvoiceController extends Controller
             ->firstOrFail();
 
         $invoice->update([
-            'status' => 'void',
+            'status' => Status::Void,
         ]);
 
         $isOutletAddition = false;

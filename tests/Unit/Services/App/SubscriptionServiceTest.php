@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Services\App;
 
+use App\Enums\SubscriptionStatus;
 use App\Models\Business;
 use App\Models\Outlet;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
-use App\Services\App\SubscriptionService;
+use App\Services\App\Subscription\SubscriptionService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -33,7 +34,7 @@ class SubscriptionServiceTest extends TestCase
         $currentSubscription = Subscription::create([
             'business_id' => $business->id,
             'plan_id' => $plan1->id,
-            'status' => 'active',
+            'status' => SubscriptionStatus::Active,
             'billing_cycle' => 'monthly',
             'started_at' => Carbon::now()->subDays(10),
             'expired_at' => Carbon::now()->addDays(20),
@@ -56,7 +57,7 @@ class SubscriptionServiceTest extends TestCase
 
         $this->assertInstanceOf(Subscription::class, $newSubscription);
         $this->assertEquals($plan2->id, $newSubscription->plan_id);
-        $this->assertEquals('inactive', $newSubscription->status);
+        $this->assertEquals(SubscriptionStatus::Pending, $newSubscription->status);
         $this->assertEquals('yearly', $newSubscription->billing_cycle);
         $this->assertEquals($now, $newSubscription->started_at);
         $this->assertEquals($now->copy()->addDays(365), $newSubscription->expired_at);
@@ -66,7 +67,7 @@ class SubscriptionServiceTest extends TestCase
 
         // Check old subscription remains active
         $currentSubscription->refresh();
-        $this->assertEquals('active', $currentSubscription->status);
+        $this->assertEquals(SubscriptionStatus::Active, $currentSubscription->status);
         $this->assertNull($currentSubscription->canceled_at);
     }
 
@@ -79,7 +80,7 @@ class SubscriptionServiceTest extends TestCase
         $subscription = Subscription::create([
             'business_id' => $business->id,
             'plan_id' => $plan->id,
-            'status' => 'active',
+            'status' => SubscriptionStatus::Active,
             'billing_cycle' => 'monthly',
             'started_at' => Carbon::now()->subDays(10),
             'expired_at' => Carbon::now()->addDays(20),
@@ -92,7 +93,7 @@ class SubscriptionServiceTest extends TestCase
 
         $this->assertTrue($result);
         $subscription->refresh();
-        $this->assertEquals('canceled', $subscription->status);
+        $this->assertEquals(SubscriptionStatus::Canceled, $subscription->status);
         $this->assertEquals($now, $subscription->canceled_at);
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Services\App\Invoice;
 
+use App\Enums\SubscriptionInvoice\Status;
+use App\Enums\SubscriptionStatus;
 use App\Models\Invoice;
 use App\Notifications\SubscriptionActivatedNotification;
 use Carbon\Carbon;
@@ -22,7 +24,7 @@ class CompleteInvoiceService
 
             // Mark invoice as paid
             $invoice->update([
-                'status' => 'paid',
+                'status' => Status::Paid,
                 'paid_at' => $now,
             ]);
 
@@ -57,7 +59,7 @@ class CompleteInvoiceService
 
                         $targetSub->update([
                             'expired_at' => $baseDate->copy()->addDays($daysToAdd),
-                            'status' => 'active',
+                            'status' => SubscriptionStatus::Active,
                         ]);
 
                         $owner = $business->users()->first();
@@ -74,18 +76,18 @@ class CompleteInvoiceService
                         }
                     }
                 }
-            } elseif ($subscription && $subscription->status !== 'active' && ! $isOutletAddition) {
+            } elseif ($subscription && $subscription->status !== SubscriptionStatus::Active && ! $isOutletAddition) {
                 // Cancel any previous active subscriptions before activating the new one
                 $business->subscriptions()
                     ->where('id', '!=', $subscription->id)
-                    ->where('status', 'active')
+                    ->where('status', SubscriptionStatus::Active)
                     ->update([
-                        'status' => 'canceled',
+                        'status' => SubscriptionStatus::Canceled,
                         'canceled_at' => $now,
                     ]);
 
                 $subscription->update([
-                    'status' => 'active',
+                    'status' => SubscriptionStatus::Active,
                 ]);
 
                 // Send notification to the first user (business owner)

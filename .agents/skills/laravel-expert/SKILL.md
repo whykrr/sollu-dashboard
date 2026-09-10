@@ -12,6 +12,7 @@ date_added: "2026-02-27"
 # Laravel Expert
 
 ## 🚨 Related Skills (Perfect Hook Matrix)
+- **`laravel-boost`**: MANDATORY MCP enforcement for AI acceleration, docs search (`search-docs`), error diagnostics (`last-error`), schema inspection (`database-schema`), and rule recording ([.agents/rules/laravel-boost.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/laravel-boost.md)).
 - **`sollu-backend`**: Sollu-specific controller, model, service, and JsonResource standards.
 - **`sollu-unit-testing`**: Service layer 100% Mocking unit test standards.
 - **`sollu-core-architecture`**: System architecture, directory layout, and security baseline.

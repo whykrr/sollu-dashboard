@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Services\App\Subscription;
 
+use App\Enums\SubscriptionStatus;
 use App\Models\Business;
 use App\Models\Invoice;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
-use App\Services\App\BillingEngine;
+use App\Services\App\Subscription\BillingEngine;
 use App\Services\App\Subscription\GenerateRenewalInvoiceService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,11 +41,11 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
         $subscriptionMock->shouldReceive('getAttribute')->with('id')->andReturn('sub-1');
         $subscriptionMock->shouldReceive('getAttribute')->with('plan_id')->andReturn('plan-1');
-        $subscriptionMock->shouldReceive('getAttribute')->with('status')->andReturn('active');
+        $subscriptionMock->shouldReceive('getAttribute')->with('status')->andReturn(SubscriptionStatus::Active);
         $subscriptionMock->shouldReceive('setAttribute')->with('billing_cycle', 'yearly')->andReturnNull();
 
         $hasManyMock = Mockery::mock(HasMany::class);
-        $hasManyMock->shouldReceive('where')->with('status', 'active')->andReturn($hasManyMock);
+        $hasManyMock->shouldReceive('where')->with('status', SubscriptionStatus::Active)->andReturn($hasManyMock);
         $hasManyMock->shouldReceive('first')->andReturn($subscriptionMock);
 
         $businessMock->shouldReceive('subscriptions')->andReturn($hasManyMock);
@@ -67,7 +68,7 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $planMock = Mockery::mock(SubscriptionPlan::class)->makePartial();
 
         $hasManyMock = Mockery::mock(HasMany::class);
-        $hasManyMock->shouldReceive('where')->with('status', 'active')->andReturn($hasManyMock);
+        $hasManyMock->shouldReceive('where')->with('status', SubscriptionStatus::Active)->andReturn($hasManyMock);
         $hasManyMock->shouldReceive('first')->andReturn(null);
 
         $businessMock->shouldReceive('subscriptions')->andReturn($hasManyMock);
@@ -87,10 +88,10 @@ class GenerateRenewalInvoiceServiceTest extends TestCase
         $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
         $subscriptionMock->shouldReceive('getAttribute')->with('id')->andReturn('sub-1');
         $subscriptionMock->shouldReceive('getAttribute')->with('plan_id')->andReturn('plan-2');
-        $subscriptionMock->shouldReceive('getAttribute')->with('status')->andReturn('active');
+        $subscriptionMock->shouldReceive('getAttribute')->with('status')->andReturn(SubscriptionStatus::Active);
 
         $hasManyMock = Mockery::mock(HasMany::class);
-        $hasManyMock->shouldReceive('where')->with('status', 'active')->andReturn($hasManyMock);
+        $hasManyMock->shouldReceive('where')->with('status', SubscriptionStatus::Active)->andReturn($hasManyMock);
         $hasManyMock->shouldReceive('first')->andReturn($subscriptionMock);
 
         $businessMock->shouldReceive('subscriptions')->andReturn($hasManyMock);

@@ -4,7 +4,7 @@ namespace App\Services\App\Inventory;
 
 use App\Models\Outlet;
 use App\Models\User;
-use App\Services\Shared\ActivityLogService;
+use App\Services\App\Master\ActivityLogService;
 use Illuminate\Support\Facades\DB;
 
 class StockFreezeService

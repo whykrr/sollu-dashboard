@@ -11,7 +11,7 @@ use App\Models\Outlet;
 use App\Models\User;
 use App\Services\App\Inventory\StockFreezeService;
 use App\Services\App\Inventory\StockTransferService;
-use App\Services\Shared\ActivityLogService;
+use App\Services\App\Master\ActivityLogService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;

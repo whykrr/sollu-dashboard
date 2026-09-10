@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Enums\FrontendEnumProvider;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -48,6 +49,7 @@ class HandleCockpitInertiaRequests extends Middleware
                     'info' => $request->session()->get('info'),
                 ],
             ],
+            'enums' => fn () => FrontendEnumProvider::all(),
             'auth' => fn () => $request->user()
                 ? array_merge(
                     $request->user()->only(['id', 'name', 'email', 'email_verified_at']),

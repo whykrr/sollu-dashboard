@@ -2,13 +2,14 @@
 
 namespace Tests\Unit\Services\App\Inventory;
 
+use App\Enums\PurchaseOrderStatus;
 use App\Models\Inventory\InventoryBalance;
 use App\Models\Inventory\InventoryCostLayer;
 use App\Models\Inventory\InventoryMovement;
 use App\Models\Inventory\PurchaseOrder;
 use App\Models\User;
 use App\Services\App\Inventory\PurchaseOrderService;
-use App\Services\Shared\ActivityLogService;
+use App\Services\App\Master\ActivityLogService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
@@ -75,7 +76,7 @@ class PurchaseOrderServiceTest extends TestCase
         $po = $this->service->createPO($data, $user);
 
         $this->assertInstanceOf(PurchaseOrder::class, $po);
-        $this->assertEquals(PurchaseOrder::STATUS_DRAFT, $po->status);
+        $this->assertEquals(PurchaseOrderStatus::Draft, $po->status);
         $this->assertEquals(5000, $po->total_amount);
         $this->assertCount(1, $po->items);
         $this->assertEquals($inventoryItem->id, $po->items[0]->inventory_item_id);
@@ -111,7 +112,7 @@ class PurchaseOrderServiceTest extends TestCase
         [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
         $po = $this->service->createPO(['outlet_id' => $outlet->id, 'order_date' => now()->format('Y-m-d'), 'items' => []], $user);
 
-        $po->status = PurchaseOrder::STATUS_ORDERED;
+        $po->status = PurchaseOrderStatus::Ordered;
         $po->save();
 
         $this->service->updatePO($po, [], $user);
@@ -124,19 +125,19 @@ class PurchaseOrderServiceTest extends TestCase
 
         $poOrdered = $this->service->markAsOrdered($po, $user);
 
-        $this->assertEquals(PurchaseOrder::STATUS_ORDERED, $poOrdered->status);
+        $this->assertEquals(PurchaseOrderStatus::Ordered, $poOrdered->status);
     }
 
     public function test_it_cancels_ordered_po()
     {
         [$user, $business, $outlet, $inventoryItem] = $this->setupBaseData();
         $po = $this->service->createPO(['outlet_id' => $outlet->id, 'order_date' => now()->format('Y-m-d'), 'items' => []], $user);
-        $po->status = PurchaseOrder::STATUS_ORDERED;
+        $po->status = PurchaseOrderStatus::Ordered;
         $po->save();
 
         $poCancelled = $this->service->cancel($po, $user);
 
-        $this->assertEquals(PurchaseOrder::STATUS_CANCELLED, $poCancelled->status);
+        $this->assertEquals(PurchaseOrderStatus::Cancelled, $poCancelled->status);
     }
 
     public function test_it_receives_po_and_updates_inventory()
@@ -148,7 +149,7 @@ class PurchaseOrderServiceTest extends TestCase
             'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]],
         ], $user);
 
-        $po->status = PurchaseOrder::STATUS_ORDERED;
+        $po->status = PurchaseOrderStatus::Ordered;
         $po->save();
         $poItem = $po->items()->first();
 
@@ -164,7 +165,7 @@ class PurchaseOrderServiceTest extends TestCase
 
         $poReceived = $this->service->receivePO($po, $receivedData, $user);
 
-        $this->assertEquals(PurchaseOrder::STATUS_RECEIVED, $poReceived->status);
+        $this->assertEquals(PurchaseOrderStatus::Received, $poReceived->status);
 
         $balance = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first();
         $this->assertNotNull($balance);
@@ -187,7 +188,7 @@ class PurchaseOrderServiceTest extends TestCase
             'order_date' => now()->format('Y-m-d'),
             'items' => [['inventory_item_id' => $inventoryItem->id, 'qty_ordered' => 5, 'purchase_price' => 1000]],
         ], $user);
-        $po->status = PurchaseOrder::STATUS_ORDERED;
+        $po->status = PurchaseOrderStatus::Ordered;
         $po->save();
 
         $poItem = $po->items()->first();
@@ -199,7 +200,7 @@ class PurchaseOrderServiceTest extends TestCase
 
         $poVoided = $this->service->void($po, $user);
 
-        $this->assertEquals(PurchaseOrder::STATUS_CANCELLED, $poVoided->status);
+        $this->assertEquals(PurchaseOrderStatus::Cancelled, $poVoided->status);
 
         $balance = InventoryBalance::where('inventory_item_id', $inventoryItem->id)->first();
         $this->assertEquals(0, $balance->current_stock);

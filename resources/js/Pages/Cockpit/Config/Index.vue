@@ -14,8 +14,15 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button class="btn btn-main btn-sm">
-                        <FontAwesomeIcon :icon="faSave" />Save Changes
+                    <button
+                        type="button"
+                        class="btn btn-main btn-sm flex items-center gap-1.5"
+                        :disabled="form.processing"
+                        @click="submitSettings"
+                    >
+                        <FontAwesomeIcon :icon="faSave" />
+                        <span v-if="form.processing">Menyimpan...</span>
+                        <span v-else>Save Changes</span>
                     </button>
                 </div>
             </div>
@@ -54,6 +61,50 @@
                             </div>
                         </div>
                         <Switch id="signups_allowed" :model-value="1" />
+                    </div>
+
+                    <div class="pt-3 border-t border-neutral-100 flex flex-col gap-2">
+                        <div>
+                            <div class="font-medium text-neutral-800 flex items-center gap-1.5">
+                                <FontAwesomeIcon :icon="faCircleQuestion" class="text-indigo-600 text-sm" />
+                                <span>Link Pusat Bantuan (Help Center)</span>
+                            </div>
+                            <div class="text-xs text-neutral-500 mt-0.5">
+                                Tautan tujuan saat pengguna menekan tombol "Pusat Bantuan" di sidebar merchant.
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-2">
+                            <div class="flex-1">
+                                <TextField
+                                    id="help_center_url"
+                                    v-model="form.help_center_url"
+                                    type="text"
+                                    placeholder="cth. https://help.sollu.id atau https://wa.me/628123456789"
+                                    :error="form.errors.help_center_url"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-main btn-sm h-[38px] px-3 shrink-0 flex items-center justify-center gap-1.5"
+                                :disabled="form.processing"
+                                @click="submitSettings"
+                            >
+                                <FontAwesomeIcon :icon="faSave" />
+                                <span>{{ form.processing ? 'Menyimpan...' : 'Simpan' }}</span>
+                            </button>
+                        </div>
+                        <div v-if="form.help_center_url" class="text-xs text-neutral-400 flex items-center gap-1">
+                            <span>Tautan aktif:</span>
+                            <a
+                                :href="form.help_center_url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-indigo-600 hover:underline flex items-center gap-1 break-all"
+                            >
+                                <span>{{ form.help_center_url }}</span>
+                                <FontAwesomeIcon :icon="faArrowUpFromBracket" class="text-[10px]" />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,16 +188,31 @@
 <script setup>
 import MainPage from '@/Components/UI/MainPage.vue';
 import Switch from '@/Components/Form/Switch.vue';
+import TextField from '@/Components/Form/TextField.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSave, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
-import { Link, router } from '@inertiajs/vue3';
+import { faSave, faLayerGroup, faCircleQuestion, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { Link, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     midtransEnabled: {
         type: Boolean,
         default: false,
     },
+    settings: {
+        type: Object,
+        default: () => ({}),
+    },
 });
+
+const form = useForm({
+    help_center_url: props.settings?.help_center_url || '',
+});
+
+const submitSettings = () => {
+    form.put(route('cockpit.config.settings.update'), {
+        preserveScroll: true,
+    });
+};
 
 const toggleMidtrans = (val) => {
     router.patch(route('cockpit.config.feature-flag.update'), {

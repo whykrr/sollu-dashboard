@@ -404,13 +404,13 @@
                     </template>
                     <template #status="{ row }">
                         <label
-                            v-if="row.status === 'paid'"
+                            v-if="row.status === $enums.InvoiceStatus.Paid"
                             class="badge pill text-xs badge-success"
                         >
                             Lunas
                         </label>
                         <label
-                            v-else-if="row.status === 'void'"
+                            v-else-if="row.status === $enums.InvoiceStatus.Cancelled || row.status === $enums.InvoiceStatus.Void"
                             class="badge pill text-xs badge-danger"
                         >
                             Dibatalkan
@@ -434,7 +434,7 @@
                             Ditolak
                         </label>
                         <label
-                            v-else-if="row.status === 'open'"
+                            v-else-if="row.status === $enums.InvoiceStatus.Open"
                             class="badge pill text-xs badge-warning"
                         >
                             Menunggu Pembayaran

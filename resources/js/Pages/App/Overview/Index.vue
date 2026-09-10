@@ -2,7 +2,9 @@
     <MainPage>
         <template #header>
             <MainPageHeader title="Dashboard Ringkasan">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full sm:w-auto">
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full sm:w-auto"
+                >
                     <!-- Outlet Selector -->
                     <div v-if="outletOptions.length > 0" class="w-full sm:w-48">
                         <GroupDropdownIconField
@@ -12,7 +14,7 @@
                             class="sm"
                             :options="[
                                 { value: '', label: 'Semua Outlet' },
-                                ...outletOptions
+                                ...outletOptions,
                             ]"
                             @change="applyFilters"
                         />
@@ -29,7 +31,7 @@
                                 { value: 'today', label: 'Hari Ini' },
                                 { value: 'yesterday', label: 'Kemarin' },
                                 { value: '7_days', label: '7 Hari Terakhir' },
-                                { value: 'this_month', label: 'Bulan Ini' }
+                                { value: 'this_month', label: 'Bulan Ini' },
                             ]"
                             @change="applyFilters"
                         />
@@ -43,11 +45,14 @@
             v-if="auth?.email_verified_at === null"
             class="alert alert-warning mb-3 shadow-xs"
         >
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+            >
                 <div>
                     <strong class="block">Verifikasi Email</strong>
                     <span class="text-xs sm:text-sm text-neutral-700">
-                        Cek email Anda untuk verifikasi sebelum menggunakan fitur lengkap aplikasi.
+                        Cek email Anda untuk verifikasi sebelum menggunakan
+                        fitur lengkap aplikasi.
                     </span>
                 </div>
                 <Link
@@ -87,7 +92,10 @@
                 <TableMostSoldProduct :data="mostSoldProducts" />
             </div>
             <div class="lg:col-span-1 flex flex-col gap-2">
-                <TableProductLowStock :data="lowStockProduct" />
+                <TableProductLowStock
+                    v-feature.lock="$enums.FeatureEnum.INVENTORY_MANAGEMENT"
+                    :data="lowStockProduct"
+                />
                 <TableProductNotSold :data="productNotSold" />
             </div>
         </div>

@@ -42,13 +42,7 @@ import Header from '@/Components/Layout/Header/Header.vue';
 import { useAppStore } from '@/store/app';
 
 // Event listener for Inertia start/finish
-router.on('start', (event) => {
-    const visit = event.detail.visit;
-    if (visit?.only?.includes('notifications')) return;
-    if (visit?.only?.includes('businessInfo')) return;
-
-    loading.value = true;
-});
+router.on('start', () => (loading.value = true));
 router.on('finish', () => (loading.value = false));
 
 const loading = ref(false);

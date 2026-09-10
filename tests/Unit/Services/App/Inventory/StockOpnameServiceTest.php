@@ -8,7 +8,7 @@ use App\Models\Inventory\InventoryItem;
 use App\Models\Inventory\StockOpname;
 use App\Models\User;
 use App\Services\App\Inventory\StockOpnameService;
-use App\Services\Shared\ActivityLogService;
+use App\Services\App\Master\ActivityLogService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;

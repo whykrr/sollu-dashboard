@@ -9,9 +9,12 @@ description: >-
 
 # Sollu Frontend Rules (Vue 3 / Inertia / Tailwind v4)
 
-## 🚨 Related Skills (Perfect Hook Matrix)
+## 🚨 Related Skills & Rules (Perfect Hook Matrix)
+- **`sollu-modular`**: Modular Monolith architecture, bounded contexts, and cross-module decoupling standards ([.agents/rules/modular-architecture.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/modular-architecture.md)).
+- **`sollu-enums`**: Single Source of Truth PHP Enum via Inertia Shared Props, template `$enums`, `useEnum` composable, and strict prohibition of magic strings in condition validation.
+- **`sollu-feature-plan`**: SaaS Feature Plan validation (`v-feature`, `v-feature.lock`, `usePlanFeature`, `$enums.FeatureEnum`).
 - **`sollu-integration-testing`**: MANDATORY visual & functional browser verification with `browsermcp`.
-- **`sollu-roles-permissions`**: Frontend RBAC authorization using `@/Composable/useAuth`.
+- **`sollu-roles-permissions`**: Frontend RBAC authorization using `@/Composable/useAuth` and `v-can`.
 - **`sollu-code-quality`**: ESLint formatting (`npm run fix:eslint`) and Vite build verification (`npm run build`).
 
 Standard pengembangan antarmuka (UI) Sollu App berbasis Vue 3 (Composition API `<script setup>`), Inertia.js 1.2, dan Tailwind CSS v4.
@@ -26,10 +29,11 @@ Standard pengembangan antarmuka (UI) Sollu App berbasis Vue 3 (Composition API `
 3. **NO HARDCODED PAGE LAYOUTS:** Selalu gunakan `<MainPage>` (`#header`, default slot, `#footer`).
 4. **PRECISE PROPS:** Komponen form menggunakan `v-model`, `label`, `placeholder`, dan `feedback` (pesan error validasi). Dilarang mengikat `is-invalid` secara manual.
 5. **NO TAILWIND CLUTTER:** Ekstrak kelompok class berulang (5+ class) ke `@utility` di `resources/css/app.css`.
-5. **MANDATORY POPUPPAGE FOR SUB-PAGES & FORMS:** Seluruh alur kerja *Create*, *Edit*, *Detail*, dan *Sub-page* WAJIB menggunakan `<PopUpPage>` (side-panel drawer) atau `usePopUpStore()`. DILARANG menggunakan *full page redirect* (`router.get()`) untuk formulir sub-halaman.
-6. **FORM SPACING LIMIT (MAX SCALE 2):** Jarak antar-input formulir (vertikal maupun horizontal) DILARANG melebihi scale 2 Tailwind (`space-y-2`, `space-x-2`, `gap-2`, `gap-y-2`, `gap-x-2`).
-7. **ASYNC FETCH FOR SECONDARY & COMPLEX DETAILS:** Data detail kompleks (isi PopUpPage) dan data sekunder (opsi dropdown relasi) WAJIB diambil secara *async* via API internal (`axios`/`fetch`). Dilarang memuat relasi berat di props `index()` Inertia.
-8. **MANDATORY BROWSERMCP UI VERIFICATION:** Setiap pembuatan atau perubahan komponen Vue/halaman Inertia WAJIB diverifikasi secara integrasi visual dan fungsional menggunakan `browsermcp` (navigasi URL, screenshot, snapshot DOM, dan inspeksi console logs via skill `sollu-integration-testing`). DILARANG menyatakan tugas frontend selesai tanpa verifikasi `browsermcp`.
+6. **MANDATORY POPUPPAGE FOR SUB-PAGES & FORMS:** Seluruh alur kerja *Create*, *Edit*, *Detail*, dan *Sub-page* WAJIB menggunakan `<PopUpPage>` (side-panel drawer) atau `usePopUpStore()`. DILARANG menggunakan *full page redirect* (`router.get()`) untuk formulir sub-halaman.
+7. **FORM SPACING LIMIT (MAX SCALE 2):** Jarak antar-input formulir (vertikal maupun horizontal) DILARANG melebihi scale 2 Tailwind (`space-y-2`, `space-x-2`, `gap-2`, `gap-y-2`, `gap-x-2`).
+8. **ASYNC FETCH FOR SECONDARY & COMPLEX DETAILS:** Data detail kompleks (isi PopUpPage) dan data sekunder (opsi dropdown relasi) WAJIB diambil secara *async* via API internal (`axios`/`fetch`). Dilarang memuat relasi berat di props `index()` Inertia.
+9. **MANDATORY ENUM FOR CONDITIONS & FORM OPTIONS (NO MAGIC STRINGS):** DILARANG KERAS meng-hardcode string literal status/tipe pada evaluasi kondisi (`v-if="status === 'draft'"`, `case 'draft':`) maupun membuat array opsi dropdown manual jika ada Enum backend terkait. WAJIB gunakan `$enums.<EnumName>.<Case>` di template atau composable `useEnum()` (`enums.<EnumName>.<Case>`, `getOptions('EnumName')`). Rujuk [.agents/rules/enums.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/enums.md).
+10. **MANDATORY BROWSERMCP UI VERIFICATION:** Setiap pembuatan atau perubahan komponen Vue/halaman Inertia WAJIB diverifikasi secara integrasi visual dan fungsional menggunakan `browsermcp` (navigasi URL, screenshot, snapshot DOM, dan inspeksi console logs via skill `sollu-integration-testing`). DILARANG menyatakan tugas frontend selesai tanpa verifikasi `browsermcp`.
 
 ## 2. Component Structure (`<script setup>`)
 
@@ -76,7 +80,38 @@ Gunakan `SelectionGroupField` untuk grup tombol opsi pilihan (mendukung seleksi 
 />
 ```
 
-## 7. Frontend Dead Code Removal Standards
+## 7. Condition Validation & Enum Standards ($enums & useEnum)
+
+Mengacu pada [.agents/rules/enums.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/enums.md), PHP Backed Enums adalah Single Source of Truth. DILARANG menggunakan string literal hardcoded untuk status atau tipe.
+
+### 7.1. Di Template Vue (Global Property `$enums`)
+- **Validasi Kondisi Tombol/Elemen:**
+  ```html
+  <button v-if="adjustment.status === $enums.AdjustmentStatus.Draft">Edit</button>
+  ```
+- **Badge Dinamis & Label dari Backend Metadata:**
+  ```html
+  <span :class="$enums.StockOpnameStatus._meta[item.status]?.color || 'badge-gray'">
+      {{ $enums.StockOpnameStatus._meta[item.status]?.label || item.status }}
+  </span>
+  ```
+
+### 7.2. Di `<script setup>` (Composable `@/Composable/useEnum`)
+- **Pengecekan Logic & Opsi Dropdown:**
+  ```javascript
+  import { useEnum } from '@/Composable/useEnum'
+
+  const { enums, getOptions, getLabel, getColor } = useEnum()
+
+  if (item.status === enums.AdjustmentStatus.Draft) {
+      // Logic khusus draft
+  }
+
+  // Opsi dropdown otomatis untuk DropdownField / SelectionGroupField / FilterModal:
+  const statusOptions = getOptions('AdjustmentStatus')
+  ```
+
+## 8. Frontend Dead Code Removal Standards
 
 Setiap kali melakukan modifikasi pada komponen Vue (`.vue`), file JavaScript (`.js`), atau style (`.css`):
 

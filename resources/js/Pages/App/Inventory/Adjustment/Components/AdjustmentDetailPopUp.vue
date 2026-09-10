@@ -25,10 +25,10 @@
                     <span
                         class="badge"
                         :class="{
-                            'badge-gray': adjustment.status === 'draft',
-                            'badge-success': adjustment.status === 'approved',
-                            'badge-danger': adjustment.status === 'rejected',
-                            'badge-warning': adjustment.status === 'voided',
+                            'badge-gray': adjustment.status === $enums.AdjustmentStatus.Draft,
+                            'badge-success': adjustment.status === $enums.AdjustmentStatus.Approved,
+                            'badge-danger': adjustment.status === $enums.AdjustmentStatus.Rejected,
+                            'badge-warning': adjustment.status === $enums.AdjustmentStatus.Voided,
                         }"
                     >
                         {{ formatStatus(adjustment.status) }}
@@ -69,8 +69,8 @@
                                 <th class="p-3 text-right">Perubahan Qty</th>
                                 <th
                                     v-if="
-                                        adjustment.status === 'approved' ||
-                                        adjustment.status === 'voided'
+                                        adjustment.status === $enums.AdjustmentStatus.Approved ||
+                                        adjustment.status === $enums.AdjustmentStatus.Voided
                                     "
                                     class="p-3 text-right"
                                 >
@@ -78,8 +78,8 @@
                                 </th>
                                 <th
                                     v-if="
-                                        adjustment.status === 'approved' ||
-                                        adjustment.status === 'voided'
+                                        adjustment.status === $enums.AdjustmentStatus.Approved ||
+                                        adjustment.status === $enums.AdjustmentStatus.Voided
                                     "
                                     class="p-3 text-right"
                                 >
@@ -115,8 +115,8 @@
                                 </td>
                                 <td
                                     v-if="
-                                        adjustment.status === 'approved' ||
-                                        adjustment.status === 'voided'
+                                        adjustment.status === $enums.AdjustmentStatus.Approved ||
+                                        adjustment.status === $enums.AdjustmentStatus.Voided
                                     "
                                     class="p-3 text-right"
                                 >
@@ -124,8 +124,8 @@
                                 </td>
                                 <td
                                     v-if="
-                                        adjustment.status === 'approved' ||
-                                        adjustment.status === 'voided'
+                                        adjustment.status === $enums.AdjustmentStatus.Approved ||
+                                        adjustment.status === $enums.AdjustmentStatus.Voided
                                     "
                                     class="p-3 text-right"
                                 >
@@ -140,7 +140,7 @@
 
             <!-- Approval Section -->
             <div
-                v-if="adjustment.status === 'draft' && canApprove"
+                v-if="adjustment.status === $enums.AdjustmentStatus.Draft && canApprove"
                 class="bg-yellow-50 p-2 rounded border border-yellow-200 mt-2"
             >
                 <h4 class="font-bold text-yellow-800 mb-2">
@@ -199,7 +199,7 @@
             </div>
 
             <div
-                v-if="adjustment.status === 'approved' && canVoid"
+                v-if="adjustment.status === $enums.AdjustmentStatus.Approved && canVoid"
                 class="mt-2 flex justify-end"
             >
                 <button

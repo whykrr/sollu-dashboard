@@ -5,8 +5,9 @@ namespace App\Http\Controllers\App\Settings;
 use App\Constants\FlashDataVariable;
 use App\Http\Controllers\Controller;
 use App\Models\SubscriptionPlan;
-use App\Services\App\BillingEngine;
-use App\Services\App\SubscriptionService;
+use App\Models\SystemSetting;
+use App\Services\App\Subscription\BillingEngine;
+use App\Services\App\Subscription\SubscriptionService;
 use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
@@ -29,7 +30,7 @@ class SubscriptionController extends Controller
             'payment_method' => 'required|in:midtrans,manual',
         ]);
 
-        if ($request->payment_method === 'midtrans' && ! \App\Models\FeatureFlag::isMidtransEnabled()) {
+        if ($request->payment_method === 'midtrans' && ! SystemSetting::isMidtransEnabled()) {
             return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis (Midtrans) saat ini sedang dinonaktifkan.');
         }
 
@@ -94,7 +95,7 @@ class SubscriptionController extends Controller
             'payment_method' => 'required|in:midtrans,manual',
         ]);
 
-        if ($request->payment_method === 'midtrans' && ! \App\Models\FeatureFlag::isMidtransEnabled()) {
+        if ($request->payment_method === 'midtrans' && ! SystemSetting::isMidtransEnabled()) {
             return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis (Midtrans) saat ini sedang dinonaktifkan.');
         }
 
@@ -153,7 +154,7 @@ class SubscriptionController extends Controller
             'payment_method' => 'required|in:midtrans,manual',
         ]);
 
-        if ($request->payment_method === 'midtrans' && ! \App\Models\FeatureFlag::isMidtransEnabled()) {
+        if ($request->payment_method === 'midtrans' && ! SystemSetting::isMidtransEnabled()) {
             return redirect()->back()->with(FlashDataVariable::FAILED->value, 'Metode pembayaran otomatis (Midtrans) saat ini sedang dinonaktifkan.');
         }
 

@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Support\Enums;
+
+use App\Enums\AdjustmentReason;
+use App\Enums\AdjustmentStatus;
+use App\Enums\CustomerGender;
+use App\Enums\FeatureEnum;
+use App\Enums\InventoryMovementType;
+use App\Enums\InvoiceStatus;
+use App\Enums\PaymentMethodType;
+use App\Enums\PlanEnum;
+use App\Enums\PromoStatus;
+use App\Enums\PromoTarget;
+use App\Enums\PromoType;
+use App\Enums\PurchaseOrderStatus;
+use App\Enums\RoleEnum;
+use App\Enums\StockOpnameStatus;
+use App\Enums\StockTransferStatus;
+use App\Enums\SubscriptionStatus;
+use App\Enums\TransactionPaymentStatus;
+use App\Enums\TransactionStatus;
+
+class FrontendEnumProvider
+{
+    /**
+     * Cache in-memory hasil serialisasi enum.
+     *
+     * @var array<string, array<string, mixed>>|null
+     */
+    protected static ?array $cachedEnums = null;
+
+    /**
+     * Daftar Backed Enum yang di-expose ke antarmuka pengguna (Frontend).
+     *
+     * @var array<class-string>
+     */
+    protected static array $frontendEnums = [
+        AdjustmentReason::class,
+        AdjustmentStatus::class,
+        CustomerGender::class,
+        FeatureEnum::class,
+        InventoryMovementType::class,
+        PaymentMethodType::class,
+        PlanEnum::class,
+        PromoStatus::class,
+        PromoTarget::class,
+        PromoType::class,
+        PurchaseOrderStatus::class,
+        RoleEnum::class,
+        StockOpnameStatus::class,
+        StockTransferStatus::class,
+        TransactionStatus::class,
+        TransactionPaymentStatus::class,
+        InvoiceStatus::class,
+        SubscriptionStatus::class,
+    ];
+
+    /**
+     * Ambil seluruh representasi enum untuk frontend.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public static function all(): array
+    {
+        if (static::$cachedEnums !== null) {
+            return static::$cachedEnums;
+        }
+
+        $result = [];
+
+        foreach (static::$frontendEnums as $enumClass) {
+            if (! enum_exists($enumClass)) {
+                continue;
+            }
+
+            $shortName = class_basename($enumClass);
+            $result[$shortName] = static::transform($enumClass);
+        }
+
+        return static::$cachedEnums = $result;
+    }
+
+    /**
+     * Transform Backed Enum class ke representasi array terstruktur.
+     *
+     * @param  class-string  $enumClass
+     * @return array<string, mixed>
+     */
+    public static function transform(string $enumClass): array
+    {
+        $data = [];
+        $meta = [];
+        $options = [];
+
+        foreach ($enumClass::cases() as $case) {
+            $value = $case->value;
+            $name = $case->name;
+
+            // Direct mapping case name ke value (PascalCase & UPPERCASE fallback)
+            $data[$name] = $value;
+            $upperName = strtoupper($name);
+            if ($upperName !== $name) {
+                $data[$upperName] = $value;
+            }
+
+            $label = method_exists($case, 'label') ? $case->label() : $name;
+            $color = method_exists($case, 'color') ? $case->color() : null;
+
+            $meta[$value] = array_filter([
+                'label' => $label,
+                'color' => $color,
+            ], fn ($val) => $val !== null);
+
+            $options[] = [
+                'value' => $value,
+                'label' => $label,
+            ];
+        }
+
+        $data['_meta'] = $meta;
+        $data['_options'] = $options;
+
+        return $data;
+    }
+
+    /**
+     * Reset cache (berguna saat testing).
+     */
+    public static function clearCache(): void
+    {
+        static::$cachedEnums = null;
+    }
+}

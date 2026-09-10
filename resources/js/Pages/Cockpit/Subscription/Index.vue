@@ -67,7 +67,7 @@
             <template #expires_at="{ row }">
                 {{ row.expires_at }}
             </template>
-            <template #actions="{ row }">
+            <template #actions>
                 <Link
                     :href="
                         route().has('cockpit.subscriptions.show')

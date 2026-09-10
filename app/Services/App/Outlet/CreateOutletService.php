@@ -5,7 +5,7 @@ namespace App\Services\App\Outlet;
 use App\Models\Outlet;
 use App\Models\OutletAuditLog;
 use App\Models\User;
-use App\Services\App\BillingEngine;
+use App\Services\App\Subscription\BillingEngine;
 use Illuminate\Support\Facades\DB;
 
 class CreateOutletService

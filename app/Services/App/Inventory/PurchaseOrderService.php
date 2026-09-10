@@ -3,12 +3,13 @@
 namespace App\Services\App\Inventory;
 
 use App\Enums\InventoryMovementType;
+use App\Enums\PurchaseOrderStatus;
 use App\Models\Inventory\InventoryBalance;
 use App\Models\Inventory\InventoryCostLayer;
 use App\Models\Inventory\InventoryMovement;
 use App\Models\Inventory\PurchaseOrder;
 use App\Models\User;
-use App\Services\Shared\ActivityLogService;
+use App\Services\App\Master\ActivityLogService;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderService
@@ -30,7 +31,7 @@ class PurchaseOrderService
                 ->whereMonth('created_at', now()->month)
                 ->count();
             $data['po_number'] = 'PO-'.now()->format('Ym').'-'.str_pad($count + 1, 3, '0', STR_PAD_LEFT);
-            $data['status'] = PurchaseOrder::STATUS_DRAFT;
+            $data['status'] = PurchaseOrderStatus::Draft;
 
             $totalAmount = 0;
             $items = $data['items'] ?? [];
@@ -65,7 +66,7 @@ class PurchaseOrderService
     public function updatePO(PurchaseOrder $po, array $data, User $updater): PurchaseOrder
     {
         return DB::transaction(function () use ($po, $data, $updater) {
-            if ($po->status !== PurchaseOrder::STATUS_DRAFT) {
+            if ($po->status !== PurchaseOrderStatus::Draft) {
                 abort(403, 'Hanya PO berstatus Draft yang dapat diubah.');
             }
 
@@ -101,11 +102,11 @@ class PurchaseOrderService
     public function markAsOrdered(PurchaseOrder $po, User $user): PurchaseOrder
     {
         return DB::transaction(function () use ($po, $user) {
-            if ($po->status !== PurchaseOrder::STATUS_DRAFT) {
+            if ($po->status !== PurchaseOrderStatus::Draft) {
                 abort(403, 'Hanya PO berstatus Draft yang dapat diproses menjadi Ordered.');
             }
 
-            $po->status = PurchaseOrder::STATUS_ORDERED;
+            $po->status = PurchaseOrderStatus::Ordered;
             $po->save();
 
             $this->activityLogService->log($po, 'ordered', $user);
@@ -117,11 +118,11 @@ class PurchaseOrderService
     public function cancel(PurchaseOrder $po, User $user): PurchaseOrder
     {
         return DB::transaction(function () use ($po, $user) {
-            if ($po->status !== PurchaseOrder::STATUS_ORDERED) {
+            if ($po->status !== PurchaseOrderStatus::Ordered) {
                 abort(403, 'Hanya PO berstatus Ordered yang dapat dibatalkan.');
             }
 
-            $po->status = PurchaseOrder::STATUS_CANCELLED;
+            $po->status = PurchaseOrderStatus::Cancelled;
             $po->save();
 
             $this->activityLogService->log($po, 'cancelled', $user);
@@ -136,7 +137,7 @@ class PurchaseOrderService
     public function receivePO(PurchaseOrder $po, array $receivedData, User $receiver): PurchaseOrder
     {
         return DB::transaction(function () use ($po, $receivedData, $receiver) {
-            if ($po->status !== PurchaseOrder::STATUS_ORDERED) {
+            if ($po->status !== PurchaseOrderStatus::Ordered) {
                 abort(403, 'Hanya PO berstatus Ordered yang dapat diterima.');
             }
 
@@ -207,7 +208,7 @@ class PurchaseOrderService
                 }
             }
 
-            $po->status = PurchaseOrder::STATUS_RECEIVED;
+            $po->status = PurchaseOrderStatus::Received;
             $po->approved_by = $receiver->id;
             $po->save();
 
@@ -220,7 +221,7 @@ class PurchaseOrderService
     public function void(PurchaseOrder $po, User $voider): PurchaseOrder
     {
         return DB::transaction(function () use ($po, $voider) {
-            if ($po->status !== PurchaseOrder::STATUS_RECEIVED) {
+            if ($po->status !== PurchaseOrderStatus::Received) {
                 abort(403, 'Hanya PO berstatus Received yang dapat di-void.');
             }
 
@@ -262,7 +263,7 @@ class PurchaseOrderService
                 }
             }
 
-            $po->status = PurchaseOrder::STATUS_CANCELLED;
+            $po->status = PurchaseOrderStatus::Cancelled;
             $po->save();
 
             $this->activityLogService->log($po, 'voided', $voider);

@@ -48,6 +48,7 @@ Route::name('cockpit.')->group(function () {
         Route::get('/uoms', [UomController::class, 'index'])->name('uoms.index');
 
         Route::get('/config', [ConfigController::class, 'index'])->name('config.index');
+        Route::put('/config/settings', [ConfigController::class, 'updateSettings'])->name('config.settings.update');
         Route::patch('/config/feature-flag', [ConfigController::class, 'updateFlag'])->name('config.feature-flag.update');
 
         Route::get('/audit', [AuditController::class, 'index'])->name('audit.index');

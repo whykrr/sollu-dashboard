@@ -2,6 +2,8 @@
 
 namespace App\Models\Sales;
 
+use App\Enums\TransactionPaymentStatus;
+use App\Enums\TransactionStatus;
 use App\Models\Master\Customer;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,6 +49,8 @@ class Transaction extends Model
             'shipping_fee' => 'float',
             'service_charge_amount' => 'float',
             'total' => 'float',
+            'status' => TransactionStatus::class,
+            'payment_status' => TransactionPaymentStatus::class,
         ];
     }
 

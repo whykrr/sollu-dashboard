@@ -40,7 +40,7 @@
             <template #actions="{ item }">
                 <div class="flex items-center gap-2">
                     <button
-                        v-if="item.status === 'in_progress'"
+                        v-if="item.status === $enums.StockOpnameStatus.InProgress"
                         class="btn btn-highlight-main btn-sm"
                         title="Lanjutkan Opname"
                         @click="openForm(item)"
@@ -48,7 +48,7 @@
                         <FontAwesomeIcon :icon="faPencil" />
                     </button>
                     <button
-                        v-if="item.status === 'pending_approval'"
+                        v-if="item.status === $enums.StockOpnameStatus.PendingApproval"
                         class="btn btn-info btn-sm"
                         title="Review & Approve"
                         @click="openDetail(item)"
@@ -57,8 +57,8 @@
                     </button>
                     <button
                         v-if="
-                            item.status === 'approved' ||
-                            item.status === 'rejected'
+                            item.status === $enums.StockOpnameStatus.Approved ||
+                            item.status === $enums.StockOpnameStatus.Rejected
                         "
                         class="btn btn-main btn-sm"
                         title="Lihat Detail"
@@ -67,7 +67,7 @@
                         <FontAwesomeIcon :icon="faEye" />
                     </button>
                     <button
-                        v-if="item.status === 'in_progress'"
+                        v-if="item.status === $enums.StockOpnameStatus.InProgress"
                         class="btn btn-flat btn-sm text-danger"
                         title="Batalkan Opname"
                         @click="confirmDelete(item)"

@@ -11,7 +11,7 @@ use App\Http\Requests\App\Settings\PaymentMethod\StorePaymentMethodRequest;
 use App\Http\Requests\App\Settings\PaymentMethod\UpdatePaymentMethodRequest;
 use App\Models\Master\PaymentMethod;
 use App\Models\Outlet;
-use App\Services\Shared\Settings\PaymentMethodService;
+use App\Services\App\Settings\PaymentMethodService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

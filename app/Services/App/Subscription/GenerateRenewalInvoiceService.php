@@ -5,7 +5,6 @@ namespace App\Services\App\Subscription;
 use App\Models\Business;
 use App\Models\Invoice;
 use App\Models\SubscriptionPlan;
-use App\Services\App\BillingEngine;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -17,7 +16,7 @@ class GenerateRenewalInvoiceService
     {
         /** @var Invoice $invoice */
         $invoice = DB::transaction(function () use ($business, $plan, $billingCycle) {
-            $subscription = $business->subscriptions()->where('status', 'active')->first();
+            $subscription = $business->subscriptions()->where('status', \App\Enums\SubscriptionStatus::Active)->first();
 
             if (! $subscription) {
                 throw new BadRequestHttpException('Tidak ada langganan aktif untuk diperpanjang.');

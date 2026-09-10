@@ -1,5 +1,7 @@
 <template>
-    <!-- TODO: Implement upgrade limit popup -->
+    <div>
+        <!-- TODO: Implement upgrade limit popup -->
+    </div>
 </template>
 
 <script setup>

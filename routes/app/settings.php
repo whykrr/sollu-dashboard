@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\FeatureEnum;
 use App\Http\Controllers\App\Settings\AccountController;
 use App\Http\Controllers\App\Settings\BusinessInfoController;
 use App\Http\Controllers\App\Settings\OutletController;
@@ -24,6 +25,9 @@ Route::prefix('settings')
                 Route::get('/', [BusinessInfoController::class, 'index'])->name('detail');
                 Route::put('/', [BusinessInfoController::class, 'save'])->name('detail.save');
                 Route::post('/logo', [BusinessInfoController::class, 'saveLogo'])->name('detail.save.logo');
+                
+                Route::get('/features', [\App\Http\Controllers\App\Settings\FeatureSettingController::class, 'index'])->name('features');
+                Route::put('/features', [\App\Http\Controllers\App\Settings\FeatureSettingController::class, 'save'])->name('features.save');
             });
 
         Route::prefix('outlets')
@@ -84,7 +88,8 @@ Route::prefix('settings')
         });
 
         Route::middleware(['can:'.\App\Enums\PermissionEnum::SETTING_PAYMENT->value])->group(function () {
-            Route::prefix('payment-methods')
+            Route::middleware('plan.feature:'.FeatureEnum::CUSTOM_PAYMENT_METHODS->value)
+                ->prefix('payment-methods')
                 ->name('payment-methods.')
                 ->group(function () {
                     Route::get('/', [\App\Http\Controllers\App\Settings\PaymentMethodController::class, 'index'])->name('index');
@@ -96,14 +101,16 @@ Route::prefix('settings')
                 });
         });
 
-        Route::prefix('receipt')
+        Route::middleware('plan.feature:'.FeatureEnum::RECEIPT_CUSTOMIZATION->value)
+            ->prefix('receipt')
             ->name('receipt.')
             ->group(function () {
                 Route::get('/', [\App\Http\Controllers\App\Settings\ReceiptSettingController::class, 'index'])->name('index');
                 Route::put('/', [\App\Http\Controllers\App\Settings\ReceiptSettingController::class, 'update'])->name('update');
             });
 
-        Route::prefix('devices')
+        Route::middleware('plan.feature:'.FeatureEnum::DEVICE_MANAGEMENT->value)
+            ->prefix('devices')
             ->name('devices.')
             ->group(function () {
                 Route::get('/', [\App\Http\Controllers\App\Settings\DeviceSettingController::class, 'index'])->name('index');
@@ -114,14 +121,16 @@ Route::prefix('settings')
                 Route::post('/{device}/unpair', [\App\Http\Controllers\App\Settings\DeviceSettingController::class, 'unpair'])->name('unpair');
             });
 
-        Route::prefix('taxes')
+        Route::middleware('plan.feature:'.FeatureEnum::TAX_AND_SERVICE_CHARGE->value)
+            ->prefix('taxes')
             ->name('taxes.')
             ->group(function () {
                 Route::get('/', [\App\Http\Controllers\App\Settings\TaxSettingController::class, 'index'])->name('index');
                 Route::put('/', [\App\Http\Controllers\App\Settings\TaxSettingController::class, 'update'])->name('update');
             });
 
-        Route::prefix('operational')
+        Route::middleware('plan.feature:'.FeatureEnum::OPERATIONAL_HOURS->value)
+            ->prefix('operational')
             ->name('operational.')
             ->group(function () {
                 Route::get('/', [\App\Http\Controllers\App\Settings\OperationalSettingController::class, 'index'])->name('index');

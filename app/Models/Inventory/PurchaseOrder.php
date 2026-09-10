@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory;
 
+use App\Enums\PurchaseOrderStatus;
 use App\Models\Business;
 use App\Models\Outlet;
 use App\Models\User;
@@ -31,14 +32,6 @@ class PurchaseOrder extends Model
     use HasFactory;
     use HasUuids;
 
-    public const STATUS_DRAFT = 'draft';
-
-    public const STATUS_ORDERED = 'ordered';
-
-    public const STATUS_RECEIVED = 'received';
-
-    public const STATUS_CANCELLED = 'cancelled';
-
     protected $fillable = [
         'business_id',
         'outlet_id',
@@ -56,6 +49,7 @@ class PurchaseOrder extends Model
     protected function casts(): array
     {
         return [
+            'status' => PurchaseOrderStatus::class,
             'total_amount' => 'float',
         ];
     }

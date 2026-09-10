@@ -7,6 +7,7 @@ use App\Enums\PermissionEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\SubscriptionPlan;
+use App\Models\SystemSetting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -110,7 +111,7 @@ class BillingController extends Controller
             'plan' => $plan,
             'isRenewal' => $req->boolean('is_renewal'),
             'manualPaymentMethods' => $manualPaymentMethods,
-            'isMidtransEnabled' => \App\Models\FeatureFlag::isMidtransEnabled(),
+            'isMidtransEnabled' => SystemSetting::isMidtransEnabled(),
         ]);
 
     }

@@ -1,3 +1,4 @@
+import { computed } from 'vue'
 import {
     faChartPie,
     faStore,
@@ -5,10 +6,10 @@ import {
     faFileInvoice,
     faUsersGear,
     faLayerGroup,
-    faBuildingColumns
+    faBuildingColumns,
 } from '@fortawesome/free-solid-svg-icons'
 
-export const cockpitSidebars = [
+export const getCockpitSidebars = () => [
     {
         route: 'cockpit.dashboard',
         icon: faChartPie,
@@ -57,5 +58,16 @@ export const cockpitSidebars = [
         label: 'Platform Config',
         permissions: '',
         activeRoute: 'cockpit.config',
-    }
+    },
 ]
+
+export function useCockpitSidebar() {
+    const cockpitSidebars = computed(() => getCockpitSidebars())
+
+    return {
+        cockpitSidebars,
+        getCockpitSidebars,
+    }
+}
+
+export const cockpitSidebars = getCockpitSidebars()

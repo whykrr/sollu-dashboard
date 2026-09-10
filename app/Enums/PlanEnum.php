@@ -51,20 +51,62 @@ enum PlanEnum: string
     {
         return match ($this) {
             self::MICRO => [
+                FeatureEnum::POS_CASHIER,
+                FeatureEnum::SHIFT_MANAGEMENT,
+                FeatureEnum::CASH_DRAWER,
+                FeatureEnum::PRODUCT_CATALOG,
+                FeatureEnum::PRODUCT_CATEGORIES,
+                FeatureEnum::CUSTOMER_MANAGEMENT,
+                FeatureEnum::OPERATIONAL_HOURS,
+                FeatureEnum::RECEIPT_CUSTOMIZATION,
+                FeatureEnum::TAX_AND_SERVICE_CHARGE,
+                FeatureEnum::CUSTOM_PAYMENT_METHODS,
+                FeatureEnum::EMPLOYEE_MANAGEMENT,
+                FeatureEnum::POS_DEVICE_SYNC,
                 FeatureEnum::BASIC_REPORTS,
             ],
             self::BASIC => array_merge(self::MICRO->systemFeatures(), [
+                FeatureEnum::SPLIT_PAYMENT,
+                FeatureEnum::VOID_REFUND,
+                FeatureEnum::PRODUCT_VARIANTS,
+                FeatureEnum::PRODUCT_MODIFIERS,
+                FeatureEnum::PRODUCT_IMPORT_EXPORT,
                 FeatureEnum::INVENTORY_MANAGEMENT,
+                FeatureEnum::RAW_MATERIALS,
+                FeatureEnum::STOCK_MOVEMENTS,
+                FeatureEnum::STOCK_ADJUSTMENTS,
+                FeatureEnum::STOCK_OPNAME,
+                FeatureEnum::SUPPLIER_MANAGEMENT,
+                FeatureEnum::PURCHASE_ORDERS,
+                FeatureEnum::INVENTORY_IMPORT_EXPORT,
+                FeatureEnum::CUSTOMER_IMPORT_EXPORT,
+                FeatureEnum::SALES_REPORTS,
+                FeatureEnum::PRODUCT_REPORTS,
+                FeatureEnum::REPORT_EXPORT,
+                FeatureEnum::DEVICE_MANAGEMENT,
+                FeatureEnum::ROLE_PERMISSIONS,
+                FeatureEnum::PAYMENT_GATEWAY,
                 FeatureEnum::MULTI_OUTLET,
             ]),
             self::PRO => array_merge(self::BASIC->systemFeatures(), [
-                FeatureEnum::ADVANCED_REPORTS,
+                FeatureEnum::INVOICE_DEBT,
+                FeatureEnum::PRODUCT_BUNDLES,
+                FeatureEnum::STOCK_FREEZE,
+                FeatureEnum::STOCK_TRANSFERS,
                 FeatureEnum::PROMO_MANAGEMENT,
+                FeatureEnum::DISCOUNT_VOUCHERS,
                 FeatureEnum::CUSTOMER_LOYALTY,
+                FeatureEnum::STOCK_REPORTS,
+                FeatureEnum::CASHIER_REPORTS,
+                FeatureEnum::PROMO_REPORTS,
+                FeatureEnum::CUSTOMER_REPORTS,
+                FeatureEnum::ADVANCED_REPORTS,
+                FeatureEnum::AUDIT_LOGS,
             ]),
             self::ULTIMATE => array_merge(self::PRO->systemFeatures(), [
                 FeatureEnum::RECIPE_MANAGEMENT,
                 FeatureEnum::UNLIMITED_USERS,
+                FeatureEnum::DEVELOPER_API,
             ]),
         };
     }
@@ -90,15 +132,15 @@ enum PlanEnum: string
 
     public static function trialFeatures(): array
     {
-        // By default, trial users get the ULTIMATE experience
         return self::MICRO->systemFeatures();
     }
 
     public static function freeFeatures(): array
     {
-        // Free users get minimal access
         return [
             FeatureEnum::BASIC_REPORTS,
+            FeatureEnum::PRODUCT_CATALOG,
+            FeatureEnum::PRODUCT_CATEGORIES,
         ];
     }
 }

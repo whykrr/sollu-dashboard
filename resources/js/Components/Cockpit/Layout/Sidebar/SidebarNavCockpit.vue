@@ -61,7 +61,9 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import NavigationDropdown from '@/Components/Layout/Sidebar/NavigationDropdown.vue';
 import NavigationItem from '@/Components/Layout/Sidebar/NavigationItem.vue';
-import { cockpitSidebars } from '@/Composable/Sidebar/cockpit';
+import { useCockpitSidebar } from '@/Composable/Sidebar/cockpit';
+
+const { cockpitSidebars } = useCockpitSidebar();
 
 const activeMenu = computed(() => {
     const _ = usePage().url;
@@ -84,9 +86,7 @@ const isActive = (menu) => {
     return current.startsWith('' + normalizeRoute(menu.route));
 };
 
-const sidebars = computed(() => {
-    return cockpitSidebars;
-});
+const sidebars = cockpitSidebars;
 </script>
 
 <style>

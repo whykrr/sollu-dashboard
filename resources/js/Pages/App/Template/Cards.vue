@@ -6,6 +6,7 @@
                 <div class="grid grid-cols-6 gap-3">
                     <Card
                         v-for="product in products"
+                        :key="product.name"
                         :title="product.name"
                         class=""
                         image="https://dummyimage.com/200x200"
@@ -30,6 +31,7 @@
                 <div class="grid grid-cols-6 gap-3">
                     <CardFade
                         v-for="product in products"
+                        :key="product.name"
                         :title="product.name"
                         image="https://dummyimage.com/200x250"
                     >

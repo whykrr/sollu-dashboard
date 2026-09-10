@@ -1,8 +1,9 @@
 <template>
     <div class="px-2 relative space-y-0 pb-3">
         <a
-            href="#"
-            target="_blank"
+            :href="helpCenterUrl"
+            :target="isExternalLink ? '_blank' : undefined"
+            :rel="isExternalLink ? 'noopener noreferrer' : undefined"
             class="flex items-center gap-2 py-1.5 px-3 cursor-pointer rounded-xl text-slate-600 hover:text-slate-800 hover:bg-slate-100/80 transition-all duration-200 group"
         >
             <FontAwesomeIcon
@@ -52,7 +53,8 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faCircleQuestion,
@@ -66,4 +68,8 @@ import SidebarBillingWidget from './SidebarBillingWidget.vue';
 defineProps({
     isSetting: Boolean,
 });
+
+const page = usePage();
+const helpCenterUrl = computed(() => page.props.app?.help_center_url || '#');
+const isExternalLink = computed(() => Boolean(helpCenterUrl.value && helpCenterUrl.value !== '#'));
 </script>

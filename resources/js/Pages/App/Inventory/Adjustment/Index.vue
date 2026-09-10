@@ -35,10 +35,10 @@
                 <span
                     class="badge"
                     :class="{
-                        'badge-gray': item.status === 'draft',
-                        'badge-success': item.status === 'approved',
-                        'badge-danger': item.status === 'rejected',
-                        'badge-warning': item.status === 'voided',
+                        'badge-gray': item.status === $enums.AdjustmentStatus.Draft,
+                        'badge-success': item.status === $enums.AdjustmentStatus.Approved,
+                        'badge-danger': item.status === $enums.AdjustmentStatus.Rejected,
+                        'badge-warning': item.status === $enums.AdjustmentStatus.Voided,
                     }"
                 >
                     {{ formatStatus(item.status) }}

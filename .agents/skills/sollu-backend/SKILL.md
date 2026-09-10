@@ -11,6 +11,9 @@ description: >-
 # Sollu Backend Rules (Laravel 11.9+)
 
 ## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-modular`**: Modular Monolith architecture, bounded contexts, and cross-module decoupling standards ([.agents/rules/modular-architecture.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/modular-architecture.md)).
+- **`laravel-boost`**: MANDATORY MCP enforcement for AI acceleration, docs search (`search-docs`), error diagnostics (`last-error`), schema inspection (`database-schema`), and rule recording ([.agents/rules/laravel-boost.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/laravel-boost.md)).
+- **`sollu-enums`**: Single Source of Truth PHP Enum via Inertia Shared Props ([.agents/rules/enums.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/enums.md)), `FrontendEnumProvider`, model `casts()`, dan `Rule::enum()` validation.
 - **`sollu-unit-testing`**: MANDATORY 100% Mocking Unit Tests whenever creating or modifying Service classes.
 - **`sollu-api-documentation`**: MANDATORY API doc update whenever request/response structures change.
 - **`sollu-roles-permissions`**: MANDATORY RBAC checks via `$this->authorize` and `BaseInertiaFormRequest`.
@@ -18,11 +21,12 @@ description: >-
 - **`sollu-pdf`**: Generic header Blade PDF generation standards.
 - **`sollu-code-quality`**: Pre-completion Pint linter (`vendor/bin/pint`) & DoD checklist.
 
-## 0. Mandatory Database Verification & Diagnostics (Live Database Check & Laravel Boost)
+## 0. Mandatory MCP Laravel Boost & Database Diagnostics (Enforced Rule)
 
-- **MANDATORY BEFORE & DURING BACKEND CHANGES:** Setiap kali membuat atau memodifikasi file backend (Model, Controller, Form Request, Service, DB Migration, JsonResource), **WAJIB** melakukan verifikasi kondisi skema database asli terlebih dahulu.
-    - **Primary Low-Level Catalog:** Gunakan MCP tool `sollu-db` (query SQL `information_schema` atau `pg_attribute`) untuk presisi level PostgreSQL (tipe data native, nullability, primary & foreign key constraints).
-    - **Laravel-Level Inspection:** Alternatif atau pelengkap, gunakan MCP tool `laravel-boost` (`DatabaseSchema` dan `DatabaseQuery`) untuk membaca skema langsung dari sudut pandang Laravel DB connection.
+- **MANDATORY BEFORE ANY CODING:**
+    - **Documentation Verification:** Gunakan MCP `laravel-boost` (`search-docs`) untuk memverifikasi sintaks resmi, signature method, dan best practices dari package ekosistem Laravel 11 terpasang.
+    - **Database Schema Inspection:** Gunakan MCP `laravel-boost` (`database-schema`) dan `sollu-db` (query PostgreSQL) untuk membaca skema langsung dari database hidup.
+    - **Error Diagnostics:** Saat terjadi error / exception, **LANGKAH PERTAMA** adalah memanggil `last-error` atau `read-log-entries` dari `laravel-boost`.
 - **Verifikasi Kolom & Data Type:** Pastikan nama kolom, tipe data, nulabilitas (`nullable`), default value, dan Foreign Key pada Model/FormRequest/Service **persis sama** dengan skema nyata di database.
 - **Verifikasi Relasi (FK):** Cek keberadaan Foreign Key constraint di database sebelum menuliskan method relasi Eloquent (`belongsTo`, `hasMany`, dll) atau validasi `exists:table,id`.
 
@@ -175,3 +179,9 @@ Gunakan MCP tools dari server `laravel-boost` untuk mempercepat siklus investiga
 - **Session vs Cache untuk UI State (STRICT RULE):** *State* pilihan antarmuka pengguna (seperti `SelectedOutlet`, *active tab*, *UI preference*) **WAJIB** disimpan dalam Laravel Session (`session()`). **DILARANG KERAS** menggunakan Redis / `Cache::` global berdasarkan `user_id` untuk menyimpan state UI, karena akan menyebabkan *cross-device state bleed* (pilihan di satu perangkat menimpa perangkat lain).
 - **Pure Arrays in Redis Cache:** Caching berbasis Redis hanya diperbolehkan untuk optimasi performa *query* (contoh: `SummaryUser`). Saat melakukan caching, **WAJIB** menyimpan pure array (menggunakan `->toArray()` atau `->only()`). Dilarang me-return *Eloquent Model* langsung ke dalam Cache untuk menghindari *stale connection* dan *serialization bugs*.
 - **Automated Cache Invalidation:** Invalidasi cache Redis (seperti pembersihan `SummaryUser`) wajib diotomatisasi melalui Eloquent Observers (misal: `UserCacheObserver`) atau Model Events (`booted()`). **Dilarang** memanggil `Cache::forget` atau class helper invalidasi cache secara manual / sporadis di dalam Service Layer maupun Controller.
+ 
+## 12. Enum Standards & Frontend Distribution (Single Source of Truth)
+
+- **Single Source of Truth:** Seluruh status, tipe, peran, dan kategori sistem **WAJIB** didefinisikan sebagai PHP Backed Enum di `app/Enums/`.
+- **Metadata Methods:** Setiap Backed Enum yang ditampilkan di UI wajib mengimplementasikan method `label(): string` dan bila memiliki representasi visual warna/badge wajib menyertakan method `color(): string` (misal: `'badge-warning'`, `'badge-success'`).
+- **Frontend Registration:** Setiap Backed Enum yang digunakan oleh frontend (Vue 3) untuk validasi kondisi, status badge, atau opsi dropdown form **WAJIB didaftarkan** pada array `$frontendEnums` di `App\Support\Enums\FrontendEnumProvider.php` agar otomatis di-share melalui middleware Inertia. Rujuk aturan lengkap pada [.agents/rules/enums.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/enums.md).

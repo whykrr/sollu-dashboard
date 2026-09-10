@@ -1,10 +1,23 @@
-import { faArrowLeft, faBoxes, faCalculator, faCashRegister, faClock, faCog, faCreditCard, faGears, faHistory, faHome, faInfo, faMapMarkerAlt, faMarker, faMinus, faMinusSquare, faMoneyBill, faMoneyBills, faReceipt, faShop, faUser, faUserCircle, faUserShield, faWallet, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
+import { computed } from 'vue'
+import {
+    faCalculator,
+    faCashRegister,
+    faClock,
+    faCreditCard,
+    faHistory,
+    faMapMarkerAlt,
+    faReceipt,
+    faShop,
+    faUserCircle,
+    faUserShield,
+    faSliders,
+} from '@fortawesome/free-solid-svg-icons'
 
-export const settingSidebars = [
+export const getSettingSidebars = (enums = { FeatureEnum: {} }) => [
     {
         type: 'section',
-        label: 'Pengaturan',
-        separator: false,
+        label: 'Pengaturan Umum',
+        separator: true,
     },
     {
         type: 'item',
@@ -15,23 +28,19 @@ export const settingSidebars = [
         activeRoute: 'settings.account',
     },
     {
-        type: 'section',
-        label: 'Usaha & Langganan',
-        separator: true,
-    },
-    {
         type: 'item',
         url: route('settings.business.detail'),
         icon: faShop,
         label: 'Informasi Usaha',
         permissions: ['business.view'],
-        activeRoute: 'settings.business',
+        activeRoute: 'settings.business.detail',
     },
     {
         type: 'item',
         url: route('settings.outlets.index'),
         icon: faMapMarkerAlt,
         label: 'Outlet',
+        feature: enums.FeatureEnum.MULTI_OUTLET,
         permissions: ['outlet.view'],
         activeRoute: 'settings.outlets',
     },
@@ -44,6 +53,14 @@ export const settingSidebars = [
         activeRoute: 'settings.billing',
     },
     {
+        type: 'item',
+        url: route('settings.business.features'),
+        icon: faSliders,
+        label: 'Personalisasi Fitur',
+        permissions: ['business.update'],
+        activeRoute: 'settings.business.features',
+    },
+    {
         type: 'section',
         label: 'Pengaturan Operasional & POS',
         separator: true,
@@ -53,6 +70,7 @@ export const settingSidebars = [
         url: route('settings.operational.index'),
         icon: faClock,
         label: 'Jam Operasional',
+        feature: enums.FeatureEnum.OPERATIONAL_HOURS,
         permissions: ['outlet.view'],
         activeRoute: 'settings.operational',
     },
@@ -61,6 +79,7 @@ export const settingSidebars = [
         url: route('settings.devices.index'),
         icon: faCashRegister,
         label: 'Perangkat',
+        feature: enums.FeatureEnum.DEVICE_MANAGEMENT,
         permissions: ['setting.device', 'outlet.view'],
         activeRoute: 'settings.devices',
     },
@@ -69,6 +88,7 @@ export const settingSidebars = [
         url: route('settings.receipt.index'),
         icon: faReceipt,
         label: 'Layout Struk & Nota',
+        feature: enums.FeatureEnum.RECEIPT_CUSTOMIZATION,
         permissions: ['setting.receipt', 'outlet.view'],
         activeRoute: 'settings.receipt',
     },
@@ -77,6 +97,7 @@ export const settingSidebars = [
         url: route('settings.taxes.index'),
         icon: faCalculator,
         label: 'Pajak & Biaya',
+        feature: enums.FeatureEnum.TAX_AND_SERVICE_CHARGE,
         permissions: ['setting.tax', 'outlet.view'],
         activeRoute: 'settings.taxes',
     },
@@ -85,6 +106,7 @@ export const settingSidebars = [
         url: route('settings.payment-methods.index'),
         icon: faCreditCard,
         label: 'Metode Pembayaran',
+        feature: enums.FeatureEnum.CUSTOM_PAYMENT_METHODS,
         permissions: ['setting.payment'],
         activeRoute: 'settings.payment-methods',
     },
@@ -93,6 +115,7 @@ export const settingSidebars = [
         url: '#',
         icon: faUserShield,
         label: 'Hak Akses',
+        feature: enums.FeatureEnum.ROLE_PERMISSIONS,
         permissions: [],
         activeRoute: 'settings.roles',
     },
@@ -101,7 +124,22 @@ export const settingSidebars = [
         url: '#',
         icon: faHistory,
         label: 'Log Aktivitas',
+        feature: enums.FeatureEnum.AUDIT_LOGS,
         permissions: [],
         activeRoute: 'settings.audit-logs',
     },
 ]
+
+import { useEnum } from '@/Composable/useEnum'
+
+export function useSettingSidebar() {
+    const { enums } = useEnum()
+    const settingSidebars = computed(() => getSettingSidebars(enums.value))
+
+    return {
+        settingSidebars,
+        getSettingSidebars,
+    }
+}
+
+export const settingSidebars = getSettingSidebars()

@@ -12,22 +12,55 @@ class BusinessTypeSeeder extends Seeder
      */
     public function run(): void
     {
+        $featuresRetail = [
+            'pos_cashier', 'shift_management', 'cash_drawer', 'split_payment', 'invoice_debt', 'void_refund',
+            'product_catalog', 'product_categories', 'product_variants', 'product_bundles', 'product_import_export',
+            'inventory_management', 'stock_movements', 'stock_adjustments', 'stock_freeze', 'stock_opname', 'stock_transfers', 'supplier_management', 'purchase_orders', 'inventory_import_export',
+            'promo_management', 'discount_vouchers', 'customer_management', 'customer_loyalty', 'customer_import_export',
+            'basic_reports', 'advanced_reports', 'sales_reports', 'product_reports', 'stock_reports', 'cashier_reports', 'promo_reports', 'customer_reports', 'report_export',
+            'multi_outlet', 'operational_hours', 'receipt_customization', 'tax_and_service_charge', 'device_management', 'custom_payment_methods',
+            'employee_management', 'role_permissions', 'unlimited_users', 'audit_logs',
+            'payment_gateway', 'pos_device_sync', 'developer_api'
+        ];
+
+        $featuresFnB = [
+            'pos_cashier', 'shift_management', 'cash_drawer', 'split_payment', 'invoice_debt', 'void_refund',
+            'product_catalog', 'product_categories', 'product_variants', 'product_modifiers', 'product_bundles', 'recipe_management', 'product_import_export',
+            'inventory_management', 'raw_materials', 'stock_movements', 'stock_adjustments', 'stock_freeze', 'stock_opname', 'stock_transfers', 'supplier_management', 'purchase_orders', 'inventory_import_export',
+            'promo_management', 'discount_vouchers', 'customer_management', 'customer_loyalty', 'customer_import_export',
+            'basic_reports', 'advanced_reports', 'sales_reports', 'product_reports', 'stock_reports', 'cashier_reports', 'promo_reports', 'customer_reports', 'report_export',
+            'multi_outlet', 'operational_hours', 'receipt_customization', 'tax_and_service_charge', 'device_management', 'custom_payment_methods',
+            'employee_management', 'role_permissions', 'unlimited_users', 'audit_logs',
+            'payment_gateway', 'pos_device_sync', 'developer_api'
+        ];
+
+        $featuresService = [
+            'pos_cashier', 'shift_management', 'cash_drawer', 'split_payment', 'invoice_debt', 'void_refund',
+            'product_catalog', 'product_categories', 'product_variants', 'product_bundles', 'product_import_export',
+            'inventory_management', 'stock_movements', 'stock_adjustments', 'stock_freeze', 'stock_opname', 'stock_transfers', 'supplier_management', 'purchase_orders', 'inventory_import_export',
+            'promo_management', 'discount_vouchers', 'customer_management', 'customer_loyalty', 'customer_import_export',
+            'basic_reports', 'advanced_reports', 'sales_reports', 'product_reports', 'stock_reports', 'cashier_reports', 'promo_reports', 'customer_reports', 'report_export',
+            'multi_outlet', 'operational_hours', 'receipt_customization', 'tax_and_service_charge', 'device_management', 'custom_payment_methods',
+            'employee_management', 'role_permissions', 'unlimited_users', 'audit_logs',
+            'payment_gateway', 'pos_device_sync', 'developer_api'
+        ];
+
         $businessTypes = [
-            ['code' => 'minimarket', 'name' => 'Minimarket', 'is_visible' => true],
-            ['code' => 'grocery', 'name' => 'Grocery / Sembako', 'is_visible' => true],
-            ['code' => 'convenience_store', 'name' => 'Toserba', 'is_visible' => true],
-            ['code' => 'fashion_store', 'name' => 'Toko Fesyen', 'is_visible' => true],
-            ['code' => 'coffee_shop', 'name' => 'Coffee Shop', 'is_visible' => true],
-            ['code' => 'restaurant', 'name' => 'Restoran', 'is_visible' => true],
-            ['code' => 'food_stall', 'name' => 'Kedai Makanan', 'is_visible' => true],
-            ['code' => 'bakery', 'name' => 'Bakery', 'is_visible' => true],
-            ['code' => 'laundry', 'name' => 'Laundry', 'is_visible' => false],
-            ['code' => 'barbershop', 'name' => 'Barbershop', 'is_visible' => false],
-            ['code' => 'salon', 'name' => 'Salon, Spa & Beauty', 'is_visible' => false],
-            ['code' => 'repair_shop', 'name' => 'Bengkel', 'is_visible' => false],
-            ['code' => 'pharmacy', 'name' => 'Apotek', 'is_visible' => false],
-            ['code' => 'vape_store', 'name' => 'Vape Store', 'is_visible' => false],
-            ['code' => 'thrift_store', 'name' => 'Toko Thrift', 'is_visible' => false],
+            ['code' => 'minimarket', 'name' => 'Minimarket', 'is_visible' => true, 'features' => $featuresRetail],
+            ['code' => 'grocery', 'name' => 'Grocery / Sembako', 'is_visible' => true, 'features' => $featuresRetail],
+            ['code' => 'convenience_store', 'name' => 'Toserba', 'is_visible' => true, 'features' => $featuresRetail],
+            ['code' => 'fashion_store', 'name' => 'Toko Fesyen', 'is_visible' => true, 'features' => $featuresRetail],
+            ['code' => 'coffee_shop', 'name' => 'Coffee Shop', 'is_visible' => true, 'features' => $featuresFnB],
+            ['code' => 'restaurant', 'name' => 'Restoran', 'is_visible' => true, 'features' => $featuresFnB],
+            ['code' => 'food_stall', 'name' => 'Kedai Makanan', 'is_visible' => true, 'features' => $featuresFnB],
+            ['code' => 'bakery', 'name' => 'Bakery', 'is_visible' => true, 'features' => $featuresFnB],
+            ['code' => 'laundry', 'name' => 'Laundry', 'is_visible' => false, 'features' => $featuresService],
+            ['code' => 'barbershop', 'name' => 'Barbershop', 'is_visible' => false, 'features' => $featuresService],
+            ['code' => 'salon', 'name' => 'Salon, Spa & Beauty', 'is_visible' => false, 'features' => $featuresService],
+            ['code' => 'repair_shop', 'name' => 'Bengkel', 'is_visible' => false, 'features' => $featuresService],
+            ['code' => 'pharmacy', 'name' => 'Apotek', 'is_visible' => false, 'features' => $featuresRetail],
+            ['code' => 'vape_store', 'name' => 'Vape Store', 'is_visible' => false, 'features' => $featuresRetail],
+            ['code' => 'thrift_store', 'name' => 'Toko Thrift', 'is_visible' => false, 'features' => $featuresRetail],
         ];
 
         foreach ($businessTypes as $type) {
@@ -36,6 +69,7 @@ class BusinessTypeSeeder extends Seeder
                 [
                     'name' => $type['name'],
                     'is_visible' => $type['is_visible'],
+                    'features' => $type['features'],
                 ]
             );
         }

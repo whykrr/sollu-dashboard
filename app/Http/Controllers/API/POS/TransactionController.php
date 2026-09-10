@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\POS;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\POS\StorePosTransactionRequest;
-use App\Services\Shared\Transaction\TransactionService;
+use App\Services\App\Transaction\TransactionService;
 
 class TransactionController extends Controller
 {

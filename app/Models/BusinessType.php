@@ -24,6 +24,7 @@ class BusinessType extends Model
         'code',
         'name',
         'is_visible',
+        'features',
     ];
 
     public $timestamps = false;
@@ -35,6 +36,7 @@ class BusinessType extends Model
     {
         return [
             'is_visible' => 'boolean',
+            'features' => 'array',
         ];
     }
 

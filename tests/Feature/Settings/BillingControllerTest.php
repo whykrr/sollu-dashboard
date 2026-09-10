@@ -87,4 +87,32 @@ class BillingControllerTest extends TestCase
             ->where('maxOutlets', $plan->max_outlet)
         );
     }
+
+    public function test_authorized_user_can_access_billing_page_with_void_invoices(): void
+    {
+        $appDomain = config('domain.app', 'app.sollu.test');
+        $user = User::first();
+        $user->givePermissionTo(PermissionEnum::BUSINESS_BILLING->value);
+
+        $business = $user->business;
+
+        Invoice::create([
+            'business_id' => $business->id,
+            'invoice_number' => 'INV-TEST-VOID-001',
+            'status' => 'void',
+            'subtotal' => 100000,
+            'tax_amount' => 0,
+            'total_amount' => 100000,
+            'due_date' => Carbon::now()->addDays(3),
+        ]);
+
+        $response = $this->actingAs($user, 'business')->get("http://{$appDomain}/settings/billing");
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Settings/Billing/Index')
+            ->has('invoices.data', 1)
+            ->where('invoices.data.0.status', 'void')
+        );
+    }
 }

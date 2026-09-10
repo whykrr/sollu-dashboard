@@ -1,10 +1,10 @@
 <?php
 
 use App\Helpers\SelectedOutlet;
-use App\Http\Controllers\App\ImpersonateController;
-use App\Http\Controllers\App\NotificationController;
-use App\Http\Controllers\App\OverviewController;
+use App\Http\Controllers\App\Notification\NotificationController;
+use App\Http\Controllers\App\Overview\OverviewController;
 use App\Http\Controllers\App\User\ForgotPasswordController;
+use App\Http\Controllers\App\User\ImpersonateController;
 use App\Http\Controllers\App\User\LoginController;
 use App\Http\Controllers\App\User\RegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -76,9 +76,10 @@ Route::middleware('auth:business')->group(function () {
         Route::get('/customers/search', [\App\Http\Controllers\API\CustomerController::class, 'search'])->name('customers.search');
         Route::get('/promos/search', [\App\Http\Controllers\API\PromoController::class, 'search'])->name('promos.search');
         Route::get('/payment-methods', [\App\Http\Controllers\API\PaymentMethodController::class, 'index'])->name('payment-methods.index');
+        Route::get('/business-info', [\App\Http\Controllers\API\BusinessInfoController::class, 'index'])->name('business-info');
     });
 
-    Route::get('/exports/download', [App\Http\Controllers\App\ExportDownloadController::class, 'download'])->name('exports.download');
+    Route::get('/exports/download', [App\Http\Controllers\App\Reports\ExportDownloadController::class, 'download'])->name('exports.download');
 
     Route::get('/', OverviewController::class)->name('overview');
 

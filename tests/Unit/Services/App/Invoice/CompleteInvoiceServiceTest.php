@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Services\App\Invoice;
 
+use App\Enums\SubscriptionInvoice\Status;
+use App\Enums\SubscriptionStatus;
 use App\Models\Business;
 use App\Models\Invoice;
 use App\Models\Subscription;
@@ -62,7 +64,7 @@ class CompleteInvoiceServiceTest extends TestCase
         $invoiceMock->shouldReceive('update')
             ->once()
             ->with([
-                'status' => 'paid',
+                'status' => Status::Paid,
                 'paid_at' => Carbon::now(),
             ])
             ->andReturnTrue();
@@ -87,13 +89,13 @@ class CompleteInvoiceServiceTest extends TestCase
 
         // Mock business->subscriptions()->where()->where()->update()
         $subsQueryMock->shouldReceive('where')->with('id', '!=', 1)->andReturnSelf();
-        $subsQueryMock->shouldReceive('where')->with('status', 'active')->andReturnSelf();
+        $subsQueryMock->shouldReceive('where')->with('status', SubscriptionStatus::Active)->andReturnSelf();
         $subsQueryMock->shouldReceive('update')->andReturn(1);
 
         // Mock subscription update
         $subscriptionMock->shouldReceive('update')
             ->once()
-            ->with(['status' => 'active'])
+            ->with(['status' => SubscriptionStatus::Active])
             ->andReturnTrue();
 
         // Mock business->users()->first()
@@ -121,7 +123,7 @@ class CompleteInvoiceServiceTest extends TestCase
         $subscriptionMock = Mockery::mock(Subscription::class)->makePartial();
 
         $invoiceMock->business = $businessMock;
-        $subscriptionMock->status = 'active';
+        $subscriptionMock->status = SubscriptionStatus::Active;
 
         DB::shouldReceive('transaction')
             ->once()
@@ -132,7 +134,7 @@ class CompleteInvoiceServiceTest extends TestCase
         $invoiceMock->shouldReceive('update')
             ->once()
             ->with([
-                'status' => 'paid',
+                'status' => Status::Paid,
                 'paid_at' => Carbon::now(),
             ])
             ->andReturnTrue();
@@ -209,7 +211,7 @@ class CompleteInvoiceServiceTest extends TestCase
         $invoiceMock->shouldReceive('update')
             ->once()
             ->with([
-                'status' => 'paid',
+                'status' => Status::Paid,
                 'paid_at' => Carbon::now(),
             ])
             ->andReturnTrue();
@@ -242,7 +244,7 @@ class CompleteInvoiceServiceTest extends TestCase
         $subscriptionMock->shouldReceive('update')
             ->once()
             ->withArgs(function ($args) use ($expiredDate) {
-                return $args['status'] === 'active' &&
+                return $args['status'] === SubscriptionStatus::Active &&
                        $args['expired_at']->equalTo($expiredDate->copy()->addDays(365));
             })
             ->andReturnTrue();

@@ -4,8 +4,9 @@ namespace App\Http\Middleware;
 
 use App\Helpers\SelectedOutlet;
 use App\Helpers\SummaryUser;
+use App\Models\SystemSetting;
+use App\Support\Enums\FrontendEnumProvider;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleAppInertiaRequests extends Middleware
@@ -45,6 +46,7 @@ class HandleAppInertiaRequests extends Middleware
             'app' => [
                 'name' => config('app.name'),
                 'breadcrumbs' => generateBreadcrumbs($request->route() ? $request->route()->getName() : ''),
+                'help_center_url' => fn () => SystemSetting::get('help_center_url', '#'),
                 'flash' => [
                     'success' => $request->session()->get('success'),
                     'failed' => $request->session()->get('failed'),
@@ -55,48 +57,14 @@ class HandleAppInertiaRequests extends Middleware
                 ],
             ],
 
+            'enums' => fn () => FrontendEnumProvider::all(),
+
             'auth' => fn () => $request->user()
                 ? array_merge(
                     $request->user()->only(['id', 'name', 'email', 'email_verified_at', 'photo']),
                     (array) SummaryUser::make()->cached(),
                     ['selected_outlet' => '']
                 ) : null,
-
-            'businessInfo' => Inertia::lazy(function () use ($request) {
-                $business = $request->user()->business;
-
-                $subscription = $business->subscriptions()
-                    ->where('status', 'active')
-                    ->with('plan:id,name')
-                    ->latest()
-                    ->first();
-
-                $isTrial = $business->trial_end_at ? \Carbon\Carbon::parse($business->trial_end_at)->isFuture() : false;
-
-                if ($subscription) {
-                    $planData = [
-                        'plan' => ['name' => $subscription->plan->name ?? 'Default Plan'],
-                        'expired_at' => $subscription->expired_at,
-                    ];
-                } elseif ($isTrial) {
-                    $planData = [
-                        'plan' => ['name' => 'Trial Plan'],
-                        'expired_at' => $business->trial_end_at,
-                    ];
-                } else {
-                    $planData = [
-                        'plan' => ['name' => 'Free Plan'],
-                        'expired_at' => null,
-                    ];
-                }
-
-                return [
-                    'subscription' => $planData,
-                    'outlet_count' => $business->outlets()
-                        ->where('is_active', true)->count(),
-                    'businessType' => $business->type()->first()->name ?? 'Unknown',
-                ];
-            }),
 
             'selectedOutlet' => fn () => $request->user() ? SelectedOutlet::make()->cached() : null,
         ]);

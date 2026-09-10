@@ -161,7 +161,7 @@
             >
                 Tutup
             </button>
-            <template v-if="opname && opname.status === 'pending_approval'">
+            <template v-if="opname && opname.status === $enums.StockOpnameStatus.PendingApproval">
                 <button
                     type="button"
                     class="btn btn-danger"

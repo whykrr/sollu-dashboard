@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\FeatureEnum;
-use App\Http\Controllers\App\PromotionController;
+use App\Http\Controllers\App\Promotion\PromotionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('promotions')

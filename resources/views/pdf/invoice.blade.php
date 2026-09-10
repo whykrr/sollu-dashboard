@@ -125,14 +125,17 @@
                 <div>Jatuh Tempo: {{ $invoice->due_date ? $invoice->due_date->format('d M Y') : '-' }}</div>
             </div>
             <div class="text-right">
-                @if ($invoice->status == 'open')
+                @php
+                    $statusVal = $invoice->status instanceof \BackedEnum ? $invoice->status->value : (string) $invoice->status;
+                @endphp
+                @if ($statusVal === 'open' || $statusVal === 'unpaid')
                     <span class="status open">Belum Dibayar</span>
-                @elseif($invoice->status == 'paid')
+                @elseif($statusVal === 'paid')
                     <span class="status paid">Terbayar</span>
-                @elseif($invoice->status == 'void')
+                @elseif($statusVal === 'void' || $statusVal === 'canceled' || $statusVal === 'cancel')
                     <span class="status void">Dibatalkan</span>
                 @else
-                    <span class="status">{{ $invoice->status }}</span>
+                    <span class="status">{{ $statusVal }}</span>
                 @endif
             </div>
         </div>

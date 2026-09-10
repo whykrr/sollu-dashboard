@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SubscriptionInvoice\Status;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,7 @@ class Invoice extends Model
     {
         return [
             'due_date' => 'datetime',
+            'status' => Status::class,
             'paid_at' => 'datetime',
         ];
     }

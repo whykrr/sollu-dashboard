@@ -41,7 +41,7 @@
             <template #actions="{ item }">
                 <div class="flex items-center gap-1">
                     <button
-                        v-if="item.status === 'draft'"
+                        v-if="item.status === $enums.PurchaseOrderStatus.Draft"
                         class="btn btn-highlight-success btn-sm leading-0"
                         title="Tandai sebagai Ordered"
                         @click="confirmOrder(item)"
@@ -49,7 +49,7 @@
                         <FontAwesomeIcon :icon="faCheck" /> Order
                     </button>
                     <button
-                        v-if="item.status === 'ordered'"
+                        v-if="item.status === $enums.PurchaseOrderStatus.Ordered"
                         class="btn btn-highlight-success btn-sm"
                         title="Terima Barang"
                         @click="openReceive(item)"
@@ -57,7 +57,7 @@
                         <FontAwesomeIcon :icon="faBoxOpen" />
                     </button>
                     <button
-                        v-if="item.status === 'ordered'"
+                        v-if="item.status === $enums.PurchaseOrderStatus.Ordered"
                         class="btn btn-flat btn-sm text-danger"
                         title="Batalkan PO"
                         @click="confirmCancel(item)"
@@ -65,7 +65,7 @@
                         <FontAwesomeIcon :icon="faBan" />
                     </button>
                     <button
-                        v-if="item.status === 'received'"
+                        v-if="item.status === $enums.PurchaseOrderStatus.Received"
                         class="btn btn-flat btn-sm text-danger"
                         title="Void PO"
                         @click="confirmVoid(item)"
@@ -75,8 +75,8 @@
 
                     <button
                         v-if="
-                            item.status === 'received' ||
-                            item.status === 'cancelled'
+                            item.status === $enums.PurchaseOrderStatus.Received ||
+                            item.status === $enums.PurchaseOrderStatus.Cancelled
                         "
                         class="btn btn-flat btn-sm text-gray-500"
                         title="Lihat Detail"
@@ -94,7 +94,7 @@
                     </a>
 
                     <button
-                        v-if="item.status === 'draft'"
+                        v-if="item.status === $enums.PurchaseOrderStatus.Draft"
                         class="btn btn-highlight-main btn-sm"
                         title="Edit PO"
                         @click="openForm(item)"
@@ -102,7 +102,7 @@
                         <FontAwesomeIcon :icon="faPencil" />
                     </button>
                     <button
-                        v-if="item.status === 'draft'"
+                        v-if="item.status === $enums.PurchaseOrderStatus.Draft"
                         class="btn btn-flat btn-sm text-danger"
                         title="Hapus PO"
                         @click="confirmDelete(item)"

@@ -9,7 +9,10 @@ description: >-
 # Sollu Code Quality & Verification Standards
 
 ## 🚨 Related Skills (Perfect Hook Matrix)
+- **`sollu-modular`**: Modular Monolith architecture, bounded contexts, and cross-module decoupling standards ([.agents/rules/modular-architecture.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/modular-architecture.md)).
+- **`laravel-boost`**: MANDATORY MCP enforcement for AI acceleration, docs search (`search-docs`), error diagnostics (`last-error`), schema inspection (`database-schema`), and rule recording ([.agents/rules/laravel-boost.md](file:///Users/whykrr/Documents/Projects/Laravel/sollu-app/.agents/rules/laravel-boost.md)).
 - **`sollu-backend`**: Pint formatting (`vendor/bin/pint`), thin controllers, and response constants.
+- **`sollu-enums`**: Mandatory PHP Backed Enums as Single Source of Truth for condition validation without magic strings.
 - **`sollu-frontend`**: ESLint formatting (`npm run fix:eslint`) and Vite build verification (`npm run build`).
 - **`sollu-unit-testing`**: Service unit test coverage and isolation.
 - **`sollu-integration-testing`**: E2E visual & functional browser verification with `browsermcp`.
@@ -47,6 +50,7 @@ Sebelum menyelesaikan tugas atau mengirimkan perubahan kode:
 5. **NO Direct Role Hardcoding:** NEVER write `$user->role == 'admin'`. Always use Spatie permission checks (`$user->can('permission.name')`).
 6. **NO Unoptimized Queries / N+1:** NEVER execute unbounded `Model::all()` or `Model::get()` on growing tables, never trigger lazy loading inside loops (N+1), never use `count() > 0` for existence checks, and never execute mutation loops where batch `insert()` / `upsert()` should be used.
 7. **NO Deadcode Leftovers (Pembersihan Dead Code Wajib):** DILARANG meninggalkan kode mati (*dead code*) dalam bentuk apa pun (commented-out code, unused imports, orphaned methods/variables, obsolete files/routes). Seluruh kode mati WAJIB DIHAPUS pada sesi perubahan codebase yang sama.
+8. **NO Magic Strings for Status/Types/Features:** DILARANG KERAS menggunakan string literal mentah status/tipe/fitur (`v-if="status === 'draft'"`, `$model->status === 'draft'`). Selalu gunakan `$enums` di template Vue, `useEnum` di `<script setup>`, dan PHP Backed Enum di backend (`sollu-enums`).
 
 ## 4. 🧹 Dead Code Elimination Protocol (Aturan Pembersihan Kode Mati)
 
@@ -62,6 +66,8 @@ Setiap kali membuat atau memodifikasi file di codebase, WAJIB menerapkan protoko
 
 A feature or bugfix is considered **DONE** only when:
 - [ ] Backend logic & endpoints tested and returning accurate HTTP status codes.
+- [ ] Skema database & error log diverifikasi via MCP `laravel-boost` (`database-schema`, `database-query`, `last-error`) tanpa asumsi.
+- [ ] Dokumentasi framework & package diverifikasi via MCP `laravel-boost` (`search-docs`).
 - [ ] Controller response messages use `App\Constants\*` (`ResourceMessage`, `FlashDataVariable`) or `lang/` translation files without any hardcoded strings.
 - [ ] Query & Eloquent teroptimasi (Eager loading diterapkan untuk mencegah N+1, seleksi kolom spesifik, pengecekan eksistensi via `exists()`, batch insert/upsert, dan bebas dari unbounded queries).
 - [ ] Frontend UI verified visually and functionally via `browsermcp` (navigasi URL, screenshot, snapshot, console log check), and layout aligns with design standards.
