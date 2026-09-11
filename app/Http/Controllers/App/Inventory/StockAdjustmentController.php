@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Inventory\IndexStockAdjustmentRequest;
 use App\Http\Requests\App\Inventory\RejectStockAdjustmentRequest;
 use App\Http\Requests\App\Inventory\StoreStockAdjustmentRequest;
-use App\Models\Inventory\InventoryItem;
 use App\Models\Inventory\StockAdjustment;
-use App\Models\Outlet;
 use App\Services\App\Inventory\StockAdjustmentService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
@@ -35,20 +33,8 @@ class StockAdjustmentController extends Controller
             ->paginate($request->input('per_page', 20))
             ->withQueryString();
 
-        // Used for item dropdown in creation
-        $items = InventoryItem::currentBusiness()
-            ->where('is_active', true)
-            ->with(['uom', 'balances' => function ($q) {
-                // Eager load balances for the frontend to show stock per outlet
-                $q->select('inventory_item_id', 'outlet_id', 'current_stock');
-            }])
-            ->get();
-
-        // The detail is now loaded via API (axios.get) in the show method.
-
         return inertia('Inventory/Adjustment/Index', [
             'adjustments' => $adjustments,
-            'items' => $items,
             'filters' => [
                 ...$request->only(['search', 'status', 'reason', 'outlet_id', 'date_from', 'date_to']),
                 'sort' => $sort,

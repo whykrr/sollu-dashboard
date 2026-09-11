@@ -24,7 +24,11 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products = Product::currentBusiness()
-            ->with(['category', 'prices', 'images', 'inventoryItems']) // Only load essentials for index
+            ->with([
+                'category:id,name',
+                'prices:id,product_id,outlet_id,amount',
+                'images:id,product_id,inventory_item_id,image_url,sort_order',
+            ])
             ->filters($request->only(['search', 'category', 'outlet', 'is_deleted']))
             ->orderByDesc('created_at')
             ->paginate(15);
@@ -32,18 +36,27 @@ class ProductController extends Controller
         return Inertia::render('Master/Product/Index', [
             'products' => $products,
             'filters' => $request->only(['search', 'category', 'outlet', 'is_deleted']),
-            'categories' => \App\Models\Master\ProductCategory::currentBusiness()->get()->map(function ($row) {
-                return [
-                    'value' => $row->id,
-                    'label' => $row->name,
-                ];
-            }),
-            'rawCategories' => \App\Models\Master\ProductCategory::currentBusiness()->get(),
-            'outlets' => \App\Models\Outlet::currentBusiness()->active()->get(),
-            'modifierGroups' => \App\Models\Master\ModifierGroup::currentBusiness()->with('options')->get(),
-            'inventoryItems' => \App\Models\Master\InventoryItem::currentBusiness()->get(),
-            'baseProducts' => Product::currentBusiness()->where('product_type', '!=', 'bundle')->get(),
-            'uoms' => \App\Models\Uom::where('status', 'active')->orderBy('name')->get(),
+            'categories' => \App\Models\Master\ProductCategory::currentBusiness()
+                ->select('id', 'name')
+                ->get()
+                ->map(function ($row) {
+                    return [
+                        'value' => $row->id,
+                        'label' => $row->name,
+                    ];
+                }),
+        ]);
+    }
+
+    public function formOptions(Request $request)
+    {
+        return response()->json([
+            'categories' => \App\Models\Master\ProductCategory::currentBusiness()->select('id', 'name')->get(),
+            'outlets' => \App\Models\Outlet::currentBusiness()->active()->select('id', 'name')->get(),
+            'modifierGroups' => \App\Models\Master\ModifierGroup::currentBusiness()->with('options:id,modifier_group_id,name,additional_price,is_default')->select('id', 'name', 'selection_type', 'max_select', 'is_required')->get(),
+            'inventoryItems' => \App\Models\Master\InventoryItem::currentBusiness()->select('id', 'name', 'uom_id')->get(),
+            'baseProducts' => Product::currentBusiness()->where('product_type', '!=', 'bundle')->select('id', 'name', 'code')->get(),
+            'uoms' => \App\Models\Uom::where('status', 'active')->orderBy('name')->select('id', 'name', 'code')->get(),
         ]);
     }
 

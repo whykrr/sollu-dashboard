@@ -13,6 +13,7 @@ Aplikasi dibagi dalam modul mandiri (Inventory, Master, Sales, dll). Setiap modu
 - **Import UI Lintas Modul:** Vue file Modul A dilarang mengimpor komponen private (`/Components/`) dari dalam folder Modul B. Pindahkan ke `@/Components/` (global) jika dipakai bersama.
 - **God Service:** DILARANG membuat Service yang mengurus logika lintas domain.
 - **Routing Berantakan:** Route WAJIB dikelompokkan di `routes/app/{module}.php`. Dilarang menaruh di `routes/app.php` langsung.
+- **Over-Fetching di Index:** DILARANG me-load relasi berat (children, items, recipe, logs) atau master lookup massal di `index()` Inertia. Data detail lengkap dan opsi form WAJIB dimuat secara on-demand via endpoint `show()` atau async API saat PopUp/drawer dibuka.
 
 **3. Komunikasi Antar Modul**
 

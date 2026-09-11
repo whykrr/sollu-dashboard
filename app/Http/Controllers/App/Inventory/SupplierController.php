@@ -22,7 +22,6 @@ class SupplierController extends Controller
 
         $suppliers = Supplier::currentBusiness()
             ->filters($validated)
-            ->with('inventoryItems:id,name') // include related items for display if needed
             ->when($request->sort, function ($query, $sort) use ($request) {
                 $query->orderBy($sort, $request->direction ?? 'asc');
             }, function ($query) {
@@ -38,6 +37,17 @@ class SupplierController extends Controller
                 'is_active' => $validated['is_active'] ?? '',
             ],
         ]);
+    }
+
+    public function show(Request $request, Supplier $supplier)
+    {
+        if ($supplier->business_id !== $request->user()->business_id) {
+            abort(403);
+        }
+
+        return response()->json(
+            $supplier->load('inventoryItems:id,name')
+        );
     }
 
     /**

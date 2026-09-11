@@ -95,15 +95,24 @@ const sidebars = cockpitSidebars;
 
 <style>
 .cockpit-navigation .nav-item {
-    @apply hover:bg-indigo-50/70 hover:text-indigo-600 transition-all duration-150;
+    transition: all 150ms ease-in-out;
+}
+.cockpit-navigation .nav-item:hover {
+    background-color: rgba(238, 242, 255, 0.7);
+    color: #4f46e5;
 }
 .cockpit-navigation .nav-item.active {
-    @apply !bg-indigo-50 !text-indigo-700 font-bold shadow-2xs;
+    background-color: #eef2ff !important;
+    color: #4338ca !important;
+    font-weight: 700;
 }
 .cockpit-navigation .nav-dropdown-item:hover {
-    @apply hover:bg-indigo-50/70 hover:text-indigo-600;
+    background-color: rgba(238, 242, 255, 0.7);
+    color: #4f46e5;
 }
 .cockpit-navigation .nav-dropdown-item.active {
-    @apply !bg-indigo-50 !text-indigo-700 font-bold;
+    background-color: #eef2ff !important;
+    color: #4338ca !important;
+    font-weight: 700;
 }
 </style>

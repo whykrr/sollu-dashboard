@@ -48,6 +48,7 @@ Route::prefix('inventories')->group(function () {
             Route::get('suppliers/search-items', [SupplierController::class, 'searchItems'])->name('suppliers.search-items');
             Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
             Route::post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+            Route::get('suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
             Route::put('suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
             Route::delete('suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
         });

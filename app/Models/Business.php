@@ -157,10 +157,10 @@ class Business extends Model
 
         // Get user personalized features if exists
         $userFeatures = $this->settings['active_features'] ?? null;
-        
+
         if (is_null($userFeatures)) {
             // Fallback to BusinessType defaults
-            $userFeatures = $this->type?->features ?? array_map(fn($f) => $f->value, $planFeatures);
+            $userFeatures = $this->type?->features ?? array_map(fn ($f) => $f->value, $planFeatures);
         }
 
         // Map strings to FeatureEnum and intersect with plan features
@@ -189,6 +189,7 @@ class Business extends Model
         }
 
         $isTrial = $this->trial_end_at ? \Carbon\Carbon::parse($this->trial_end_at)->isFuture() : false;
+
         return $isTrial ? \App\Enums\PlanEnum::trialFeatures() : \App\Enums\PlanEnum::freeFeatures();
     }
 

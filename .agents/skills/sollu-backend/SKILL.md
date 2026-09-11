@@ -74,19 +74,22 @@ description: >-
 - **Database Transactions:** Bungkus setiap mutasi multi-tabel dalam `DB::transaction(function () { ... });`.
 - **Audit Log:** Catat perubahaan data penting menggunakan `AuditLogService`.
 
-## 5. Query Optimization & Performance Limits (Max 5s)
+## 5. Query Optimization & On-Demand Data Loading Standards (Max 5s)
 
 - **Waktu Eksekusi Query/Response:** Dilarang melebihi **5 detik**.
-- **N+1 Query Prevention:** Selalu gunakan Eager Loading (`with()`) untuk query standar Eloquent. Dilarang memicu lazy loading di dalam perulangan (`foreach`) atau template.
+- **Standarisasi On-Demand Data Loading (STRICT RULE):**
+    - **Inertia `index()` HANYA Memuat Data Esensial Tabel:** Dilarang keras memuat data relasi berat (children, items, recipes, logs) atau lookup master massal (semua kategori, semua item, semua opsi modifier) ke dalam props Inertia `index()`.
+    - **Offload Complex Detail ke Endpoint On-Demand (`show`):** Detail lengkap entitas (untuk drawer/PopUpPage/modal view & edit) WAJIB disediakan melalui endpoint API/controller tersendiri (misal: `show(Entity $entity)` yang mengembalikan JSON atau `JsonResource`) dan diambil secara *asynchronous* (Axios) hanya saat drawer/popup dibuka.
+    - **Offload Form Lookup Options:** Opsi dropdown form yang besar atau dinamis WAJIB dimuat secara on-demand saat formulir dibuka (via endpoint khusus seperti `formOptions` atau pencarian async `AsyncSelectField`), BUKAN di-load massal di setiap kunjungan `index()`.
+- **N+1 Query Prevention & DataTables:**
+    - Selalu gunakan Eager Loading (`with()`) untuk relasi yang ditampilkan pada kolom tabel.
+    - **Dilarang Over-Eager Loading:** Dilarang me-load relasi yang TIDAK ditampilkan di kolom tabel (misal relasi item, promo, outlet, atau log audit yang hanya dipakai di modal).
+    - **Hitung Jumlah dengan `withCount()`:** Jika tabel hanya menampilkan jumlah data relasi (misal jumlah item, opsi, atau user), WAJIB gunakan `withCount('relation')` dan akses `relation_count`. DILARANG memuat seluruh model relasi (`with('relation')`) hanya untuk menghitung `.length` atau `count()`.
 - **Selective Column Loading (`select()`):** Hindari pemanggilan `SELECT *` secara membabi-buta pada query berat atau tabel dengan kolom besar (`TEXT`, `JSON`). Pilih hanya kolom yang dibutuhkan (`select(['id', 'name', 'status', ...])`), terutama saat me-load relasi via eager loading (`with(['relation:id,parent_id,name'])`).
 - **Existence Checks (`exists()` / `doesntExist()`):** Gunakan `exists()` atau `doesntExist()` saat mengecek keberadaan data. Dilarang keras menggunakan `count() > 0` atau `first() !== null` hanya untuk pengecekan boolean eksistensi.
 - **Batch Processing & Mutations:** Dilarang melakukan perulangan mutasi model (`foreach (...) { Model::create(...) }` atau `->save()`). Gunakan batch `insert()` atau `upsert()` untuk manipulasi data massal.
 - **Index & Filtering Awareness:** Sebelum menambahkan klausa `where`, `orderBy`, atau `join` baru, periksa ketersediaan indeks pada kolom terkait menggunakan MCP tool `sollu-db`. Kolom pencarian, filter status, tenant ID, atau relasi yang sering digunakan wajib memiliki indeks di database.
-- **DataTables & Pagination:**
-    - Jangan load relasi berat pada `index()`; gunakan `withCount()` untuk jumlah data relasi.
-    - Jika memerlukan _sorting_ atau _filtering_ pada kolom tabel relasi, gunakan `join()` atau `leftJoin()` di tingkat database untuk efisiensi memori.
-    - **No Unbounded Queries:** Dilarang memanggil `get()` atau `all()` tanpa batasan (`limit` atau `paginate`) pada tabel yang berpotensi terus bertambah (transaksi, mutasi stok, audit log, dsb).
-- **Offload Complex Detail & Secondary Data:** Sediakan endpoint API JSON (`JsonResource`) tersendiri untuk data detail kompleks (diakses via PopUpPage) atau data sekunder (opsi dropdown dinamis), dilarang di-load di Inertia `index()`.
+- **No Unbounded Queries:** Dilarang memanggil `get()` atau `all()` tanpa batasan (`limit` atau `paginate`) pada tabel yang berpotensi terus bertambah (transaksi, mutasi stok, audit log, dsb).
 - **Large Datasets:** Gunakan `chunk()`, `lazy()`, atau `cursor()` untuk pengolahan data dalam jumlah besar.
 
 ## 6. API JSON Response Standards

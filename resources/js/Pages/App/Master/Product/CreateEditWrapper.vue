@@ -28,9 +28,9 @@
         :product="fetchedProduct"
         :initial-step="initialStep"
         :target-step-id="targetStepId"
-        :categories="categories"
-        :outlets="outlets"
-        :uoms="uoms"
+        :categories="loadedCategories"
+        :outlets="loadedOutlets"
+        :uoms="loadedUoms"
     />
 </template>
 
@@ -49,21 +49,49 @@ const props = defineProps({
     uoms: { type: Array, default: () => [] },
 });
 
-const isLoading = ref(props.editMode);
+const loadedCategories = ref(props.categories);
+const loadedOutlets = ref(props.outlets);
+const loadedUoms = ref(props.uoms);
+const isLoading = ref(true);
 const fetchedProduct = ref(props.product);
 
 onMounted(async () => {
-    if (props.editMode && props.product?.id) {
-        try {
-            // Fetch the detailed product with all relationships
-            const response = await axios.get(route('master.products.show', props.product.id));
-            fetchedProduct.value = response.data.data;
-        } catch (error) {
-            console.error('Failed to load product details:', error);
-            // Optionally handle error (e.g. show toast)
-        } finally {
-            isLoading.value = false;
+    try {
+        const promises = [];
+
+        // Load master form options on demand if not already provided
+        if (
+            loadedCategories.value.length === 0 ||
+            loadedOutlets.value.length === 0 ||
+            loadedUoms.value.length === 0
+        ) {
+            promises.push(
+                axios.get(route('master.products.formOptions')).then((res) => {
+                    loadedCategories.value = res.data.categories || [];
+                    loadedOutlets.value = res.data.outlets || [];
+                    loadedUoms.value = res.data.uoms || [];
+                }),
+            );
         }
+
+        // Fetch detailed product with all relationships when editing
+        if (props.editMode && props.product?.id) {
+            promises.push(
+                axios
+                    .get(route('master.products.show', props.product.id))
+                    .then((res) => {
+                        fetchedProduct.value = res.data.data;
+                    }),
+            );
+        }
+
+        if (promises.length > 0) {
+            await Promise.all(promises);
+        }
+    } catch (error) {
+        console.error('Failed to load product form data:', error);
+    } finally {
+        isLoading.value = false;
     }
 });
 </script>

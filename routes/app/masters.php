@@ -19,9 +19,10 @@ Route::prefix('master')
             Route::post('products/import', [ProductController::class, 'import'])->name('products.import');
         });
         Route::middleware('plan.feature:'.FeatureEnum::PRODUCT_CATALOG->value)->group(function () {
+            Route::get('products/form-options', [ProductController::class, 'formOptions'])->name('products.formOptions');
             Route::resource('products', ProductController::class);
         });
         Route::middleware('plan.feature:'.FeatureEnum::PRODUCT_MODIFIERS->value)->group(function () {
-            Route::resource('modifiers', ModifierGroupController::class)->except(['create', 'edit', 'show']);
+            Route::resource('modifiers', ModifierGroupController::class)->except(['create', 'edit']);
         });
     });

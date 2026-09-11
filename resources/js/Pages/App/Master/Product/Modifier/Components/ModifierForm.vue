@@ -45,7 +45,15 @@
                 </button>
             </div>
 
-            <div class="space-y-2 mb-4">
+            <div
+                v-if="isLoadingOptions"
+                class="py-8 flex flex-col items-center justify-center gap-2 text-neutral-400"
+            >
+                <FontAwesomeIcon :icon="faSpinner" class="animate-spin text-2xl text-main" />
+                <span class="text-xs">Memuat opsi modifier...</span>
+            </div>
+
+            <div v-else class="space-y-2 mb-4">
                 <div
                     v-for="(opt, index) in form.options"
                     :key="index"
@@ -97,7 +105,7 @@
                 </button>
                 <button
                     type="button"
-                    :disabled="form.processing"
+                    :disabled="form.processing || isLoadingOptions"
                     class="btn btn-success"
                     @click="submit"
                 >
@@ -111,6 +119,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { usePopUpStore } from '@/store/popup';
 
 import TextField from '@/Components/Form/TextField.vue';
@@ -124,6 +135,7 @@ const props = defineProps({
 
 const popUpStore = usePopUpStore();
 const isMounted = ref(false);
+const isLoadingOptions = ref(false);
 
 const isEdit = ref(false);
 const editingId = ref(null);
@@ -136,7 +148,7 @@ const form = useForm({
     options: [{ name: '', additional_price: 0, is_default: 0 }],
 });
 
-onMounted(() => {
+onMounted(async () => {
     isMounted.value = true;
     if (props.modifier) {
         isEdit.value = true;
@@ -145,11 +157,31 @@ onMounted(() => {
         form.selection_type = props.modifier.selection_type;
         form.max_select = props.modifier.max_select;
         form.is_required = props.modifier.is_required ? 1 : 0;
-        form.options = props.modifier.options.map((o) => ({
-            name: o.name,
-            additional_price: o.additional_price,
-            is_default: o.is_default ? 1 : 0,
-        }));
+
+        if (props.modifier.options && props.modifier.options.length > 0) {
+            form.options = props.modifier.options.map((o) => ({
+                name: o.name,
+                additional_price: o.additional_price,
+                is_default: o.is_default ? 1 : 0,
+            }));
+        } else {
+            isLoadingOptions.value = true;
+            try {
+                const response = await axios.get(route('master.modifiers.show', props.modifier.id));
+                const loadedOptions = response.data?.options || [];
+                if (loadedOptions.length > 0) {
+                    form.options = loadedOptions.map((o) => ({
+                        name: o.name,
+                        additional_price: o.additional_price,
+                        is_default: o.is_default ? 1 : 0,
+                    }));
+                }
+            } catch (error) {
+                console.error('Gagal memuat opsi modifier:', error);
+            } finally {
+                isLoadingOptions.value = false;
+            }
+        }
     }
 });
 

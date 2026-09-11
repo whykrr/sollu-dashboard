@@ -27,7 +27,7 @@ class EmployeeController extends Controller
             ->selectedOutlet($req->get('outlet'))
             ->filters($req->safe()->only(['search', 'role', 'is_deleted']))
             ->sortable($req->validated('sort', 'created_at'), $req->validated('direction', 'desc'))
-            ->with(['roles', 'outlets'])
+            ->with(['roles:id,name,label', 'outlets:id,name'])
             ->paginate($req->validated('perpage', 20))
             ->appends($req->query());
 
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         return inertia('Employee/Index', [
             'users' => $users,
             'params' => $req->validated(),
-            'roles' => ModelsRole::where('business_id', $req->user()->business_id)->get()->map(function ($row) {
+            'roles' => ModelsRole::where('business_id', $req->user()->business_id)->select('id', 'name', 'label')->get()->map(function ($row) {
                 return [
                     'value' => $row->name,
                     'label' => $row->label ?? (RoleEnum::tryFrom($row->name)?->label() ?? $row->name),

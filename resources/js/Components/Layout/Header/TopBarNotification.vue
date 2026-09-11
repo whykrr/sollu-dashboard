@@ -41,12 +41,23 @@ let notificationChannel = null
 const handleIncomingNotification = (notification) => {
     unreadCount.value++
     
-    // Resolve notification type safely
-    const rawType = (notification.type || notification.level || notification.data?.type || 'info').toString().toLowerCase()
+    // Resolve notification type safely (prioritize data.type/level over PHP class name in notification.type)
     const validTypes = ['success', 'info', 'warning', 'danger', 'error']
+    const candidates = [
+        notification.data?.type,
+        notification.alert_type,
+        notification.level,
+        notification.status,
+        notification.type,
+    ]
     let toastType = 'info'
-    if (validTypes.includes(rawType)) {
-        toastType = rawType === 'error' ? 'danger' : rawType
+    for (const cand of candidates) {
+        if (!cand) continue
+        const candStr = cand.toString().toLowerCase()
+        if (validTypes.includes(candStr)) {
+            toastType = candStr === 'error' ? 'danger' : candStr
+            break
+        }
     }
 
     const title = notification.title || notification.data?.title || 'Notifikasi Baru'

@@ -1,6 +1,7 @@
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import './echo'
 
 import AppLayout from '@/Layout/AppCockpitLayout.vue'
 import { createPinia } from 'pinia'

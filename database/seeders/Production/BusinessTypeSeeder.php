@@ -20,7 +20,7 @@ class BusinessTypeSeeder extends Seeder
             'basic_reports', 'advanced_reports', 'sales_reports', 'product_reports', 'stock_reports', 'cashier_reports', 'promo_reports', 'customer_reports', 'report_export',
             'multi_outlet', 'operational_hours', 'receipt_customization', 'tax_and_service_charge', 'device_management', 'custom_payment_methods',
             'employee_management', 'role_permissions', 'unlimited_users', 'audit_logs',
-            'payment_gateway', 'pos_device_sync', 'developer_api'
+            'payment_gateway', 'pos_device_sync', 'developer_api',
         ];
 
         $featuresFnB = [
@@ -31,7 +31,7 @@ class BusinessTypeSeeder extends Seeder
             'basic_reports', 'advanced_reports', 'sales_reports', 'product_reports', 'stock_reports', 'cashier_reports', 'promo_reports', 'customer_reports', 'report_export',
             'multi_outlet', 'operational_hours', 'receipt_customization', 'tax_and_service_charge', 'device_management', 'custom_payment_methods',
             'employee_management', 'role_permissions', 'unlimited_users', 'audit_logs',
-            'payment_gateway', 'pos_device_sync', 'developer_api'
+            'payment_gateway', 'pos_device_sync', 'developer_api',
         ];
 
         $featuresService = [
@@ -42,7 +42,7 @@ class BusinessTypeSeeder extends Seeder
             'basic_reports', 'advanced_reports', 'sales_reports', 'product_reports', 'stock_reports', 'cashier_reports', 'promo_reports', 'customer_reports', 'report_export',
             'multi_outlet', 'operational_hours', 'receipt_customization', 'tax_and_service_charge', 'device_management', 'custom_payment_methods',
             'employee_management', 'role_permissions', 'unlimited_users', 'audit_logs',
-            'payment_gateway', 'pos_device_sync', 'developer_api'
+            'payment_gateway', 'pos_device_sync', 'developer_api',
         ];
 
         $businessTypes = [

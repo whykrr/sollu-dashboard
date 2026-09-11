@@ -28,7 +28,12 @@ class SalesController extends Controller
         $sortField = $filters['sort'] ?? 'created_at';
         $sortDirection = $filters['direction'] ?? 'desc';
 
-        $transactions = Transaction::with(['customer', 'outlet', 'shift.user', 'invoice', 'promos'])
+        $transactions = Transaction::with([
+            'customer:id,name',
+            'shift:id,user_id',
+            'shift.user:id,name',
+            'invoice:id,transaction_id,invoice_number',
+        ])
             ->filters($filters)
             ->orderBy($sortField, $sortDirection)
             ->paginate(15)

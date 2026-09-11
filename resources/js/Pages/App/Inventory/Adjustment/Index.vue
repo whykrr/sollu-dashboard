@@ -123,10 +123,6 @@ const props = defineProps({
         type: Object,
         default: () => ({ data: [], links: [] }),
     },
-    items: {
-        type: Array,
-        default: () => [],
-    },
     filters: {
         type: Object,
         default: () => ({}),

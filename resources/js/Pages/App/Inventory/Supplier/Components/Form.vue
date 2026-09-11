@@ -260,6 +260,20 @@ watch(
                     knownItemsMap.value.set(i.id, { id: i.id, name: i.name });
                 });
                 form.inventory_items = data.inventory_items.map((i) => i.id);
+            } else if (data.id) {
+                axios
+                    .get(route('inventory.suppliers.show', data.id))
+                    .then((res) => {
+                        const items = res.data?.inventory_items || [];
+                        items.forEach((i) => {
+                            knownItemsMap.value.set(i.id, {
+                                id: i.id,
+                                name: i.name,
+                            });
+                        });
+                        form.inventory_items = items.map((i) => i.id);
+                    })
+                    .catch((err) => console.error(err));
             } else {
                 form.inventory_items = [];
             }

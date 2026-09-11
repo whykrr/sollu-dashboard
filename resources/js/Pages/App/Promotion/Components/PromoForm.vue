@@ -222,6 +222,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
 import { usePopUpStore } from '@/store/popup';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -283,8 +284,25 @@ const form = useForm({
     outlet_ids: props.promo?.outlets?.map((o) => o.id) || [],
 });
 
-onMounted(() => {
+onMounted(async () => {
     isMounted.value = true;
+    if (props.promo?.id && (!props.promo.outlets || !props.promo.inventory_items)) {
+        try {
+            const response = await axios.get(route('promotions.show', props.promo.id));
+            const data = response.data;
+            if (data.outlets && data.outlets.length > 0) {
+                form.outlet_ids = data.outlets.map((o) => o.id);
+            }
+            if (data.inventory_items && data.inventory_items.length > 0) {
+                selectedProducts.value = data.inventory_items.map((i) => ({
+                    id: i.id,
+                    name: i.name,
+                }));
+            }
+        } catch (error) {
+            console.error('Gagal memuat detail relasi promo:', error);
+        }
+    }
 });
 
 // Logic to clear max_discount when type is fixed

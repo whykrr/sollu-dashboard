@@ -22,8 +22,7 @@ class ModifierGroupController extends Controller
     public function index(Request $request)
     {
         $modifiers = ModifierGroup::currentBusiness()
-            ->with('options')
-            ->withCount('products')
+            ->withCount(['options', 'products'])
             ->filters($request->only('search'))
             ->paginate($request->per_page ?? 10)
             ->withQueryString();
@@ -32,6 +31,15 @@ class ModifierGroupController extends Controller
             'modifiers' => $modifiers,
             'filters' => $request->only('search'),
         ]);
+    }
+
+    public function show(Request $request, ModifierGroup $modifier)
+    {
+        if ($modifier->business_id !== $request->user()->business_id) {
+            abort(403);
+        }
+
+        return response()->json($modifier->load('options'));
     }
 
     public function store(StoreModifierGroupRequest $request)

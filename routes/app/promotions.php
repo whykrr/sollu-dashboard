@@ -12,5 +12,5 @@ Route::prefix('promotions')
     });
 
 Route::resource('promotions', PromotionController::class)
-    ->except(['create', 'edit', 'show'])
+    ->except(['create', 'edit'])
     ->middleware('plan.feature:'.FeatureEnum::PROMO_MANAGEMENT->value);

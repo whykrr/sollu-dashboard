@@ -24,13 +24,13 @@ class FeatureSettingController extends Controller
 
         // Base Plan Features (used to determine what's locked vs available to toggle)
         $availableFeatures = $business->getAvailablePlanFeatures();
-        
+
         // Actual Toggled ON features (taking into account user settings & defaults & plan intersection)
         $activeFeatures = $business->activePlanFeatures();
 
         return Inertia::render('Settings/Business/Features', [
-            'availableFeatures' => array_map(fn($f) => $f->value, $availableFeatures),
-            'activeFeatures' => array_map(fn($f) => $f->value, $activeFeatures),
+            'availableFeatures' => array_map(fn ($f) => $f->value, $availableFeatures),
+            'activeFeatures' => array_map(fn ($f) => $f->value, $activeFeatures),
             'featureGroups' => FeatureEnum::grouped(),
         ]);
     }
@@ -48,17 +48,17 @@ class FeatureSettingController extends Controller
 
         /** @var Business */
         $business = Business::findOrFail($business_id);
-        
+
         $settings = $business->settings ?? [];
-        
+
         // We only allow enabling features that are actually in their plan
-        $availablePlanFeatures = array_map(fn($f) => $f->value, $business->getAvailablePlanFeatures());
+        $availablePlanFeatures = array_map(fn ($f) => $f->value, $business->getAvailablePlanFeatures());
         $requestedFeatures = $request->input('features');
-        
+
         $validFeaturesToSave = array_values(array_intersect($requestedFeatures, $availablePlanFeatures));
-        
+
         $settings['active_features'] = $validFeaturesToSave;
-        
+
         $business->settings = $settings;
         $business->save();
 

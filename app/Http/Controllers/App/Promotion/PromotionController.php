@@ -25,7 +25,6 @@ class PromotionController extends Controller
         $limit = $request->query('limit', 20);
 
         $promos = Promo::currentBusiness()
-            ->with(['outlets:id,name', 'inventoryItems:id,name'])
             ->filters($request->only(['search', 'status', 'target', 'type', 'outlet']))
             ->sortable($request->get('sort', 'updated_at'), $request->get('direction', 'desc'))
             ->paginate($limit)
@@ -35,6 +34,19 @@ class PromotionController extends Controller
             'promos' => $promos,
             'filters' => $request->only(['search', 'status', 'target', 'type', 'outlet']),
         ]);
+    }
+
+    public function show(Request $request, Promo $promotion)
+    {
+        $this->authorize(PermissionEnum::PROMO_VIEW->value);
+
+        if ($promotion->business_id !== $request->user()->business_id) {
+            abort(403);
+        }
+
+        return response()->json(
+            $promotion->load(['outlets:id,name', 'inventoryItems:id,name'])
+        );
     }
 
     public function store(StorePromoRequest $request)

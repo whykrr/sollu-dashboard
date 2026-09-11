@@ -126,38 +126,6 @@ const props = defineProps({
     categories: Array,
 });
 
-// Provide master data for popup components
-provide(
-    'categories',
-    computed(
-        () =>
-            page.props.rawCategories ||
-            page.props.categories ||
-            props.categories ||
-            [],
-    ),
-);
-provide(
-    'outlets',
-    computed(() => page.props.outlets || []),
-);
-provide(
-    'modifierGroups',
-    computed(() => page.props.modifierGroups || []),
-);
-provide(
-    'inventoryItems',
-    computed(() => page.props.inventoryItems || []),
-);
-provide(
-    'products',
-    computed(() => page.props.baseProducts || []),
-);
-provide(
-    'uoms',
-    computed(() => page.props.uoms || []),
-);
-
 const headers = [
     { label: 'Foto', field: 'image', slot: 'image', sortable: false },
     { label: 'Kode', field: 'code', slot: 'code', sortable: true },
@@ -231,13 +199,6 @@ const openCreate = () => {
             initialStep: 0,
             editMode: false,
             targetStepId: 'basic',
-            categories:
-                page.props.rawCategories ||
-                page.props.categories ||
-                props.categories ||
-                [],
-            outlets: page.props.outlets || [],
-            uoms: page.props.uoms || [],
         },
     });
 };
@@ -254,13 +215,6 @@ const openEdit = (row, targetStepId = 'basic') => {
             editMode: true,
             targetStepId,
             product: row,
-            categories:
-                page.props.rawCategories ||
-                page.props.categories ||
-                props.categories ||
-                [],
-            outlets: page.props.outlets || [],
-            uoms: page.props.uoms || [],
         },
     });
 };

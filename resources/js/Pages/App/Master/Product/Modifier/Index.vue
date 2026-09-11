@@ -25,7 +25,7 @@
                 }}
             </template>
             <template #options_count="{ row }">
-                {{ row.options.length }}
+                {{ row.options_count ?? 0 }}
             </template>
             <template #actions="{ row }">
                 <button

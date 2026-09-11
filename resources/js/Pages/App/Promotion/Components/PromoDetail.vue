@@ -82,63 +82,74 @@
             </div>
         </div>
 
-        <!-- Cakupan Outlet -->
-        <div class="space-y-2 border-t pt-4">
-            <h4 class="text-xs font-semibold text-slate-500 uppercase">
-                Cakupan Outlet
-            </h4>
-            <div v-if="promo.applies_to_all_outlets" class="text-sm">
-                <span
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700"
-                >
-                    <FontAwesomeIcon
-                        :icon="faCheck"
-                        class="text-success text-xs"
-                    />
-                    Berlaku di Semua Outlet
-                </span>
-            </div>
-            <div
-                v-else-if="promo.outlets && promo.outlets.length > 0"
-                class="flex flex-wrap gap-2"
-            >
-                <span
-                    v-for="outlet in promo.outlets"
-                    :key="outlet.id"
-                    class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-sm border border-slate-200"
-                >
-                    {{ outlet.name }}
-                </span>
-            </div>
-            <div v-else class="text-sm text-slate-500 italic">
-                Tidak ada outlet yang dipilih
-            </div>
+        <!-- Loading Detail State -->
+        <div
+            v-if="isLoadingDetail"
+            class="py-6 flex flex-col items-center justify-center gap-2 text-neutral-400 border-t pt-4"
+        >
+            <FontAwesomeIcon :icon="faSpinner" class="animate-spin text-xl text-main" />
+            <span class="text-xs">Memuat detail outlet dan produk promo...</span>
         </div>
 
-        <!-- Cakupan Produk -->
-        <div
-            v-if="promo.target_type === 'product'"
-            class="space-y-2 border-t pt-4"
-        >
-            <h4 class="text-xs font-semibold text-slate-500 uppercase">
-                Produk yang Mendapat Diskon
-            </h4>
-            <div
-                v-if="promo.products && promo.products.length > 0"
-                class="flex flex-wrap gap-2"
-            >
-                <span
-                    v-for="product in promo.products"
-                    :key="product.id"
-                    class="inline-flex items-center px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 text-sm border border-indigo-100"
+        <template v-else>
+            <!-- Cakupan Outlet -->
+            <div class="space-y-2 border-t pt-4">
+                <h4 class="text-xs font-semibold text-slate-500 uppercase">
+                    Cakupan Outlet
+                </h4>
+                <div v-if="detailedPromo.applies_to_all_outlets" class="text-sm">
+                    <span
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700"
+                    >
+                        <FontAwesomeIcon
+                            :icon="faCheck"
+                            class="text-success text-xs"
+                        />
+                        Berlaku di Semua Outlet
+                    </span>
+                </div>
+                <div
+                    v-else-if="detailedPromo.outlets && detailedPromo.outlets.length > 0"
+                    class="flex flex-wrap gap-2"
                 >
-                    {{ product.name }}
-                </span>
+                    <span
+                        v-for="outlet in detailedPromo.outlets"
+                        :key="outlet.id"
+                        class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-sm border border-slate-200"
+                    >
+                        {{ outlet.name }}
+                    </span>
+                </div>
+                <div v-else class="text-sm text-slate-500 italic">
+                    Tidak ada outlet yang dipilih
+                </div>
             </div>
-            <div v-else class="text-sm text-slate-500 italic">
-                Tidak ada produk yang dipilih
+
+            <!-- Cakupan Produk -->
+            <div
+                v-if="detailedPromo.target_type === 'product'"
+                class="space-y-2 border-t pt-4"
+            >
+                <h4 class="text-xs font-semibold text-slate-500 uppercase">
+                    Produk yang Mendapat Diskon
+                </h4>
+                <div
+                    v-if="(detailedPromo.inventory_items && detailedPromo.inventory_items.length > 0) || (detailedPromo.products && detailedPromo.products.length > 0)"
+                    class="flex flex-wrap gap-2"
+                >
+                    <span
+                        v-for="product in (detailedPromo.inventory_items || detailedPromo.products)"
+                        :key="product.id"
+                        class="inline-flex items-center px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 text-sm border border-indigo-100"
+                    >
+                        {{ product.name }}
+                    </span>
+                </div>
+                <div v-else class="text-sm text-slate-500 italic">
+                    Tidak ada produk yang dipilih
+                </div>
             </div>
-        </div>
+        </template>
 
         <!-- Actions -->
         <Teleport v-if="isMounted" to="#popUpFooter">
@@ -193,9 +204,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 import { usePopUpStore } from '@/store/popup';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PromoForm from './PromoForm.vue';
 import { useModalStore } from '@/store/notification.js';
 
@@ -217,9 +229,22 @@ const props = defineProps({
 const popUpStore = usePopUpStore();
 const modal = useModalStore();
 const isMounted = ref(false);
+const isLoadingDetail = ref(false);
+const detailedPromo = ref({ ...props.promo });
 
-onMounted(() => {
+onMounted(async () => {
     isMounted.value = true;
+    if (props.promo?.id && (!props.promo.outlets || !props.promo.inventory_items)) {
+        isLoadingDetail.value = true;
+        try {
+            const response = await axios.get(route('promotions.show', props.promo.id));
+            detailedPromo.value = { ...detailedPromo.value, ...response.data };
+        } catch (error) {
+            console.error('Gagal memuat detail promo:', error);
+        } finally {
+            isLoadingDetail.value = false;
+        }
+    }
 });
 
 const bannerClass = computed(() => {
