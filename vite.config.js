@@ -5,6 +5,16 @@ import path from 'path';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        hmr: {
+            host: 'app.sollu.test',
+        },
+        watch: {
+            usePolling: true,
+        },
+    },
     plugins: [
         laravel({
             input: [

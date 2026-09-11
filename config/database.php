@@ -98,6 +98,23 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'telescope' => [
+            'driver' => env('DB_TELESCOPE_DRIVER', env('DB_CONNECTION', 'pgsql')),
+            'url' => env('DB_TELESCOPE_URL', env('DB_URL')),
+            'host' => env('DB_TELESCOPE_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_TELESCOPE_PORT', env('DB_PORT', '5432')),
+            'database' => env('DB_TELESCOPE_DATABASE', env('DB_DATABASE', 'laravel')),
+            'username' => env('DB_TELESCOPE_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('DB_TELESCOPE_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prepared' => env('DB_PREPARED', true),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => env('DB_TELESCOPE_SCHEMA', 'telescope'),
+            'sslmode' => 'prefer',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),

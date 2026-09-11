@@ -15,7 +15,7 @@ class CreateOutletService
         protected OutletProvisioningService $provisioningService
     ) {}
 
-    public function execute(array $data, User $user): array
+    public function execute(array $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
             $outlet = new Outlet;

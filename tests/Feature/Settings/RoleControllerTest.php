@@ -128,4 +128,45 @@ class RoleControllerTest extends TestCase
             ->where('filters.search', 'Kasir')
         );
     }
+
+    public function test_authorized_user_can_view_role_details_with_permissions(): void
+    {
+        $user = User::first();
+        $this->subscribeBusinessToPlan($user);
+        setPermissionsTeamId($user->business_id);
+
+        $role = \App\Models\Role::where('business_id', $user->business_id)->first();
+
+        $response = $this->actingAs($user, 'business')->get("http://{$this->appDomain}/settings/roles/{$role->id}");
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'id',
+            'label',
+            'name',
+            'is_default',
+            'permissions',
+        ]);
+        $this->assertEquals($role->id, $response->json('id'));
+    }
+
+    public function test_user_cannot_view_role_of_another_business(): void
+    {
+        $user = User::first();
+        $this->subscribeBusinessToPlan($user);
+        setPermissionsTeamId($user->business_id);
+
+        $otherBusinessId = (string) \Illuminate\Support\Str::uuid();
+        $otherRole = \App\Models\Role::create([
+            'business_id' => $otherBusinessId,
+            'name' => 'other-role',
+            'label' => 'Other Role',
+            'guard_name' => 'business',
+            'is_default' => false,
+        ]);
+
+        $response = $this->actingAs($user, 'business')->get("http://{$this->appDomain}/settings/roles/{$otherRole->id}");
+
+        $response->assertStatus(403);
+    }
 }

@@ -44,6 +44,15 @@
             </div>
         </div>
         <div class="hidden relative sm:flex items-center space-x-2.5">
+            <a
+                href="/telescope"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold select-none transition-all duration-150 shadow-xs"
+                title="Buka Telescope Monitoring"
+            >
+                <FontAwesomeIcon :icon="faBinoculars" class="text-indigo-400" />
+                <span>Telescope</span>
+            </a>
+
             <!-- Cockpit specific notifications (placeholder) -->
             <TopBarNotification />
 
@@ -59,7 +68,7 @@ import Breadcrumbs from '@/Components/Layout/Header/Breadcrumbs.vue';
 import TopBarAccountCockpit from './TopBarAccountCockpit.vue';
 import TopBarNotification from '@/Components/Layout/Header/TopBarNotification.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faBars, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose, faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { useAppStore } from '@/store/app';
 
 const appStore = useAppStore();

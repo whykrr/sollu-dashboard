@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="modal !justify-end pt-4"
+    class="modal !justify-end pt-4 overscroll-contain"
     :class="{ show: show }"
   >
     <div
@@ -36,7 +36,7 @@
 
         <!-- Modal Body -->
         <div
-          class="modal-body pt-0 flex-1 overflow-y-auto floating-scroll [mask-image:linear-gradient(to_bottom,black_95%,transparent)]"
+          class="modal-body pt-0 flex-1 overflow-y-auto overscroll-y-contain floating-scroll [mask-image:linear-gradient(to_bottom,black_95%,transparent)]"
         >
           <!-- Dynamic Component Support -->
           <component

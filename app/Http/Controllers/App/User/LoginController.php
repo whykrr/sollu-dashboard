@@ -22,7 +22,7 @@ class LoginController extends Controller
                 'email' => ['required', 'email'],
                 'password' => ['required'],
             ]),
-            $request->filled('remember')
+            $request->boolean('remember')
         )) {
             throw ValidationException::withMessages([
                 'email' => 'Autentikasi gagal, silakan periksa kembali email dan kata sandi Anda!',

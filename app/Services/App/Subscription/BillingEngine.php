@@ -15,7 +15,7 @@ class BillingEngine
     /**
      * Calculate prorated cost for adding an outlet
      */
-    public function calculateProratedCost(Subscription $subscription): float
+    public function calculateProratedCost(Subscription $subscription)
     {
         $plan = $subscription->plan;
 

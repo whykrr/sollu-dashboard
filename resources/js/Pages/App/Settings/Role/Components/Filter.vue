@@ -1,11 +1,6 @@
 <template>
     <div class="flex items-center gap-2 mt-2">
-        <div class="w-72">
-            <FilterSearch
-                v-model="filterForm.search"
-                placeholder="Cari peran..."
-            />
-        </div>
+        <FilterSearch v-model="filterForm.search" placeholder="Cari peran..." />
         <div class="grow"></div>
     </div>
 </template>

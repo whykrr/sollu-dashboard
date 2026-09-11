@@ -47,7 +47,7 @@
             <div class="placeholder h-2 bg-neutral-200 rounded w-1/4" />
         </div>
 
-        <div v-if="!isSkeleton" class="flex flex-col gap-1.5 items-end opacity-0 group-hover:opacity-100 transition-opacity">
+        <div v-if="!isSkeleton" class="flex flex-col gap-1.5 items-end shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
             <button 
                 v-if="!notification.read_at"
                 type="button"

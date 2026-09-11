@@ -1,22 +1,90 @@
-version: "3.8"
-
 services:
-    mailpit:
-        image: axllent/mailpit:latest
-        container_name: sollu_mailpit
-        ports:
-            - "8025:8025" # Web UI
-            - "1025:1025" # SMTP port
-        restart: unless-stopped
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: sollu-app-dev
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "8088:8088"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - WWWUSER=1000
+      - WWWGROUP=1000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - sollu-dev-network
 
-    redis:
-        image: redis:7
-        container_name: sollu_redis
-        ports:
-            - "6379:6379"
-        volumes:
-            - redis-data:/data
-        restart: unless-stopped
+  vite:
+    image: node:22-alpine
+    container_name: sollu-vite-dev
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+    command: sh -c "npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - app
+    networks:
+      - sollu-dev-network
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: sollu-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sollu_core
+      POSTGRES_USER: whykrr
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - sollu-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U whykrr -d sollu_core"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sollu-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: sollu-redis-dev
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - sollu-redis-data:/data
+    networks:
+      - sollu-dev-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: sollu-mailpit-dev
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - sollu-dev-network
 
 volumes:
-    redis-data:
+  sollu-pg-data:
+    driver: local
+  sollu-redis-data:
+    driver: local
+
+networks:
+  sollu-dev-network:
+    driver: bridge

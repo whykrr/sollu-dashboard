@@ -59,7 +59,7 @@ Route::prefix('settings')
             'can:'.\App\Enums\PermissionEnum::ROLE_VIEW->value,
             'plan.feature:'.FeatureEnum::ROLE_PERMISSIONS->value,
         ])->group(function () {
-            Route::resource('roles', \App\Http\Controllers\App\Settings\RoleController::class)->except(['create', 'show', 'edit']);
+            Route::resource('roles', \App\Http\Controllers\App\Settings\RoleController::class)->except(['create', 'edit']);
         });
 
         Route::middleware(['can:'.\App\Enums\PermissionEnum::BUSINESS_BILLING->value])->group(function () {

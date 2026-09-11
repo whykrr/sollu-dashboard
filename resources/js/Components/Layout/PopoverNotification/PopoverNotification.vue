@@ -2,9 +2,9 @@
     <transition name="fade-down" mode="in-out">
         <div
             v-if="props.isOpen"
-            class="fixed inset-x-3 top-16 sm:absolute sm:inset-auto sm:top-full sm:mt-2 sm:right-0 sm:w-[26rem] z-50 bg-white border border-neutral-100 rounded-xl shadow-2xl ring-1 ring-black/5 p-4 origin-top-right flex flex-col max-h-[calc(100vh-5rem)]"
+            class="fixed inset-x-3 top-16 sm:absolute sm:inset-auto sm:top-full sm:mt-2 sm:right-0 sm:w-[26rem] z-50 bg-white border border-neutral-100 rounded-xl shadow-2xl ring-1 ring-black/5 p-4 origin-top-right flex flex-col max-h-[calc(100vh-5rem)] sm:max-h-[36rem] overflow-hidden"
         >
-            <div class="flex flex-col h-full w-full relative gap-2">
+            <div class="flex flex-col flex-1 min-h-0 w-full relative gap-2">
                 <!-- Close Button -->
                 <div class="absolute right-0 top-0">
                     <a
@@ -17,7 +17,7 @@
                 </div>
 
                 <!-- Header Title & Mark All As Read -->
-                <div class="flex items-center justify-between pr-6">
+                <div class="flex items-center justify-between pr-6 shrink-0">
                     <div class="text-lg font-medium text-neutral-800">
                         Notifikasi
                     </div>
@@ -31,7 +31,7 @@
                 </div>
                 
                 <!-- Filter Tabs matching TopBarAccount style -->
-                <div class="bg-neutral-50 border border-neutral-100 rounded-xl p-1 flex gap-1 text-xs font-medium text-neutral-500">
+                <div class="bg-neutral-50 border border-neutral-100 rounded-xl p-1 flex gap-1 text-xs font-medium text-neutral-500 shrink-0">
                     <button
                         class="flex-1 py-1.5 px-2 rounded-lg transition-all duration-150 ease-in-out text-center flex items-center justify-center gap-1.5"
                         :class="filterActive === 'all' ? 'bg-white text-neutral-800 shadow-sm border border-neutral-100 font-semibold' : 'hover:text-neutral-800 hover:bg-neutral-100/50'"
@@ -59,7 +59,7 @@
                 </div>
                 
                 <!-- Content Area -->
-                <div class="bg-neutral-50 border border-neutral-100 rounded-xl overflow-hidden flex-1 overflow-y-auto floating-scroll">
+                <div class="bg-neutral-50 border border-neutral-100 rounded-xl overflow-hidden flex-1 min-h-0 overflow-y-auto floating-scroll">
                     <!-- Loaded State -->
                     <ol
                         v-if="!isLoading && notifications.length > 0"

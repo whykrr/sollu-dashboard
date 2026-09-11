@@ -25,7 +25,15 @@
                 Peran Pemilik Usaha (Owner) memiliki hak akses penuh ke seluruh sistem dan tidak dapat dikurangi.
             </div>
 
-            <div class="space-y-2">
+            <div
+                v-if="isLoadingPermissions"
+                class="py-12 flex flex-col items-center justify-center gap-2 text-neutral-400"
+            >
+                <FontAwesomeIcon :icon="faSpinner" class="animate-spin text-2xl text-main" />
+                <span class="text-xs">Memuat hak akses...</span>
+            </div>
+
+            <div v-else class="space-y-2">
                 <div
                     v-for="group in permissionGroups"
                     :key="group.key"
@@ -95,7 +103,7 @@
                 <button
                     type="button"
                     class="btn btn-highlight-main"
-                    :disabled="form.processing || isOwnerRole"
+                    :disabled="form.processing || isOwnerRole || isLoadingPermissions"
                     @click="submit"
                 >
                     {{ form.processing ? 'Menyimpan...' : 'Simpan' }}
@@ -108,6 +116,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { usePopUpStore } from '@/store/popup';
 import { useEnum } from '@/Composable/useEnum';
 
@@ -124,6 +135,7 @@ const props = defineProps({
 const popUpStore = usePopUpStore();
 const { enums, getGrouped } = useEnum();
 const isMounted = ref(false);
+const isLoadingPermissions = ref(false);
 
 const isOwnerRole = computed(() => props.role?.name === enums.value?.RoleEnum?.OWNER);
 
@@ -166,11 +178,23 @@ const toggleGroup = (group) => {
 
 const form = useForm({
     label: props.role?.label || '',
-    permissions: props.role?.permissions?.map((p) => p.name) || [],
+    permissions: props.role?.permissions?.map((p) => (typeof p === 'string' ? p : p.name)) || [],
 });
 
-onMounted(() => {
+onMounted(async () => {
     isMounted.value = true;
+
+    if (props.role?.id && (!props.role.permissions || props.role.permissions.length === 0)) {
+        isLoadingPermissions.value = true;
+        try {
+            const response = await axios.get(route('settings.roles.show', props.role.id));
+            form.permissions = response.data.permissions || [];
+        } catch (error) {
+            console.error('Gagal memuat hak akses peran:', error);
+        } finally {
+            isLoadingPermissions.value = false;
+        }
+    }
 });
 
 const submit = () => {

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Resolve project root
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+TTY_FLAG=""
+if [ ! -t 0 ]; then
+    TTY_FLAG="-T"
+fi
+
+# Map host project path to container path /var/www/html
+ARGS=()
+for arg in "$@"; do
+    # Replace absolute host path with container path
+    MODIFIED_ARG="${arg//$PROJECT_DIR//var/www/html}"
+    ARGS+=("$MODIFIED_ARG")
+done
+
+exec docker compose -f "$PROJECT_DIR/docker-compose.yml" exec $TTY_FLAG app php "${ARGS[@]}"

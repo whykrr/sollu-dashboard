@@ -25,7 +25,6 @@ class RoleController extends Controller
         $search = $request->query('search');
 
         $roles = Role::where('business_id', $request->user()->business_id)
-            ->with(['permissions:id,name'])
             ->withCount('users')
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
@@ -39,6 +38,26 @@ class RoleController extends Controller
         return inertia('Settings/Role/Index', [
             'roles' => $roles,
             'filters' => $request->only(['search']),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Request $request, Role $role)
+    {
+        $this->authorize('role.view');
+
+        if ($role->business_id !== $request->user()->business_id) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        return response()->json([
+            'id' => $role->id,
+            'label' => $role->label,
+            'name' => $role->name,
+            'is_default' => $role->is_default,
+            'permissions' => $role->permissions()->pluck('name'),
         ]);
     }
 

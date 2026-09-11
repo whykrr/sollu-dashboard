@@ -17,6 +17,7 @@ class CockpitUser extends Authenticatable
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**

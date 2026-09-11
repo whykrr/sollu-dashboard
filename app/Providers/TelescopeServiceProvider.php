@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\CockpitUser;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -18,10 +19,17 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
         $this->hideSensitiveRequestDetails();
 
-        $isLocal = $this->app->environment('local');
+        Telescope::filter(static function (IncomingEntry $entry): bool {
+            if (! app()->isProduction()) {
+                return true;
+            }
 
-        Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
-            return $isLocal || $entry->isReportableException() || $entry->isFailedRequest() || $entry->isFailedJob() || $entry->isScheduledTask() || $entry->hasMonitoredTag();
+            return $entry->isReportableException()
+                || $entry->isFailedRequest()
+                || $entry->isFailedJob()
+                || $entry->isScheduledTask()
+                || $entry->isSlowQuery()
+                || $entry->hasMonitoredTag();
         });
     }
 
@@ -34,13 +42,40 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             return;
         }
 
-        Telescope::hideRequestParameters(['_token']);
+        Telescope::hideRequestParameters([
+            '_token',
+            'password',
+            'password_confirmation',
+            'token',
+            'secret',
+            'card_number',
+            'cvv',
+        ]);
 
         Telescope::hideRequestHeaders([
             'cookie',
             'x-csrf-token',
             'x-xsrf-token',
+            'authorization',
         ]);
+    }
+
+    /**
+     * Configure the Telescope authorization services.
+     */
+    protected function authorization(): void
+    {
+        $this->gate();
+
+        Telescope::auth(function ($request) {
+            $user = $request->user('cockpit');
+
+            if (! $user instanceof CockpitUser || $user->status !== 'active') {
+                return false;
+            }
+
+            return Gate::forUser($user)->check('viewTelescope', [$user]);
+        });
     }
 
     /**
@@ -50,10 +85,18 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate(): void
     {
-        Gate::define('viewTelescope', function ($user) {
-            return in_array($user->email, [
-                //
-            ]);
+        Gate::define('viewTelescope', function (CockpitUser $user): bool {
+            if ($user->status !== 'active') {
+                return false;
+            }
+
+            $allowedEmails = array_filter(array_map('trim', explode(',', (string) env('TELESCOPE_ALLOWED_EMAILS', ''))));
+
+            if (! empty($allowedEmails)) {
+                return in_array($user->email, $allowedEmails, true);
+            }
+
+            return true;
         });
     }
 }

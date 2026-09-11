@@ -20,11 +20,15 @@
                     v-else-if="!sidebar.items"
                     v-can="sidebar.permissions"
                     :to="
-                        route().has(sidebar.route) ? route(sidebar.route) : '#'
+                        sidebar.href ||
+                        (route().has(sidebar.route)
+                            ? route(sidebar.route)
+                            : '#')
                     "
                     :icon="sidebar.icon"
                     :label="sidebar.label"
                     :active="isActive(sidebar)"
+                    :external="sidebar.external"
                 />
                 <NavigationDropdown
                     v-else

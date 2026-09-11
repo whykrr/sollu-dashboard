@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+TTY_FLAG=""
+if [ ! -t 0 ]; then
+    TTY_FLAG="-T"
+fi
+
+exec docker compose -f "$PROJECT_DIR/docker-compose.yml" exec $TTY_FLAG vite npm "$@"

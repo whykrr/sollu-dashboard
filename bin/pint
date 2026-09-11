@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+TTY_FLAG=""
+if [ ! -t 0 ]; then
+    TTY_FLAG="-T"
+fi
+
+ARGS=()
+for arg in "$@"; do
+    MODIFIED_ARG="${arg//$PROJECT_DIR//var/www/html}"
+    ARGS+=("$MODIFIED_ARG")
+done
+
+exec docker compose -f "$PROJECT_DIR/docker-compose.yml" exec $TTY_FLAG app vendor/bin/pint "${ARGS[@]}"

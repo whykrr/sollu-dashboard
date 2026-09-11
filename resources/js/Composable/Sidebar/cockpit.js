@@ -7,6 +7,7 @@ import {
     faUsersGear,
     faLayerGroup,
     faBuildingColumns,
+    faBinoculars,
 } from '@fortawesome/free-solid-svg-icons'
 
 export const getCockpitSidebars = () => [
@@ -58,6 +59,20 @@ export const getCockpitSidebars = () => [
         label: 'Platform Config',
         permissions: '',
         activeRoute: 'cockpit.config',
+    },
+    {
+        route: '',
+        label: 'MONITORING & TOOLS',
+        separator: true,
+    },
+    {
+        route: 'telescope',
+        href: '/telescope',
+        icon: faBinoculars,
+        label: 'Telescope Monitoring',
+        permissions: '',
+        activeRoute: 'telescope',
+        external: true,
     },
 ]
 

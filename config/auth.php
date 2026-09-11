@@ -39,10 +39,12 @@ return [
         'business' => [
             'driver' => 'session',
             'provider' => 'users',
+            'remember' => (int) env('AUTH_REMEMBER_DURATION_BUSINESS', 43200),
         ],
         'cockpit' => [
             'driver' => 'session',
             'provider' => 'internal_users',
+            'remember' => (int) env('AUTH_REMEMBER_DURATION_COCKPIT', 43200),
         ],
     ],
 

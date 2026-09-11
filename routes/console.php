@@ -8,7 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('telescope:prune')->daily();
+Schedule::command('telescope:prune --hours='.(int) env('TELESCOPE_PRUNE_HOURS', 24))->daily();
 
 Schedule::call(function () {
     $files = Illuminate\Support\Facades\Storage::disk('public')->files('exports');
