@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "laravel.vscode-laravel",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "emeraldwalk.runonsave",
+        "shufo.vscode-blade-formatter"
+    ]
+}

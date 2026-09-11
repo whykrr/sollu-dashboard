@@ -1,0 +1,71 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Artisan: Migrate",
+            "type": "shell",
+            "command": "./bin/artisan migrate",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Artisan: Tinker",
+            "type": "shell",
+            "command": "./bin/artisan tinker",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Artisan: Ziggy Generate",
+            "type": "shell",
+            "command": "./bin/artisan ziggy:generate",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Pint: Fix Code Style",
+            "type": "shell",
+            "command": "./bin/pint",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Test: Run PHPUnit",
+            "type": "shell",
+            "command": "./bin/phpunit",
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Start Containers (Up)",
+            "type": "shell",
+            "command": "docker compose up -d",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Stop Containers (Down)",
+            "type": "shell",
+            "command": "docker compose down",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: View Logs",
+            "type": "shell",
+            "command": "docker compose logs -f",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        }
+    ]
+}

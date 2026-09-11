@@ -1,0 +1,68 @@
+{
+    // === PHP Executable (Points to Docker App Container via global/project wrapper) ===
+    "php.validate.executablePath": "/opt/homebrew/bin/php",
+
+    // === Official Laravel Extension (laravel.vscode-laravel) ===
+    "Laravel.phpEnvironment": "docker",
+    "Laravel.phpCommand": [
+        "docker",
+        "compose",
+        "exec",
+        "-T",
+        "app",
+        "php"
+    ],
+    "Laravel.pint.runOnSave": true,
+
+    // === Laravel Extra Intellisense (amiralizadeh9480.laravel-extra-intellisense) ===
+    "LaravelExtraIntellisense.basePath": "",
+    "LaravelExtraIntellisense.basePathForCode": "/var/www/html",
+    "LaravelExtraIntellisense.phpCommand": "docker compose exec -T app php -r \"{code}\"",
+    "LaravelExtraIntellisense.modelVariables": {
+        "user": "App\\Models\\User"
+    },
+
+    // === PHP CS Fixer / Pint Code Formatter ===
+    "php-cs-fixer.executablePath": "${workspaceFolder}/bin/pint",
+
+    // === Run on Save Commands ===
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "./routes/*",
+                "cmd": "${workspaceFolder}/bin/artisan ziggy:generate"
+            }
+        ]
+    },
+
+    // === Laravel IDE Helper & Intelephense ===
+    "intelephense.environment.phpVersion": "8.3",
+    "intelephense.diagnostics.undefinedMethods": false,
+    "intelephense.diagnostics.undefinedProperties": false,
+    "intelephense.codeLens.references.enable": true,
+    "intelephense.files.associations": [
+        "*.php",
+        "*.module",
+        "*.inc"
+    ],
+    "intelephense.environment.includePaths": [
+        "app",
+        "bootstrap",
+        "config",
+        "database",
+        "routes",
+        "tests"
+    ],
+    "intelephense.files.maxSize": 5000000,
+    "intelephense.files.exclude": [
+        "**/node_modules/**",
+        "**/storage/**",
+        "**/cache/**"
+    ],
+
+    // === Editor & General Suggestions ===
+    "editor.parameterHints.enabled": true,
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+}
