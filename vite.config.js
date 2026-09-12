@@ -12,7 +12,7 @@ export default defineConfig({
             host: 'app.sollu.test',
         },
         watch: {
-            usePolling: true,
+            ignored: ['**/storage/**', '**/vendor/**', '**/.git/**'],
         },
     },
     plugins: [
